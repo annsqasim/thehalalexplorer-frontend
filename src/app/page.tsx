@@ -1,12 +1,5 @@
 'use client'
 
-const navigation = [
-  { name: 'Product', href: '#' },
-  { name: 'Features', href: '#' },
-  { name: 'Marketplace', href: '#' },
-  { name: 'Company', href: '#' },
-]
-
 export default function Example() {
   return (
     <div className="bg-white">
