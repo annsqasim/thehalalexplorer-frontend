@@ -1,6 +1,4 @@
 /** @type {import('next-sitemap').IConfig} */
-module.exports = {
-    siteUrl: 'https://thehalalexplorer.com', // replace with your actual domain
-    generateRobotsTxt: true,
-    sitemapSize: 5000,
-  };
+export const siteUrl = 'https://www.thehalalexplorer.com';
+export const generateRobotsTxt = true;
+export const sitemapSize = 5000;
