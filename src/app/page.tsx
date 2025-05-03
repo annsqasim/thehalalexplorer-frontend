@@ -1,7 +1,5 @@
 'use client'
 
-import { useState } from 'react'
-
 const navigation = [
   { name: 'Product', href: '#' },
   { name: 'Features', href: '#' },
@@ -10,8 +8,6 @@ const navigation = [
 ]
 
 export default function Example() {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
-
   return (
     <div className="bg-white">
       <header className="absolute inset-x-0 top-0 z-50">
@@ -29,7 +25,6 @@ export default function Example() {
           <div className="flex lg:hidden">
             <button
               type="button"
-              onClick={() => setMobileMenuOpen(true)}
               className="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-700"
             >
               <span className="sr-only">Open main menu</span>
