@@ -1,17 +1,11 @@
 import { client } from '@/lib/sanity';
-import { getDestinationBySlug } from '@/lib/sanity/queries';
 import Image from 'next/image';
 import { Metadata } from 'next';
+import { getDestinationBySlug } from '@/lib/sanity/queries';
 import { PortableText } from '@portabletext/react';
 import { PortableTextBlock } from '@portabletext/types';
 
 export const revalidate = 60;
-
-type Props = {
-  params: {
-    slug: string;
-  };
-};
 
 type Destination = {
   name: string;
@@ -30,41 +24,42 @@ type Destination = {
   mainImage?: string;
 };
 
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { slug } = params;
-  const destination = await getDestinationBySlug(slug);
+export async function generateMetadata({
+  params,
+}: {
+  params: { slug: string };
+}): Promise<Metadata> {
+  const destination = await getDestinationBySlug(params.slug);
 
   return {
-    title: destination?.title
-      ? `${destination.title} | The Halal Explorer`
-      : 'Destination | The Halal Explorer',
-    description: destination?.description || 'Explore global halal-friendly travel destinations.',
+    title: `${destination?.title} | The Halal Explorer`,
+    description: destination?.description,
     openGraph: {
-      title: destination?.title || 'The Halal Explorer',
-      description: destination?.description || '',
-      images: destination?.mainImage
-        ? [
-            {
-              url: destination.mainImage,
-              width: 800,
-              height: 600,
-            },
-          ]
-        : [],
+      title: destination?.title,
+      description: destination?.description,
+      images: [
+        {
+          url: destination?.mainImage || '',
+          width: 800,
+          height: 600,
+        },
+      ],
     },
   };
 }
 
-export async function generateStaticParams(): Promise<{ slug: string }[]> {
+export async function generateStaticParams() {
   const slugs: string[] = await client.fetch(
     `*[_type == "destination" && defined(slug.current)][].slug.current`
   );
   return slugs.map((slug) => ({ slug }));
 }
 
-export default async function DestinationPage({ params }: Props) {
-  const { slug } = params;
-
+export default async function DestinationPage({
+  params,
+}: {
+  params: { slug: string };
+}) {
   const query = `*[_type == "destination" && slug.current == $slug][0]{
     name,
     country,
@@ -80,13 +75,13 @@ export default async function DestinationPage({ params }: Props) {
     }
   }`;
 
-  const destination: Destination | null = await client.fetch(query, { slug });
+  const destination: Destination = await client.fetch(query, {
+    slug: params.slug,
+  });
 
   if (!destination) {
     return (
-      <div className="p-8 text-center text-red-500">
-        Destination not found.
-      </div>
+      <div className="p-8 text-center text-red-500">Destination not found.</div>
     );
   }
 
@@ -120,7 +115,7 @@ export default async function DestinationPage({ params }: Props) {
           <strong>Best Time to Visit:</strong> {destination.bestTimeToVisit}
         </p>
         {destination.content && (
-          <div className="prose prose-lg max-w-none mt-6">
+          <div className="prose prose-lg max-w-none">
             <PortableText value={destination.content} />
           </div>
         )}
