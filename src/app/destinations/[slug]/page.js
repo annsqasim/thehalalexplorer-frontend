@@ -1,34 +1,10 @@
 import { client } from '@/lib/sanity';
 import Image from 'next/image';
-import { Metadata } from 'next';
-import { getDestinationBySlug } from '@/lib/sanity/queries';
 import { PortableText } from '@portabletext/react';
-import { PortableTextBlock } from '@portabletext/types';
 
 export const revalidate = 60;
 
-type Destination = {
-  name: string;
-  country: string;
-  description: string;
-  halalFoodInfo: string;
-  prayerFacilities: string;
-  bestTimeToVisit: string;
-  content?: PortableTextBlock[];
-  image?: {
-    asset: {
-      url: string;
-    };
-  };
-  title?: string;
-  mainImage?: string;
-};
-
-export async function generateMetadata({
-  params,
-}: {
-  params: { slug: string };
-}): Promise<Metadata> {
+export async function generateMetadata({ params }) {
   const destination = await getDestinationBySlug(params.slug);
 
   return {
@@ -49,17 +25,13 @@ export async function generateMetadata({
 }
 
 export async function generateStaticParams() {
-  const slugs: string[] = await client.fetch(
+  const slugs = await client.fetch(
     `*[_type == "destination" && defined(slug.current)][].slug.current`
   );
   return slugs.map((slug) => ({ slug }));
 }
 
-export default async function DestinationPage({
-  params,
-}: {
-  params: { slug: string };
-}) {
+export default async function DestinationPage({ params }) {
   const query = `*[_type == "destination" && slug.current == $slug][0]{
     name,
     country,
@@ -75,7 +47,7 @@ export default async function DestinationPage({
     }
   }`;
 
-  const destination: Destination = await client.fetch(query, {
+  const destination = await client.fetch(query, {
     slug: params.slug,
   });
 
@@ -122,4 +94,14 @@ export default async function DestinationPage({
       </div>
     </>
   );
+}
+
+// You need to define getDestinationBySlug if not already
+async function getDestinationBySlug(slug) {
+  const query = `*[_type == "destination" && slug.current == $slug][0]{
+    title,
+    description,
+    mainImage
+  }`;
+  return await client.fetch(query, { slug });
 }
