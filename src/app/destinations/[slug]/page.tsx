@@ -6,7 +6,13 @@ import { PortableText } from '@portabletext/react';
 
 export const revalidate = 60;
 
-export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
+type Props = {
+  params: {
+    slug: string;
+  };
+};
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const destination = await getDestinationBySlug(params.slug)
 
   return {
@@ -31,7 +37,7 @@ export async function generateStaticParams() {
   return slugs.map((slug: string) => ({ slug }));
 }
 
-export default async function DestinationPage({params}: { params: { slug: string } }) {
+export default async function DestinationPage({params}: Props) {
   const query = `*[_type == "destination" && slug.current == $slug][0]{
     name,
     country,
