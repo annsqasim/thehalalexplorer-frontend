@@ -28,7 +28,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
 
 export async function generateStaticParams() {
   const slugs = await client.fetch(`*[_type == "destination" && defined(slug.current)][].slug.current`);
-  return slugs.map((slug: any) => ({ slug }));
+  return slugs.map((slug: string) => ({ slug }));
 }
 
 export default async function DestinationPage({params}: { params: { slug: string } }) {
@@ -47,7 +47,7 @@ export default async function DestinationPage({params}: { params: { slug: string
   }`;
 
   const destination = await client.fetch(query, { slug: params.slug });
-console.log('Destination:', destination);
+
   if (!destination) {
     return <div>Destination not found</div>;
   }
