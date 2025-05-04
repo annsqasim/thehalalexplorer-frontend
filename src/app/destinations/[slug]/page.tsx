@@ -3,6 +3,7 @@ import { getDestinationBySlug } from '@/lib/sanity/queries';
 import Image from 'next/image';
 import { Metadata } from 'next';
 import { PortableText } from '@portabletext/react';
+import { PortableTextBlock } from '@portabletext/types';
 
 export const revalidate = 60;
 
@@ -19,7 +20,7 @@ type Destination = {
   halalFoodInfo: string;
   prayerFacilities: string;
   bestTimeToVisit: string;
-  content?: any;
+  content?: PortableTextBlock[];
   image?: {
     asset: {
       url: string;
