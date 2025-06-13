@@ -182,3 +182,10 @@ body {
   );
   z-index: 2;
 }
+
+.footer {
+  background-color: rgb(var(--color-very-dark-green));
+  color: white;
+  padding: 40px 20px;
+  text-align: center;
+}

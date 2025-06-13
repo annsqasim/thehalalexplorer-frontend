@@ -12,6 +12,9 @@ import {
   CardContent,
   TextField,
   Paper,
+  Stack,
+  ArrowForward,
+  Link
 } from '@mui/material';
 import { Search } from '@mui/icons-material';
 
@@ -113,16 +116,54 @@ export default async function HomePage() {
             component="form"
             sx={{ p: '4px 8px', display: 'flex', alignItems: 'center', mt: 2 }}
           >
-        </Paper>
-      </Container>
+            {/* <Stack direction={{ xs: "column", sm: "row" }} spacing={2}>
+              <Button
+                variant="contained"
+                color="primary"
+                size="large"
+                component={Link}
+                href="/destinations"
+                endIcon={<ArrowForward />}
+                sx={{
+                  px: 4,
+                  py: 1.5,
+                  fontSize: "1rem",
+                  borderRadius: 3,
+                }}
+              >
+                Explore Destinations
+              </Button>
+              <Button
+                variant="outlined"
+                size="large"
+                component={Link}
+                href="/search"
+                sx={{
+                  px: 4,
+                  py: 1.5,
+                  fontSize: "1rem",
+                  borderRadius: 3,
+                  borderColor: "rgba(255, 255, 255, 0.6)",
+                  color: "white",
+                  "&:hover": {
+                    borderColor: "white",
+                    backgroundColor: "rgba(255, 255, 255, 0.1)",
+                  },
+                }}
+              >
+                Find Your Perfect Trip
+              </Button>
+            </Stack> */}
+          </Paper>
+        </Container>
       </div>
 
-      <Container maxWidth="lg" className='featured-content'>
+      <Container maxWidth="lg" className='featured-content' sx={{ py: 4 }}>
         <Typography variant="h3" gutterBottom>
           Featured Destinations
         </Typography>
         <Grid container spacing={4} sx={{ py: 4 }}>
-          {destinations.slice(0,3).map((place: Destination, index) => (
+          {destinations.slice(0,6).map((place: Destination, index) => (
             <Grid key={index} size={4}>
               <Card>
                 <CardMedia
@@ -178,8 +219,8 @@ export default async function HomePage() {
       </Box> */}
 
       {/* Footer */}
-        <Container>
-          <Typography variant="body2">
+        <Container className='footer'>
+          <Typography variant="body2" color='text.secondary' align="center" sx={{ py: 2 }}>
             &copy; {new Date().getFullYear()} The Halal Explorer. All rights
             reserved.
           </Typography>
