@@ -13,7 +13,6 @@ import {
   TextField,
   Paper,
   Stack,
-  ArrowForward,
   Link
 } from '@mui/material';
 import { Search } from '@mui/icons-material';

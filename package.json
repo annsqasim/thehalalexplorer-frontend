@@ -6,7 +6,8 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint . --config eslint.config.mjs",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
     "postbuild": "next-sitemap"
   },
   "dependencies": {
@@ -27,18 +28,12 @@
     "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {
-    "@eslint/eslintrc": "^3",
-    "@tailwindcss/postcss": "^4",
-    "@types/node": "^20",
-    "@types/react": "^19",
-    "@types/react-dom": "^19",
-    "@typescript-eslint/eslint-plugin": "^8.31.1",
-    "@typescript-eslint/parser": "^8.31.1",
-    "eslint": "^9.26.0",
-    "eslint-config-next": "^15.3.1",
+    "@eslint/js": "^9.29.0",
+    "eslint": "^9.29.0",
     "eslint-plugin-react": "^7.37.5",
-    "prettier": "^3.5.3",
+    "globals": "^16.2.0",
     "prettier-plugin-tailwindcss": "^0.6.11",
-    "typescript": "^5"
+    "typescript": "^5",
+    "typescript-eslint": "^8.34.0"
   }
 }
