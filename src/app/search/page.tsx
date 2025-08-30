@@ -134,7 +134,7 @@ export default function SearchPage() {
             }}
           >
             <Grid container spacing={2} alignItems="center">
-              <Grid item xs={12} md={5}>
+              <Grid size={{ xs: 12, md: 5 }}>
                 <TextField
                   fullWidth
                   placeholder="Search destinations, attractions, or experiences..."
@@ -145,7 +145,7 @@ export default function SearchPage() {
                   }}
                 />
               </Grid>
-              <Grid item xs={12} md={5}>
+              <Grid size={{ xs: 12, md: 5 }}>
                 <FormControl fullWidth>
                   <InputLabel id="region-select-label">Region</InputLabel>
                   <Select
@@ -163,7 +163,7 @@ export default function SearchPage() {
                   </Select>
                 </FormControl>
               </Grid>
-              <Grid item xs={12} md={2}>
+              <Grid size={{ xs: 12, md: 2 }}>
                 <Button variant="contained" color="primary" fullWidth size="large">
                   Search
                 </Button>
@@ -176,7 +176,7 @@ export default function SearchPage() {
       <Container maxWidth="lg" sx={{ py: 6 }}>
         <Grid container spacing={4}>
           {/* Filters Sidebar */}
-          <Grid item xs={12} md={3}>
+          <Grid size={{ xs: 12, md: 3 }}>
             <Box sx={{ position: "sticky", top: "100px" }}>
               <Typography variant="h6" fontWeight={600} sx={{ mb: 3, display: "flex", alignItems: "center" }}>
                 <FilterListIcon sx={{ mr: 1 }} /> Filters
@@ -259,7 +259,7 @@ export default function SearchPage() {
           </Grid>
 
           {/* Search Results */}
-          <Grid item xs={12} md={9}>
+          <Grid size={{ xs: 12, md: 9 }}>
             <Box sx={{ mb: 3, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
               <Typography variant="body1">{filteredDestinations.length} destinations found</Typography>
               <FormControl sx={{ minWidth: 200 }}>
@@ -277,7 +277,7 @@ export default function SearchPage() {
               <>
                 <Grid container spacing={3}>
                   {displayedDestinations.map((destination) => (
-                    <Grid item key={destination.id} xs={12} sm={6} lg={4}>
+                    <Grid key={destination.id} size={{ xs: 12, md: 6, sm: 6, lg: 4 }}>
                       <Card
                         className="destination-card"
                         sx={{ height: "100%", display: "flex", flexDirection: "column" }}

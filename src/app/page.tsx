@@ -21,6 +21,7 @@ import { client } from '@/lib/sanity';
 import { urlFor } from '@/lib/imageBuilder';
 import Image from 'next/image';
 import _get from 'lodash/get';
+import DestinationAutocomplete from '@/components/DestinationAutocomplete';
 
 
 export default async function HomePage() {
@@ -51,6 +52,7 @@ export default async function HomePage() {
     halalFoodInfo,
     prayerFacilities,
     bestTimeToVisit,
+    isFeatured,
     image{
       asset->{
         url
@@ -67,6 +69,7 @@ export default async function HomePage() {
     halalFoodInfo: string;
     prayerFacilities: string;
     bestTimeToVisit: string;
+    isFeatured?: boolean;
     image: {
       asset: {
         url: string;
@@ -79,7 +82,7 @@ export default async function HomePage() {
   const homepageData = await client.fetch(query);
   console.log('homepageData', homepageData, destinations);
   const heroImage = homepageData.heroImage?.asset?.url || 'https://source.unsplash.com/1600x900/?travel,muslim';
-
+  const featured = destinations.filter(dest => dest.isFeatured);
   return (
     <>
       {/* Navbar */}
@@ -112,7 +115,6 @@ export default async function HomePage() {
             Discover Muslim-Friendly Destinations
           </Typography>
           <Paper
-            component="form"
             sx={{ p: '4px 8px', display: 'flex', alignItems: 'center', mt: 2 }}
           >
             {/* <Stack direction={{ xs: "column", sm: "row" }} spacing={2}>
@@ -153,6 +155,7 @@ export default async function HomePage() {
                 Find Your Perfect Trip
               </Button>
             </Stack> */}
+            <DestinationAutocomplete destinations={destinations} />
           </Paper>
         </Container>
       </div>
@@ -162,7 +165,7 @@ export default async function HomePage() {
           Featured Destinations
         </Typography>
         <Grid container spacing={4} sx={{ py: 4 }}>
-          {destinations.slice(0,6).map((place: Destination, index) => (
+          {featured.map((place: Destination, index) => (
             <Grid key={index} size={4}>
               <Card>
                 <CardMedia

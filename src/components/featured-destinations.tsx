@@ -32,7 +32,7 @@ export default function FeaturedDestinations({ destinations }: FeaturedDestinati
   return (
     <Grid container spacing={4}>
       {destinations.map((destination) => (
-        <Grid item key={destination.id} xs={12} sm={6} md={4}>
+        <Grid key={destination.id} size={{ xs: 12, md: 4, sm: 6 }}>
           <Card
             sx={{
               height: "100%",
