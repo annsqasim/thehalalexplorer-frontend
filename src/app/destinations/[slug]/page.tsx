@@ -1,103 +1,16 @@
 import Box from "@mui/material/Box"
-import Container from "@mui/material/Container"
+import { Container, Grid, CardContent, Card, Chip, Divider } from "@mui/material"
 import Typography from "@mui/material/Typography"
 import Breadcrumbs from "@mui/material/Breadcrumbs"
 import Link from "next/link"
 import FeaturedDestinations from "@/components/featured-destinations"
+import { AdBanner } from "@/components/AdBanner"
+import { MosqueIcon, RestaurantIcon, CalendarIcon, InfoIcon } from "@/components/Icons"
+import { Destination } from "@/types"
+import { getDestinationBySlug } from "@/lib/sanity/queries"
+import Image from "next/image"
+import _get from "lodash/get"
 
-// Mock data - in a real app, this would come from Sanity
-const destinations = [
-  {
-    id: "istanbul",
-    name: "Istanbul",
-    country: "Turkey",
-    description: "A city where East meets West, with stunning mosques and rich Islamic heritage.",
-    image: "/placeholder.svg?height=300&width=500",
-    halalFoodRating: 5,
-    prayerFacilities: 5,
-    bestTimeToVisit: "April to May, September to November",
-  },
-  {
-    id: "dubai",
-    name: "Dubai",
-    country: "United Arab Emirates",
-    description: "Modern metropolis with luxury shopping, ultramodern architecture, and vibrant nightlife.",
-    image: "/placeholder.svg?height=300&width=500",
-    halalFoodRating: 5,
-    prayerFacilities: 5,
-    bestTimeToVisit: "November to March",
-  },
-  {
-    id: "kuala-lumpur",
-    name: "Kuala Lumpur",
-    country: "Malaysia",
-    description: "A cultural melting pot with iconic skyscrapers and delicious halal cuisine.",
-    image: "/placeholder.svg?height=300&width=500",
-    halalFoodRating: 5,
-    prayerFacilities: 5,
-    bestTimeToVisit: "May to July",
-  },
-  {
-    id: "marrakech",
-    name: "Marrakech",
-    country: "Morocco",
-    description: "A vibrant city known for its markets, gardens, palaces, and mosques.",
-    image: "/placeholder.svg?height=300&width=500",
-    halalFoodRating: 4,
-    prayerFacilities: 5,
-    bestTimeToVisit: "March to May, September to November",
-  },
-  {
-    id: "cairo",
-    name: "Cairo",
-    country: "Egypt",
-    description: "Home to the Pyramids of Giza and the iconic Nile River with rich Islamic history.",
-    image: "/placeholder.svg?height=300&width=500",
-    halalFoodRating: 4,
-    prayerFacilities: 5,
-    bestTimeToVisit: "October to April",
-  },
-  {
-    id: "doha",
-    name: "Doha",
-    country: "Qatar",
-    description: "A rapidly developing city with modern architecture and traditional Islamic values.",
-    image: "/placeholder.svg?height=300&width=500",
-    halalFoodRating: 5,
-    prayerFacilities: 5,
-    bestTimeToVisit: "November to April",
-  },
-  {
-    id: "maldives",
-    name: "Maldives",
-    country: "Maldives",
-    description: "Paradise islands with crystal clear waters and Muslim-friendly resorts.",
-    image: "/placeholder.svg?height=300&width=500",
-    halalFoodRating: 4,
-    prayerFacilities: 4,
-    bestTimeToVisit: "November to April",
-  },
-  {
-    id: "amman",
-    name: "Amman",
-    country: "Jordan",
-    description: "A city with ancient ruins and a gateway to Petra and the Dead Sea.",
-    image: "/placeholder.svg?height=300&width=500",
-    halalFoodRating: 4,
-    prayerFacilities: 5,
-    bestTimeToVisit: "March to May, September to November",
-  },
-  {
-    id: "singapore",
-    name: "Singapore",
-    country: "Singapore",
-    description: "A modern city-state with excellent halal food options and Muslim-friendly attractions.",
-    image: "/placeholder.svg?height=300&width=500",
-    halalFoodRating: 5,
-    prayerFacilities: 4,
-    bestTimeToVisit: "February to April",
-  },
-]
 
 export const metadata = {
   title: "Muslim-Friendly Destinations | The Halal Explorer",
@@ -105,28 +18,147 @@ export const metadata = {
     "Explore our curated list of Muslim-friendly travel destinations with information on halal food, prayer facilities, and local customs.",
 }
 
-export default function DestinationsPage() {
+export default async function DestinationsPage({
+  params,
+}: {
+  params: { slug: string };
+})  {
+  const { slug } = params;
+  const destination: Destination = await getDestinationBySlug(slug);
+  console.log('destination', destination);
+  const imageUrl = _get(destination, 'image.asset.url', '/placeholder.svg');
+  if (!destination) {
+    return <Box sx={{ py: 4, textAlign: "center" }}>Destination not found.</Box>;
+  }
   return (
-    <Box sx={{ py: 4 }}>
+    <>
+      <Box sx={{ position: "relative", height: 500, overflow: "hidden", mb: 4 }}>
+        <div className="destination-image-overlay" style={{ position: "absolute", inset: 0, zIndex: 1 }} />
+        <Image
+          src={imageUrl}
+          alt={`${destination.name}, ${destination.country}`}
+          fill
+          style={{ objectFit: "cover" }}
+          priority
+        />
+        <Box
+          sx={{
+            position: "absolute",
+            bottom: 0,
+            left: 0,
+            right: 0,
+            p: 4,
+            zIndex: 2,
+            color: "white",
+          }}
+        >
+          <Typography variant="h2" component="h1" sx={{ fontWeight: 700 }}>
+            {destination.name}
+          </Typography>
+          <Typography variant="h5" component="h2">
+            {destination.country}
+          </Typography>
+        </Box>
+      </Box>
       <Container maxWidth="lg">
-        <Breadcrumbs sx={{ mb: 4 }}>
-          <Link href="/" style={{ color: "inherit", textDecoration: "none" }}>
-            Home
-          </Link>
-          <Typography color="text.primary">Destinations</Typography>
-        </Breadcrumbs>
+        <Grid container spacing={4}>
+          <Grid item xs={12} md={8}>
+            <Card sx={{ mb: 4 }}>
+              <CardContent>
+                <Typography variant="h4" gutterBottom sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                  <InfoIcon /> About {destination.name}
+                </Typography>
+                <Typography variant="body1" component={"p"} paragraph sx={{ mb: 2 }}>
+                  {destination.description}
+                </Typography>
+              </CardContent>
+            </Card>
 
-        <Typography variant="h3" component="h1" gutterBottom sx={{ fontWeight: 700, mb: 2 }}>
-          Muslim-Friendly Destinations
-        </Typography>
+            {/* Ad between content blocks */}
+            <AdBanner slot="destination-content" format="banner" />
 
-        <Typography variant="body1" paragraph sx={{ mb: 6, maxWidth: "800px" }}>
-          Explore our curated collection of Muslim-friendly destinations around the world. Each destination features
-          detailed information about halal food options, prayer facilities, local customs, and the best times to visit.
-        </Typography>
+            <Card sx={{ mb: 4 }}>
+              <CardContent>
+                <Typography variant="h4" gutterBottom sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                  <RestaurantIcon /> Halal Food Scene
+                </Typography>
+                <Typography variant="body1" paragraph>
+                  {destination.halalFoodInfo}
+                </Typography>
+                {/* <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
+                  {destination.foodTypes.map((type) => (
+                    <Chip key={type} label={type} color="primary" variant="outlined" />
+                  ))}
+                </Box> */}
+              </CardContent>
+            </Card>
 
-        <FeaturedDestinations destinations={destinations} />
+            <Card sx={{ mb: 4 }}>
+              <CardContent>
+                <Typography variant="h4" gutterBottom sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                  <MosqueIcon /> Prayer Facilities
+                </Typography>
+                <Typography variant="body1">{destination.prayerFacilities}</Typography>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardContent>
+                <Typography variant="h4" gutterBottom sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                  <CalendarIcon /> Best Time to Visit
+                </Typography>
+                <Typography variant="body1">{destination.bestTimeToVisit}</Typography>
+              </CardContent>
+            </Card>
+          </Grid>
+
+          <Grid item xs={12} md={4}>
+            {/* Use rectangle format for sidebar - more reliable */}
+            <AdBanner slot="destination-sidebar" format="rectangle" />
+
+            <Card sx={{ mt: 4 }}>
+              <CardContent>
+                <Typography variant="h5" gutterBottom>
+                  Quick Facts
+                </Typography>
+                <Divider sx={{ mb: 2 }} />
+                <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+                  <Box>
+                    <Typography variant="subtitle2" color="primary">
+                      Country
+                    </Typography>
+                    <Typography variant="body2">{destination.country}</Typography>
+                  </Box>
+                  <Box>
+                    <Typography variant="subtitle2" color="primary">
+                      Muslim Population
+                    </Typography>
+                    <Typography variant="body2">{destination.prayerFacilities}</Typography>
+                  </Box>
+                  <Box>
+                    <Typography variant="subtitle2" color="primary">
+                      Primary Language
+                    </Typography>
+                    {/* <Typography variant="body2">{destination.language}</Typography> */}
+                  </Box>
+                  <Box>
+                    <Typography variant="subtitle2" color="primary">
+                      Currency
+                    </Typography>
+                    {/* <Typography variant="body2">{destination.currency}</Typography> */}
+                  </Box>
+                  <Box>
+                    <Typography variant="subtitle2" color="primary">
+                      Best Time to Visit
+                    </Typography>
+                    {/* <Typography variant="body2">{destination.bestTimeToVisit}</Typography> */}
+                  </Box>
+                </Box>
+              </CardContent>
+            </Card>
+          </Grid>
+        </Grid>
       </Container>
-    </Box>
+    </>
   )
 }

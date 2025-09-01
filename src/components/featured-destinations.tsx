@@ -12,17 +12,7 @@ import Chip from "@mui/material/Chip"
 import RestaurantIcon from "@mui/icons-material/Restaurant"
 import MosqueIcon from "@mui/icons-material/Mosque"
 import Link from "next/link"
-
-interface Destination {
-  id: string
-  name: string
-  country: string
-  description: string
-  image: string
-  halalFoodRating: number
-  prayerFacilities: number
-  bestTimeToVisit: string
-}
+import { Destination } from "@/types"
 
 interface FeaturedDestinationsProps {
   destinations: Destination[]
@@ -48,7 +38,7 @@ export default function FeaturedDestinations({ destinations }: FeaturedDestinati
               },
             }}
           >
-            <CardActionArea component={Link} href={`/destinations/${destination.id}`} sx={{ flexGrow: 1 }}>
+            <CardActionArea component={Link} href={`/destinations/${destination.slug}`} sx={{ flexGrow: 1 }}>
               <Box sx={{ position: "relative", height: 220 }}>
                 <CardMedia
                   component="img"

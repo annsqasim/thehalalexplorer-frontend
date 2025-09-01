@@ -2,31 +2,15 @@
 'use client';
 
 import { Autocomplete, TextField } from '@mui/material';
-import { useEffect, useState } from 'react';
-import { client } from '@/lib/sanity';
-import { getDestinationsQuery } from '@/lib/queries';
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import _get from 'lodash/get';
-
-type Destination = {
-  _id: string;
-  name: string;
-  country: string;
-  slug: string;
-};
+import { Destination } from "@/types"
 
 export default function DestinationAutocomplete({ destinations }: { destinations: Destination[] }) {
   const [options, setOptions] = useState(destinations);
   const [inputValue, setInputValue] = useState('');
   const router = useRouter();
-
-//   useEffect(() => {
-//     const fetchData = async () => {
-//       const data: Destination[] = await client.fetch(getDestinationsQuery);
-//       setOptions(data);
-//     };
-//     fetchData();
-//   }, []);
 
   return (
     <Autocomplete
@@ -38,7 +22,7 @@ export default function DestinationAutocomplete({ destinations }: { destinations
       onChange={(_, selectedOption) => {
         console.log('Selected option:', selectedOption);
         if (selectedOption) {
-          router.push(`/destinations/${_get(selectedOption, 'slug.current', selectedOption._id)}`);
+          router.push(`/destinations/${_get(selectedOption, 'slug.current', selectedOption.id)}`);
         }
       }}
       sx={{ width: '100%' }}

@@ -1,103 +1,60 @@
+import { Metadata } from 'next';
+
 import {
-  AppBar,
   Box,
   Button,
   Container,
   Grid,
-  InputBase,
-  Toolbar,
   Typography,
   Card,
   CardMedia,
   CardContent,
   TextField,
   Paper,
-  Stack,
   Link
 } from '@mui/material';
-import { Search } from '@mui/icons-material';
 
-import { client } from '@/lib/sanity';
-import { urlFor } from '@/lib/imageBuilder';
-import Image from 'next/image';
+import { PortableText } from "@portabletext/react";
 import _get from 'lodash/get';
 import DestinationAutocomplete from '@/components/DestinationAutocomplete';
+import { getFeaturedDestinations, getHomepageData } from '@/lib/sanity/queries';
+import { Destination } from "@/types";
+import { AdBanner } from "@/components/AdBanner"
+
+export function getMetadata(homepageData: any): Metadata {
+  return {
+    title: homepageData?.metaTitle || "Default Title",
+    description: homepageData?.metaDescription || "Default description",
+    keywords: homepageData?.metaKeywords || [],
+    openGraph: {
+      title: homepageData?.metaTitle || "Default Title",
+      description: homepageData?.metaDescription || "Default description",
+      images: homepageData?.heroImage?.asset?.url
+        ? [{ url: homepageData.heroImage.asset.url, width: 1200, height: 630 }]
+        : [],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: homepageData?.metaTitle || "Default Title",
+      description: homepageData?.metaDescription || "Default description",
+      images: homepageData?.heroImage?.asset?.url
+        ? [homepageData.heroImage.asset.url]
+        : [],
+    },
+  };
+}
 
 
 export default async function HomePage() {
   // Fetching homepage data from Sanity
-  const query = `*[_type == "homepage"][0]{
-    title,
-    subtitle,
-    description,
-    aboutSection,
-    metaTitle,
-    metaDescription,
-    metaKeywords,
-    heroImage,
-    heroImage {
-      asset->{
-        _id,
-        url
-      }
-    }
-  }`;
 
-  const destinationQuery = `*[_type == "destination"]{
-    _id,
-    name,
-    country,
-    slug,
-    description,
-    halalFoodInfo,
-    prayerFacilities,
-    bestTimeToVisit,
-    isFeatured,
-    image{
-      asset->{
-        url
-      }
-    }
-  }`;
-
-  type Destination = {
-    _id: string;
-    name: string;
-    country: string;
-    slug: string;
-    description: string;
-    halalFoodInfo: string;
-    prayerFacilities: string;
-    bestTimeToVisit: string;
-    isFeatured?: boolean;
-    image: {
-      asset: {
-        url: string;
-      };
-    };
-  };
-
-  const destinations: Destination[] = await client.fetch(destinationQuery);
-
-  const homepageData = await client.fetch(query);
-  console.log('homepageData', homepageData, destinations);
+  const homepageData = await getHomepageData();
+  
+  const featureDestinations = await getFeaturedDestinations();
   const heroImage = homepageData.heroImage?.asset?.url || 'https://source.unsplash.com/1600x900/?travel,muslim';
-  const featured = destinations.filter(dest => dest.isFeatured);
+  const aboutSection = _get(homepageData, 'aboutSection', '');
   return (
     <>
-      {/* Navbar */}
-      {/* <AppBar position="static" color="transparent" elevation={0}>
-        <Toolbar>
-          <Typography variant="h6" sx={{ flexGrow: 1 }}>
-            The Halal Explorer
-          </Typography>
-          <Button color="inherit">Home</Button>
-          <Button color="inherit">Destinations</Button>
-          <Button color="inherit">About</Button>
-          <Button color="inherit">Contact</Button>
-        </Toolbar>
-      </AppBar> */}
-
       {/* Hero Section */}
       <div
         style={{
@@ -117,45 +74,7 @@ export default async function HomePage() {
           <Paper
             sx={{ p: '4px 8px', display: 'flex', alignItems: 'center', mt: 2 }}
           >
-            {/* <Stack direction={{ xs: "column", sm: "row" }} spacing={2}>
-              <Button
-                variant="contained"
-                color="primary"
-                size="large"
-                component={Link}
-                href="/destinations"
-                endIcon={<ArrowForward />}
-                sx={{
-                  px: 4,
-                  py: 1.5,
-                  fontSize: "1rem",
-                  borderRadius: 3,
-                }}
-              >
-                Explore Destinations
-              </Button>
-              <Button
-                variant="outlined"
-                size="large"
-                component={Link}
-                href="/search"
-                sx={{
-                  px: 4,
-                  py: 1.5,
-                  fontSize: "1rem",
-                  borderRadius: 3,
-                  borderColor: "rgba(255, 255, 255, 0.6)",
-                  color: "white",
-                  "&:hover": {
-                    borderColor: "white",
-                    backgroundColor: "rgba(255, 255, 255, 0.1)",
-                  },
-                }}
-              >
-                Find Your Perfect Trip
-              </Button>
-            </Stack> */}
-            <DestinationAutocomplete destinations={destinations} />
+            <DestinationAutocomplete destinations={featureDestinations} />
           </Paper>
         </Container>
       </div>
@@ -165,9 +84,10 @@ export default async function HomePage() {
           Featured Destinations
         </Typography>
         <Grid container spacing={4} sx={{ py: 4 }}>
-          {featured.map((place: Destination, index) => (
-            <Grid key={index} size={4}>
+          {featureDestinations.map((place: Destination) => (
+            <Grid key={place.id} size={4}>
               <Card>
+                <Link href={`/destinations/${place.slug.current}`} style={{ textDecoration: 'none', color: 'inherit' }}>
                 <CardMedia
                   component="img"
                   height="180"
@@ -180,6 +100,7 @@ export default async function HomePage() {
                     {place.description}
                   </Typography>
                 </CardContent>
+                </Link>
               </Card>
             </Grid>
           ))}
@@ -192,17 +113,31 @@ export default async function HomePage() {
           <Typography variant="h4" gutterBottom>
             About The Halal Explorer
           </Typography>
-          <Typography variant="body1">
-            The Halal Explorer is your ultimate companion for planning
-            Muslim-friendly travel experiences around the globe. Whether
-            you're looking for halal food, mosques, or prayer times, we’ve got
-            you covered.
-          </Typography>
+          <PortableText
+            value={aboutSection}
+            components={{
+              types: {},
+              marks: {
+                strong: ({ children }) => <strong className="text-green-700">{children}</strong>,
+              },
+              block: {
+                h3: ({ children }) => <h3 className="text-2xl font-bold mb-2">{children}</h3>,
+                h4: ({ children }) => <h4 className="text-xl font-semibold mb-2">{children}</h4>,
+                normal: ({ children }) => <p className="mb-4">{children}</p>,
+              },
+              list: {
+                bullet: ({ children }) => <ul className="list-disc pl-6">{children}</ul>,
+              },
+              listItem: {
+                bullet: ({ children }) => <li className="mb-2">{children}</li>,
+              },
+            }}
+          />
         </Container>
       </Box>
 
       {/* Newsletter Section */}
-      {/* <Box sx={{ py: 6 }}>
+      <Box sx={{ py: 6 }}>
         <Container>
           <Typography variant="h5" gutterBottom>
             Stay Updated
@@ -218,7 +153,7 @@ export default async function HomePage() {
             </Button>
           </Box>
         </Container>
-      </Box> */}
+      </Box>
 
       {/* Footer */}
         <Container className='footer'>
