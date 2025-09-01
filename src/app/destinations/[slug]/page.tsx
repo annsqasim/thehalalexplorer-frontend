@@ -10,6 +10,7 @@ import { Destination } from "@/types"
 import { getDestinationBySlug } from "@/lib/sanity/queries"
 import Image from "next/image"
 import _get from "lodash/get"
+import { PageProps } from "@/types"
 
 
 export const metadata = {
@@ -18,12 +19,8 @@ export const metadata = {
     "Explore our curated list of Muslim-friendly travel destinations with information on halal food, prayer facilities, and local customs.",
 }
 
-export default async function DestinationsPage({
-  params,
-}: {
-  params: { slug: string };
-})  {
-  const { slug } = params;
+export default async function DestinationsPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
   const destination: Destination = await getDestinationBySlug(slug);
   const imageUrl = _get(destination, 'image.asset.url', '/placeholder.svg');
   if (!destination) {
