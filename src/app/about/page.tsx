@@ -16,6 +16,9 @@ import {
 } from "@mui/material"
 import { CheckCircleOutline, ExploreOutlined } from "@mui/icons-material"
 import Image from "next/image"
+import AboutBg from '../images/about_bg.png'
+import AboutSection from '../images/about-section.jpg'
+import CoreValues from '../images/core_values.jpg'
 
 export default function AboutPage() {
   return (
@@ -44,7 +47,7 @@ export default function AboutPage() {
           }}
         >
           <Image
-            src="/placeholder.svg?height=600&width=1920"
+            src={AboutBg}
             alt="About The Halal Explorer"
             fill
             style={{ objectFit: "cover" }}
@@ -97,7 +100,7 @@ export default function AboutPage() {
           <Grid size={{ xs: 12, md: 6 }} component="div">
             <Box sx={{ position: "relative", height: "100%", minHeight: 300 }}>
               <Image
-                src="/placeholder.svg?height=600&width=800"
+                src={AboutSection}
                 alt="The Halal Explorer team"
                 fill
                 style={{ objectFit: "cover", borderRadius: "12px" }}
@@ -169,7 +172,7 @@ export default function AboutPage() {
           <Grid size={{ xs: 12, md: 6 }} component="div">
             <Box sx={{ position: "relative", height: 400 }}>
               <Image
-                src="/placeholder.svg?height=800&width=600"
+                src={CoreValues}
                 alt="Our values"
                 fill
                 style={{ objectFit: "cover", borderRadius: "12px" }}
@@ -232,7 +235,7 @@ export default function AboutPage() {
 
         <Divider sx={{ my: 8 }} />
 
-        <Box sx={{ textAlign: "center", mb: 6 }}>
+        {/* <Box sx={{ textAlign: "center", mb: 6 }}>
           <Typography variant="h4" component="h2" fontWeight={600} gutterBottom>
             Meet Our Team
           </Typography>
@@ -269,7 +272,7 @@ export default function AboutPage() {
               </Card>
             </Grid>
           ))}
-        </Grid>
+        </Grid> */}
 
         <Divider sx={{ my: 8 }} />
 

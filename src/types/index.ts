@@ -1,6 +1,7 @@
 // src/types/index.ts
 
 export interface Destination {
+    _id: Key | null | undefined;
     _type: string;
     id: number;
     name: string;

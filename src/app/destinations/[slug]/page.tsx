@@ -25,7 +25,6 @@ export default async function DestinationsPage({
 })  {
   const { slug } = params;
   const destination: Destination = await getDestinationBySlug(slug);
-  console.log('destination', destination);
   const imageUrl = _get(destination, 'image.asset.url', '/placeholder.svg');
   if (!destination) {
     return <Box sx={{ py: 4, textAlign: "center" }}>Destination not found.</Box>;

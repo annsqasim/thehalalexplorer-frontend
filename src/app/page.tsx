@@ -85,7 +85,7 @@ export default async function HomePage() {
         </Typography>
         <Grid container spacing={4} sx={{ py: 4 }}>
           {featureDestinations.map((place: Destination) => (
-            <Grid key={place.id} size={4}>
+            <Grid key={place._id} size={4}>
               <Card>
                 <Link href={`/destinations/${place.slug.current}`} style={{ textDecoration: 'none', color: 'inherit' }}>
                 <CardMedia

@@ -3,7 +3,7 @@ import Container from "@mui/material/Container"
 import Typography from "@mui/material/Typography"
 import Breadcrumbs from "@mui/material/Breadcrumbs"
 import Link from "next/link"
-import FeaturedDestinations from "@/components/featured-destinations"
+import DestinationList from "@/components/DestinationList"
 import { getAllDestinations } from "@/lib/sanity/queries"
 import { Destination } from "@/types"
 
@@ -15,6 +15,7 @@ export const metadata = {
 
 export default async function DestinationsPage() {
   const destinations: Destination[] = await getAllDestinations();
+
   return (
     <Box sx={{ py: 4 }}>
       <Container maxWidth="lg">
@@ -33,9 +34,8 @@ export default async function DestinationsPage() {
           Explore our curated collection of Muslim-friendly destinations around the world. Each destination features
           detailed information about halal food options, prayer facilities, local customs, and the best times to visit.
         </Typography>
-
-        <FeaturedDestinations destinations={destinations} />
       </Container>
+      <DestinationList destinations={destinations} />
     </Box>
   )
 }
