@@ -24,7 +24,7 @@ export default function Footer() {
     >
       <Container maxWidth="lg">
         <Grid container spacing={4}>
-          <Grid size={{ xs: 12, md: 4 }}>
+          <Grid xs={12} md={4}>
             <Box display="flex" alignItems="center" mb={2}>
               <ExploreIcon sx={{ mr: 1, color: "primary.main" }} />
               <Typography variant="h6" color="primary.main" fontWeight={700}>
@@ -51,7 +51,7 @@ export default function Footer() {
             </Stack>
           </Grid>
 
-          <Grid size={{ xs: 12, md: 2 }}>
+          <Grid xs={12} md={2}>
             <Typography variant="subtitle1" color="text.primary" gutterBottom fontWeight={600}>
               Explore
             </Typography>
@@ -71,7 +71,7 @@ export default function Footer() {
             </Stack>
           </Grid>
 
-          <Grid size={{ xs: 12, md: 2 }}>
+          <Grid xs={12} md={2}>
             <Typography variant="subtitle1" color="text.primary" gutterBottom fontWeight={600}>
               Resources
             </Typography>
@@ -91,7 +91,7 @@ export default function Footer() {
             </Stack>
           </Grid>
 
-          <Grid size={{ xs: 12, md: 2 }}>
+          <Grid xs={12} md={2}>
             <Typography variant="subtitle1" color="text.primary" gutterBottom fontWeight={600}>
               Company
             </Typography>
@@ -111,7 +111,7 @@ export default function Footer() {
             </Stack>
           </Grid>
 
-          <Grid size={{ xs: 12, md: 2 }}>
+          <Grid xs={12} md={2}>
             <Typography variant="subtitle1" color="text.primary" gutterBottom fontWeight={600}>
               Support
             </Typography>

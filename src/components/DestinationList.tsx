@@ -7,7 +7,7 @@ export default function DestinationList({ destinations }: { destinations: Destin
     <Container maxWidth="lg" className='featured-content'>
         <Grid container spacing={4}>
         {destinations.map((place: Destination) => (
-          <Grid key={place._id} size={4}>
+          <Grid item key={place._id} xs={12} md={6} lg={4}>
             <Card>
                 <Link href={`/destinations/${place.slug.current}`} style={{ textDecoration: 'none', color: 'inherit' }}>
                 <CardMedia

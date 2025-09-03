@@ -1,58 +1,34 @@
-import js from "@eslint/js";
-import globals from "globals";
-import pluginReact from "eslint-plugin-react";
-import * as pluginTs from "@typescript-eslint/eslint-plugin";
-import parserTs from "@typescript-eslint/parser"; // No * here, just import default
-import { defineConfig } from "eslint/config";
+import js from '@eslint/js';
+import tsParser from '@typescript-eslint/parser';
+import tsPlugin from '@typescript-eslint/eslint-plugin';
+import reactPlugin from 'eslint-plugin-react';
+import globals from 'globals';
 
-export default defineConfig([
+export default [
   {
-    files: ["**/*.{js,mjs,cjs,jsx}"],
+    files: ['**/*.{js,jsx,ts,tsx}'],
     languageOptions: {
-      parser: js,
-      globals: globals.browser,
-    },
-    plugins: { js },
-    extends: ["js/recommended"],
-  },
-  {
-    files: ["**/*.{ts,tsx}"],
-    languageOptions: {
-      parser: parserTs,
+      parser: tsParser,
       parserOptions: {
-        project: "./tsconfig.json",
-        tsconfigRootDir: process.cwd(),
-        sourceType: "module",
+        ecmaVersion: 'latest',
+        sourceType: 'module',
+        project: './tsconfig.json',
       },
       globals: globals.browser,
     },
-    plugins: { "@typescript-eslint": pluginTs },
-    extends: [
-      "plugin:@typescript-eslint/recommended",
-      "plugin:react/recommended",       // Add React rules for TS files
-      "plugin:react-hooks/recommended" // Recommended hooks rules
-    ],
+    plugins: {
+      '@typescript-eslint': tsPlugin,
+      react: reactPlugin,
+    },
     rules: {
-      // You can add any overrides or rule customizations here
+      'react/react-in-jsx-scope': 'off',
+      '@typescript-eslint/no-explicit-any': 'warn',
     },
     settings: {
-      react: {
-        version: "detect",
-      },
-    },
-  },
-  // React rules for JS/JSX files outside TS config, keep it at root
-  {
-    files: ["**/*.{js,jsx}"],
-    plugins: { react: pluginReact },
-    extends: ["plugin:react/recommended", "plugin:react-hooks/recommended"],
-    settings: {
-      react: {
-        version: "detect",
-      },
+      react: { version: 'detect' },
     },
   },
   {
-    ignores: ["**/node_modules/**", "**/.next/**", "**/dist/**"],
+    ignores: ['.next/', 'node_modules/',  "next-sitemap.config.js"],
   },
-]);
+];

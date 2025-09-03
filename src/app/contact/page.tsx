@@ -133,7 +133,7 @@ export default function ContactPage() {
 
       <Container maxWidth="lg" sx={{ mb: 8 }}>
         <Grid container spacing={6}>
-          <Grid size={{ xs: 12, md: 5 }}>
+          <Grid item xs={12} md={5}>
             <Typography variant="h4" component="h2" fontWeight={600} gutterBottom>
               Get In Touch
             </Typography>
@@ -198,14 +198,14 @@ export default function ContactPage() {
             </Box>
           </Grid>
 
-          <Grid size={{ xs: 12, md: 7 }}>
+          <Grid item xs={12} md={7}>
             <Paper sx={{ p: 4 }}>
               <Typography variant="h5" component="h3" gutterBottom>
                 Send Us a Message
               </Typography>
               <form onSubmit={handleSubmit}>
                 <Grid container spacing={3}>
-                  <Grid size={{ xs: 12, md: 6 }}>
+                  <Grid item xs={12} md={6}>
                     <TextField
                       required
                       fullWidth
@@ -215,7 +215,7 @@ export default function ContactPage() {
                       onChange={handleChange}
                     />
                   </Grid>
-                  <Grid size={{ xs: 12, md: 6 }}>
+                  <Grid xs={12} md={6}>
                     <TextField
                       required
                       fullWidth
@@ -226,7 +226,7 @@ export default function ContactPage() {
                       onChange={handleChange}
                     />
                   </Grid>
-                  <Grid size={{ xs: 12 }}>
+                  <Grid xs={12}>
                     <TextField
                       required
                       fullWidth
@@ -243,7 +243,7 @@ export default function ContactPage() {
                       <MenuItem value="media">Media Inquiry</MenuItem>
                     </TextField>
                   </Grid>
-                  <Grid size={{ xs: 12 }}>
+                  <Grid xs={12}>
                     <TextField
                       fullWidth
                       label="Subject"
@@ -252,7 +252,7 @@ export default function ContactPage() {
                       onChange={handleChange}
                     />
                   </Grid>
-                  <Grid size={{ xs: 12 }}>
+                  <Grid xs={12}>
                     <TextField
                       required
                       fullWidth
@@ -264,7 +264,7 @@ export default function ContactPage() {
                       onChange={handleChange}
                     />
                   </Grid>
-                  <Grid size={{ xs: 12 }}>
+                  <Grid xs={12} sx={{ textAlign: "right" }}>
                     <Button type="submit" variant="contained" color="primary" size="large" endIcon={<SendIcon />}>
                       Send Message
                     </Button>
@@ -302,7 +302,7 @@ export default function ContactPage() {
                   "We strive to keep our information as up-to-date as possible. Our team regularly reviews and updates destination information, and we also rely on community feedback to alert us to any changes.",
               },
             ].map((faq, index) => (
-              <Grid size={{ xs: 12, md: 6 }} key={index}>
+              <Grid xs={12} md={6} key={index}>
                 <Paper sx={{ p: 3 }}>
                   <Typography variant="h6" gutterBottom>
                     {faq.question}

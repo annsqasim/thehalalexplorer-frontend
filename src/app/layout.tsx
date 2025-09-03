@@ -5,6 +5,7 @@ import "./globals.css"
 import ThemeRegistry from "@/components/theme-registry"
 import Navbar from "@/components/navbar"
 import Footer from "@/components/footer"
+import { Analytics } from '@vercel/analytics/react';
 
 const inter = Inter({ subsets: ["latin"] })
 
@@ -26,7 +27,8 @@ export default function RootLayout({
         <ThemeRegistry>
           <Navbar />
           <main className="min-h-screen">{children}</main>
-          {/* <Footer /> */}
+          <Analytics />
+          <Footer />
         </ThemeRegistry>
       </body>
     </html>

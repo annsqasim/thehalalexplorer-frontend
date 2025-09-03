@@ -346,7 +346,7 @@ export default function ExplorePage() {
           {filteredExperiences.length > 0 ? (
             <Grid container spacing={3}>
               {filteredExperiences.map((experience) => (
-                <Grid key={experience.id} size={{ xs: 12, md: 6 }}>
+                <Grid item key={experience.id} xs={12} sm={6} md={4}>
                   <Card className="destination-card" sx={{ height: "100%", display: "flex", flexDirection: "column" }}>
                     <CardActionArea component={Link} href={`/explore/${experience.id}`}>
                       <CardMedia component="div" sx={{ height: 200, position: "relative" }}>
@@ -431,7 +431,7 @@ export default function ExplorePage() {
 
           <Grid container spacing={3}>
             {allDestinations.slice(0, 6).map((destination) => (
-              <Grid key={destination.id} size={{ xs: 12, md: 6, sm: 4 }}>
+              <Grid key={destination.id} xs={12} sm={6} md={4} item>
                 <Card
                   sx={{
                     position: "relative",

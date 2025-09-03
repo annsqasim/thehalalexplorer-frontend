@@ -78,7 +78,7 @@ export default function AboutPage() {
 
       <Container maxWidth="lg" sx={{ mb: 8 }}>
         <Grid container spacing={6}>
-          <Grid size={{ xs: 12, md: 6 }} component="div">
+          <Grid xs={12} md={6} component="div">
             <Typography variant="h4" component="h2" fontWeight={600} gutterBottom>
               Our Story
             </Typography>
@@ -97,7 +97,7 @@ export default function AboutPage() {
               seeking authentic experiences without compromising their faith and values.
             </Typography>
           </Grid>
-          <Grid size={{ xs: 12, md: 6 }} component="div">
+          <Grid xs={12} md={6} component="div">
             <Box sx={{ position: "relative", height: "100%", minHeight: 300 }}>
               <Image
                 src={AboutSection}
@@ -122,7 +122,7 @@ export default function AboutPage() {
         </Box>
 
         <Grid container spacing={4}>
-          <Grid size={{ xs: 12, md: 4 }}>
+          <Grid xs={12} md={4} component="div">
             <Paper sx={{ p: 4, height: "100%" }}>
               <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
                 <Avatar sx={{ bgcolor: "primary.main", mr: 2 }}>1</Avatar>
@@ -136,7 +136,7 @@ export default function AboutPage() {
               </Typography>
             </Paper>
           </Grid>
-          <Grid size={{ xs: 12, md: 4 }}>
+          <Grid xs={12} md={4} component="div">
             <Paper sx={{ p: 4, height: "100%" }}>
               <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
                 <Avatar sx={{ bgcolor: "primary.main", mr: 2 }}>2</Avatar>
@@ -150,7 +150,7 @@ export default function AboutPage() {
               </Typography>
             </Paper>
           </Grid>
-          <Grid size={{ xs: 12, md: 4 }}>
+          <Grid xs={12} md={4} component="div">
             <Paper sx={{ p: 4, height: "100%" }}>
               <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
                 <Avatar sx={{ bgcolor: "primary.main", mr: 2 }}>3</Avatar>
@@ -169,7 +169,7 @@ export default function AboutPage() {
         <Divider sx={{ my: 8 }} />
 
         <Grid container spacing={6} alignItems="center">
-          <Grid size={{ xs: 12, md: 6 }} component="div">
+          <Grid xs={12} md={6} component="div">
             <Box sx={{ position: "relative", height: 400 }}>
               <Image
                 src={CoreValues}
@@ -179,7 +179,7 @@ export default function AboutPage() {
               />
             </Box>
           </Grid>
-          <Grid size={{ xs: 12, md: 6 }} component="div">
+          <Grid xs={12} md={6} component="div">
             <Typography variant="h4" component="h2" fontWeight={600} gutterBottom>
               Our Values
             </Typography>

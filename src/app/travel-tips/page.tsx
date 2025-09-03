@@ -258,7 +258,7 @@ export default function TravelTipsPage() {
         <TabPanel value={tabValue} index={0}>
           <Grid container spacing={4}>
             {travelTips.map((tip) => (
-              <Grid key={tip.id} size={{ xs: 12, md: 4, sm: 6 }}>
+              <Grid key={tip.id} xs={12} md={4} sm={6}>
                 <Card
                   className="destination-card"
                   sx={{ height: "100%", display: "flex", flexDirection: "column" }}
@@ -296,7 +296,7 @@ export default function TravelTipsPage() {
           </Typography>
 
           <Grid container spacing={4}>
-            <Grid size={{ xs: 12, md: 6 }}>
+            <Grid xs={12} md={6}>
               <Paper sx={{ p: 3 }}>
                 <Typography variant="h6" gutterBottom fontWeight={600}>
                   Research Before You Go
@@ -332,7 +332,7 @@ export default function TravelTipsPage() {
                 </List>
               </Paper>
             </Grid>
-            <Grid size={{ xs: 12, md: 6 }}>
+            <Grid xs={12} md={6}>
               <Paper sx={{ p: 3 }}>
                 <Typography variant="h6" gutterBottom fontWeight={600}>
                   When Halal Options Are Limited
@@ -378,7 +378,7 @@ export default function TravelTipsPage() {
               {travelTips
                 .filter((tip) => tip.category === "Food")
                 .map((tip) => (
-                  <Grid key={tip.id} size={{ xs: 12, md: 4, sm: 6 }}>
+                  <Grid key={tip.id} xs={12} md={6} sm={6}>
                     <Card
                       className="destination-card"
                       sx={{ height: "100%", display: "flex", flexDirection: "column" }}
@@ -421,7 +421,7 @@ export default function TravelTipsPage() {
           </Typography>
           
           <Grid container spacing={4}>
-            <Grid size={{ xs: 12, md: 6 }}>
+            <Grid xs={12} md={6}>
               <Paper sx={{ p: 3 }}>
                 <Typography variant="h6" gutterBottom fontWeight={600}>
                   Prayer Apps & Tools
@@ -457,7 +457,7 @@ export default function TravelTipsPage() {
                 </List>
               </Paper>
             </Grid>
-            <Grid size={{ xs: 12, md: 6 }}>
+            <Grid xs={12} md={6}>
               <Paper sx={{ p: 3 }}>
                 <Typography variant="h6" gutterBottom fontWeight={600}>
                   Finding Prayer Spaces
@@ -546,7 +546,7 @@ export default function TravelTipsPage() {
                 icon: <FamilyRestroom color="primary" sx={{ fontSize: 40 }} />,
               },
             ].map((tip, index) => (
-              <Grid key={index} size={{ xs: 12, md: 4, sm: 6 }}>
+              <Grid key={index} xs={12} md={4} sm={6}>
                 <Paper sx={{ p: 3, height: "100%", display: "flex", flexDirection: "column" }}>
                   <Box sx={{ display: "flex", justifyContent: "center", mb: 2 }}>{tip.icon}</Box>
                   <Typography variant="h6" component="h3" gutterBottom textAlign="center">

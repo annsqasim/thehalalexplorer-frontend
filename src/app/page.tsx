@@ -21,7 +21,9 @@ import { getFeaturedDestinations, getHomepageData } from '@/lib/sanity/queries';
 import { Destination } from "@/types";
 import { AdBanner } from "@/components/AdBanner"
 
-export function getMetadata(homepageData: any): Metadata {
+export async function generateMetadata(): Promise<Metadata> {
+  const homepageData = await getHomepageData();
+
   return {
     title: homepageData?.metaTitle || "Default Title",
     description: homepageData?.metaDescription || "Default description",
@@ -79,27 +81,37 @@ export default async function HomePage() {
         </Container>
       </div>
 
-      <Container maxWidth="lg" className='featured-content' sx={{ py: 4 }}>
+      <Container maxWidth="lg" className="featured-content" sx={{ py: 4 }}>
         <Typography variant="h3" gutterBottom>
           Featured Destinations
         </Typography>
-        <Grid container spacing={4} sx={{ py: 4 }}>
+
+        <Grid container spacing={4}> {/* Use spacing={3} for both row & column gaps */}
           {featureDestinations.map((place: Destination) => (
-            <Grid key={place._id} size={4}>
-              <Card>
-                <Link href={`/destinations/${place.slug.current}`} style={{ textDecoration: 'none', color: 'inherit' }}>
-                <CardMedia
-                  component="img"
-                  height="180"
-                  image={_get(place, 'image.asset.url', 'https://source.unsplash.com/1600x900/?travel,muslim')}
-                  alt={place.name}
-                />
-                <CardContent>
-                  <Typography variant="h6">{place.name}</Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    {place.description}
-                  </Typography>
-                </CardContent>
+            <Grid item key={place._id} xs={12} sm={6} md={3} lg={4}>
+              <Card sx={{ height: "100%" }}>
+                <Link
+                  href={`/destinations/${place.slug.current}`}
+                  style={{ textDecoration: "none", color: "inherit" }}
+                >
+                  <CardMedia
+                    component="img"
+                    height="200"
+                    image={
+                      _get(
+                        place,
+                        "image.asset.url",
+                        "https://source.unsplash.com/1600x900/?travel,muslim"
+                      )
+                    }
+                    alt={place.name}
+                  />
+                  <CardContent>
+                    <Typography variant="h6">{place.name}</Typography>
+                    <Typography variant="body2" color="text.secondary" noWrap>
+                      {place.description}
+                    </Typography>
+                  </CardContent>
                 </Link>
               </Card>
             </Grid>

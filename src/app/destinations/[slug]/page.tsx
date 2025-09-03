@@ -1,5 +1,6 @@
 import Box from "@mui/material/Box"
-import { Container, Grid, CardContent, Card, Chip, Divider } from "@mui/material"
+import { Container, CardContent, Card, Chip, Divider } from "@mui/material"
+import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography"
 import Breadcrumbs from "@mui/material/Breadcrumbs"
 import Link from "next/link"
@@ -58,7 +59,7 @@ export default async function DestinationsPage({ params }: { params: Promise<{ s
       </Box>
       <Container maxWidth="lg">
         <Grid container spacing={4}>
-          <Grid item xs={12} md={8}>
+          <Grid item xs={12} md={8} {...({} as any)}>
             <Card sx={{ mb: 4 }}>
               <CardContent>
                 <Typography variant="h4" gutterBottom sx={{ display: "flex", alignItems: "center", gap: 1 }}>
@@ -108,7 +109,7 @@ export default async function DestinationsPage({ params }: { params: Promise<{ s
             </Card>
           </Grid>
 
-          <Grid item xs={12} md={4}>
+          <Grid item xs={12} md={4} {...({} as any)}>
             {/* Use rectangle format for sidebar - more reliable */}
             <AdBanner slot="destination-sidebar" format="rectangle" />
 

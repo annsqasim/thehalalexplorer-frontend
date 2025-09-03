@@ -22,10 +22,11 @@
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
-    "@emotion/styled": "^11.14.0",
-    "@mui/icons-material": "^7.1.0",
-    "@mui/material": "^7.1.1",
-    "@mui/material-nextjs": "^7.1.0",
+    "@emotion/styled": "^11.14.1",
+    "@mui/icons-material": "^5.15.20",
+    "@mui/material": "^5.15.20",
+    "@mui/system": "^5.15.20",
+    "@mui/utils": "^5.15.20",
     "@portabletext/react": "^3.2.1",
     "@radix-ui/react-accordion": "1.2.2",
     "@radix-ui/react-alert-dialog": "1.1.4",
@@ -56,6 +57,7 @@
     "@radix-ui/react-tooltip": "1.1.6",
     "@sanity/client": "^7.0.0",
     "@sanity/image-url": "^1.1.0",
+    "@vercel/analytics": "^1.5.0",
     "class-variance-authority": "^0.7.1",
     "cmdk": "^1.1.1",
     "embla-carousel-react": "^8.6.0",
@@ -77,19 +79,20 @@
     "vaul": "^1.1.2"
   },
   "devDependencies": {
-    "@eslint/js": "^9.29.0",
+    "@eslint/js": "^9.34.0",
     "@types/lodash": "^4.17.17",
-    "@types/react": "^18.3.0",
-    "@types/react-dom": "^18.3.0",
+    "@types/react": "^18.3.24",
+    "@types/react-dom": "^18.3.7",
     "@typescript-eslint/eslint-plugin": "^8.41.0",
     "@typescript-eslint/parser": "^8.41.0",
-    "eslint": "^9.29.0",
+    "eslint": "^9.34.0",
     "eslint-plugin-jsx-a11y": "^6.8.0",
     "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-react-hooks": "^5.0.0",
-    "globals": "^16.2.0",
+    "globals": "^16.3.0",
     "prettier": "^3.2.5",
     "prettier-plugin-tailwindcss": "^0.6.11",
-    "typescript": "^5.4.5"
+    "typescript": "^5.9.2",
+    "typescript-eslint": "^8.41.0"
   }
 }

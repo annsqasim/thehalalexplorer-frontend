@@ -23,9 +23,11 @@
         "name": "next"
       }
     ],
-    "baseUrl": ".",         
-    "paths": {              
-      "@/*": ["src/*"]
+    "baseUrl": ".",
+    "paths": {
+      "@/*": [
+        "src/*"
+      ]
     }
   },
   "include": [
@@ -35,6 +37,7 @@
     ".next/types/**/*.ts"
   ],
   "exclude": [
-    "node_modules"
+    "node_modules",
+    "next-sitemap.config.js"
   ]
 }
