@@ -55,64 +55,6 @@ function TabPanel(props: TabPanelProps) {
   )
 }
 
-// Mock travel tips articles
-const travelTips = [
-  {
-    id: 1,
-    title: "Finding Halal Food While Traveling",
-    category: "Food",
-    image: "/placeholder.svg?height=300&width=500",
-    excerpt:
-      "Discover strategies for finding authentic halal food options in any destination, from apps to local recommendations.",
-    readTime: "5 min read",
-  },
-  {
-    id: 2,
-    title: "Prayer Times and Qibla Direction on the Go",
-    category: "Prayer",
-    image: "/placeholder.svg?height=300&width=500",
-    excerpt:
-      "Learn about the best apps and tools to help you maintain your prayer schedule and find the qibla direction while traveling.",
-    readTime: "4 min read",
-  },
-  {
-    id: 3,
-    title: "Packing Essentials for Muslim Travelers",
-    category: "Packing",
-    image: "/placeholder.svg?height=300&width=500",
-    excerpt:
-      "A comprehensive packing list for Muslim travelers, including modest clothing options and travel prayer mats.",
-    readTime: "7 min read",
-  },
-  {
-    id: 4,
-    title: "Navigating Ramadan While Traveling",
-    category: "Ramadan",
-    image: "/placeholder.svg?height=300&width=500",
-    excerpt:
-      "Tips for maintaining your fast and finding iftar meals while exploring new destinations during Ramadan.",
-    readTime: "6 min read",
-  },
-  {
-    id: 5,
-    title: "Muslim-Friendly Beach Destinations",
-    category: "Destinations",
-    image: "/placeholder.svg?height=300&width=500",
-    excerpt:
-      "Discover beautiful beach destinations with private beaches, modest swimwear options, and halal dining.",
-    readTime: "8 min read",
-  },
-  {
-    id: 6,
-    title: "Traveling with Family: Muslim Parent Guide",
-    category: "Family",
-    image: "/placeholder.svg?height=300&width=500",
-    excerpt:
-      "Practical advice for Muslim parents traveling with children, including activities and accommodation tips.",
-    readTime: "9 min read",
-  },
-]
-
 export default function TravelTipsPage() {
   const [tabValue, setTabValue] = useState(0)
 
@@ -256,9 +198,9 @@ export default function TravelTipsPage() {
 
         {/* Tab Panels */}
         <TabPanel value={tabValue} index={0}>
-          <Grid container spacing={4}>
-            {travelTips.map((tip) => (
-              <Grid key={tip.id} xs={12} md={4} sm={6}>
+          <Grid container spacing={2}>
+            {/* {travelTips.map((tip) => (
+              <Grid key={tip.id} xs={12} md={4} sm={6} padding={1}>
                 <Card
                   className="destination-card"
                   sx={{ height: "100%", display: "flex", flexDirection: "column" }}
@@ -282,7 +224,7 @@ export default function TravelTipsPage() {
                   </CardActionArea>
                 </Card>
               </Grid>
-            ))}
+            ))} */}
           </Grid>
         </TabPanel>
 
@@ -374,7 +316,7 @@ export default function TravelTipsPage() {
             <Typography variant="h6" gutterBottom fontWeight={600}>
               Related Food Articles
             </Typography>
-            <Grid container spacing={3}>
+            {/* <Grid container spacing={3}>
               {travelTips
                 .filter((tip) => tip.category === "Food")
                 .map((tip) => (
@@ -407,7 +349,7 @@ export default function TravelTipsPage() {
                     </Card>
                   </Grid>
                 ))}
-            </Grid>
+            </Grid> */}
           </Box>
         </TabPanel>
 
@@ -546,7 +488,7 @@ export default function TravelTipsPage() {
                 icon: <FamilyRestroom color="primary" sx={{ fontSize: 40 }} />,
               },
             ].map((tip, index) => (
-              <Grid key={index} xs={12} md={4} sm={6}>
+              <Grid key={index} xs={12} md={4} sm={6} padding={2}>
                 <Paper sx={{ p: 3, height: "100%", display: "flex", flexDirection: "column" }}>
                   <Box sx={{ display: "flex", justifyContent: "center", mb: 2 }}>{tip.icon}</Box>
                   <Typography variant="h6" component="h3" gutterBottom textAlign="center">

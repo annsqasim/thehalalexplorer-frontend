@@ -115,7 +115,7 @@ export default function NewsletterSignup() {
               disabled={isSubmitting}
               endIcon={<SendIcon />}
               sx={{
-                px: 4,
+                px: 6,
                 height: { sm: "56px" },
                 whiteSpace: "nowrap",
                 alignSelf: { xs: "stretch", sm: "auto" },

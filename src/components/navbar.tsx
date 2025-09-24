@@ -1,6 +1,7 @@
 "use client"
 
 import * as React from "react"
+import Image from "next/image"
 import AppBar from "@mui/material/AppBar"
 import Box from "@mui/material/Box"
 import Toolbar from "@mui/material/Toolbar"
@@ -17,10 +18,11 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { useEffect, useState } from "react"
 
+
 const pages = [
   { name: "Home", path: "/" },
   { name: "Destinations", path: "/destinations" },
-  { name: "Explore", path: "/explore" },
+  // { name: "Explore", path: "/explore" },
   { name: "Travel Tips", path: "/travel-tips" },
   { name: "About", path: "/about" },
   { name: "Contact", path: "/contact" },
@@ -69,7 +71,7 @@ function Navbar() {
         <Toolbar disableGutters sx={{ py: { xs: 1.5, md: 1 }, px: { xs: 1, md: 2 } }}>
           {/* Desktop Logo */}
           <Box sx={{ display: { xs: "none", md: "flex" }, alignItems: "center" }}>
-            <ExploreIcon sx={{ fontSize: 28, color: "#5e8b7e", mr: 1 }} />
+            {/* <ExploreIcon sx={{ fontSize: 28, color: "#5e8b7e", mr: 1 }} />
             <Typography
               variant="h6"
               noWrap
@@ -83,7 +85,8 @@ function Navbar() {
               }}
             >
               The Halal Explorer
-            </Typography>
+            </Typography> */}
+            <Image src="/the-logo.svg" alt="The Halal Explorer" width={180} height={40} />
           </Box>
 
           {/* Mobile Menu */}

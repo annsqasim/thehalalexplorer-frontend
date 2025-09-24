@@ -30,3 +30,17 @@ export interface Destination {
 export interface PageProps {
   params: { slug: string };
 }
+
+export interface Blog {
+  _id: Key | null | undefined;
+  title: string;
+  slug: string
+  content: {
+    _type: string;
+    children: {
+      _type: string;
+      text: string;
+    }[];
+  }[];
+  publishedAt: string;
+}

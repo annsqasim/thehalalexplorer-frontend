@@ -82,3 +82,23 @@ export async function getHomepageData() {
 
   return await client.fetch(query);
 }
+
+export async function getAllBlogPosts() {
+  const query = `*[_type == "blog"]{
+    title,
+    slug,
+    shortDescription,
+    mainImage{
+      asset->{
+        url
+      }
+    },
+    author,
+    publishedAt,
+    categories,
+    metaTitle,
+    metaDescription
+  }`;
+
+  return await client.fetch(query);
+}
