@@ -120,7 +120,7 @@ export default function TravelTipsClient({ blogs }: { blogs: Blog[] }) {
     const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
       setTabValue(newValue)
     }
-  
+    console.log(blogs);
     return (
       <Box>
         {/* Hero Section */}

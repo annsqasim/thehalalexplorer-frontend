@@ -32,6 +32,7 @@ import {
 import { useState } from "react"
 import Image from "next/image"
 import Link from "next/link"
+import { getAllBlogPosts } from "@/lib/sanity/queries"
 
 interface TabPanelProps {
   children?: React.ReactNode
@@ -55,12 +56,15 @@ function TabPanel(props: TabPanelProps) {
   )
 }
 
-export default function TravelTipsPage() {
+export default async function TravelTipsPage() {
   const [tabValue, setTabValue] = useState(0)
 
   const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
     setTabValue(newValue)
   }
+
+  // const blogs = await getAllBlogPosts();
+  // console.log(blogs);
 
   return (
     <Box>
