@@ -1,14 +1,15 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Box, Chip, Container, Typography, Paper } from "@mui/material";
+import type { Blog } from "@/types";
 import { getAllBlogPosts } from "@/lib/sanity/queries";
 
 export const revalidate = 60; // ISR
 
 export default async function BlogIndexPage() {
-  const posts = await getAllBlogPosts();
-  const featured = Array.isArray(posts) && posts.length > 0 ? posts[0] : null;
-  const rest = Array.isArray(posts) && posts.length > 1 ? posts.slice(1) : [];
+  const posts: Blog[] = await getAllBlogPosts();
+  const featured: Blog | null = Array.isArray(posts) && posts.length > 0 ? posts[0] : null;
+  const rest: Blog[] = Array.isArray(posts) && posts.length > 1 ? posts.slice(1) : [];
 
   return (
     <div className="container mx-auto px-4 py-10">
@@ -62,7 +63,7 @@ export default async function BlogIndexPage() {
       )}
 
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {rest?.map((post: any) => (
+        {rest?.map((post) => (
           <article key={post._id} className="border rounded-lg overflow-hidden hover:shadow-md transition-shadow">
             {post?.mainImage?.asset?.url && (
               <Link href={`/blog/${post.slug?.current}`}> 

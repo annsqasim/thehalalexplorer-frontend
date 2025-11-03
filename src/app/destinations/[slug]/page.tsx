@@ -60,7 +60,7 @@ export default async function DestinationsPage({ params }: { params: Promise<{ s
       </Box>
       <Container maxWidth="lg">
         <Grid container spacing={4}>
-          <Grid item xs={12} md={8} {...({} as any)}>
+          <Grid item xs={12} md={8}>
             <Card sx={{ mb: 4 }}>
               <CardContent>
                 <Typography variant="h4" gutterBottom sx={{ display: "flex", alignItems: "center", gap: 1 }}>
@@ -110,7 +110,7 @@ export default async function DestinationsPage({ params }: { params: Promise<{ s
             </Card>
           </Grid>
 
-          <Grid item xs={12} md={4} {...({} as any)}>
+          <Grid item xs={12} md={4}>
             {/* Use rectangle format for sidebar - more reliable */}
             <AdBanner slot="destination-sidebar" format="rectangle" />
 

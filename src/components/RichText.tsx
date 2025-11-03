@@ -9,7 +9,6 @@ const components: PortableTextComponents = {
       const url = value?.asset?.url;
       if (!url) return null;
       return (
-        // eslint-disable-next-line @next/next/no-img-element
         <img src={url} alt={value?.alt || ""} className="my-6 rounded-md" />
       );
     },
@@ -45,7 +44,7 @@ const components: PortableTextComponents = {
   },
 };
 
-export default function RichText({ value }: { value: any }) {
+export default function RichText({ value }: { value: unknown }) {
   return <PortableText value={value} components={components} />;
 }
 

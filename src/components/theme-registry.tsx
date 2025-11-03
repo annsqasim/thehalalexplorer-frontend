@@ -5,9 +5,12 @@ import createCache from "@emotion/cache";
 import { useServerInsertedHTML } from "next/navigation";
 import { CacheProvider } from "@emotion/react";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
+import type { Shadows } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 
 // Create a custom theme
+const customShadows: Shadows = Array(25).fill("none") as unknown as Shadows;
+
 const theme = createTheme({
   palette: {
     primary: { main: "#5e8b7e", light: "#a9b78a", dark: "#3a5a40", contrastText: "#ffffff" },
@@ -19,7 +22,7 @@ const theme = createTheme({
     fontFamily: '"Inter", "SF Pro Display", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
   },
   shape: { borderRadius: 4 },
-  shadows: Array(25).fill("none") as any,
+  shadows: customShadows,
   components: {
     MuiPaper: {
       defaultProps: { elevation: 0 },
