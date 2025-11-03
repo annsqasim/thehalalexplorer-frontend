@@ -1,6 +1,7 @@
 "use client";
 
 import { PortableText, PortableTextComponents } from "@portabletext/react";
+import type { PortableTextBlock } from "@portabletext/types";
 
 const components: PortableTextComponents = {
   types: {
@@ -44,7 +45,7 @@ const components: PortableTextComponents = {
   },
 };
 
-export default function RichText({ value }: { value: unknown }) {
+export default function RichText({ value }: { value: PortableTextBlock[] }) {
   return <PortableText value={value} components={components} />;
 }
 
