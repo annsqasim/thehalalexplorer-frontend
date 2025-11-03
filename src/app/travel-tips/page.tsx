@@ -29,7 +29,7 @@ import {
   AttachMoney,
   HealthAndSafety,
 } from "@mui/icons-material"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import Image from "next/image"
 import Link from "next/link"
 import { getAllBlogPosts } from "@/lib/sanity/queries"
@@ -56,15 +56,29 @@ function TabPanel(props: TabPanelProps) {
   )
 }
 
-export default async function TravelTipsPage() {
+export default function TravelTipsPage() {
   const [tabValue, setTabValue] = useState(0)
+  const [posts, setPosts] = useState<any[]>([])
+  const [loading, setLoading] = useState(true)
 
   const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
     setTabValue(newValue)
   }
 
-  // const blogs = await getAllBlogPosts();
-  // console.log(blogs);
+  useEffect(() => {
+    let mounted = true
+    ;(async () => {
+      try {
+        const data = await getAllBlogPosts()
+        if (mounted) setPosts(Array.isArray(data) ? data : [])
+      } finally {
+        if (mounted) setLoading(false)
+      }
+    })()
+    return () => {
+      mounted = false
+    }
+  }, [])
 
   return (
     <Box>
@@ -184,18 +198,20 @@ export default async function TravelTipsPage() {
             <Box sx={{ position: "relative", zIndex: 1, p: { xs: 3, md: 5 }, width: "100%" }}>
               <Chip label="Featured" color="secondary" sx={{ mb: 2 }} />
               <Typography variant="h3" component="h2" sx={{ color: "white", fontWeight: 700, mb: 2 }}>
-                Essential Muslim Travel Tips for 2023
+                {posts?.[0]?.title || "Latest from our Blog"}
               </Typography>
               <Typography variant="body1" sx={{ color: "white", mb: 3, maxWidth: "800px" }}>
-                Our comprehensive guide to navigating the world as a Muslim traveler, with updated information for 2023
-                including post-pandemic considerations and new Muslim-friendly destinations.
+                {posts?.[0]?.shortDescription || "Discover tips, guides and halal-friendly travel insights from our editors."}
               </Typography>
-              <Box sx={{ display: "flex", alignItems: "center", color: "white" }}>
-                <Typography variant="body2" sx={{ mr: 3 }}>
-                  12 min read
-                </Typography>
-                <Typography variant="body2">Updated: May 10, 2023</Typography>
-              </Box>
+              {!!posts?.[0] && (
+                <Box sx={{ display: "flex", alignItems: "center", color: "white" }}>
+                  {posts?.[0]?.publishedAt && (
+                    <Typography variant="body2">
+                      {new Date(posts[0].publishedAt).toLocaleDateString()}
+                    </Typography>
+                  )}
+                </Box>
+              )}
             </Box>
           </Paper>
         </Box>
@@ -203,32 +219,50 @@ export default async function TravelTipsPage() {
         {/* Tab Panels */}
         <TabPanel value={tabValue} index={0}>
           <Grid container spacing={2}>
-            {/* {travelTips.map((tip) => (
-              <Grid key={tip.id} xs={12} md={4} sm={6} padding={1}>
-                <Card
-                  className="destination-card"
-                  sx={{ height: "100%", display: "flex", flexDirection: "column" }}
-                >
-                  <CardActionArea component={Link} href={`/travel-tips/${tip.id}`}>
+            {loading &&
+              Array.from({ length: 6 }).map((_, i) => (
+                <Grid key={i} xs={12} md={4} sm={6} padding={1}>
+                  <Card sx={{ height: "100%" }}>
+                    <CardMedia component="div" sx={{ height: 200, bgcolor: "grey.200" }} />
+                    <CardContent>
+                      <Typography variant="h6" sx={{ mb: 1, bgcolor: "grey.200", height: 28, borderRadius: 1 }} />
+                      <Typography variant="body2" sx={{ bgcolor: "grey.100", height: 18, borderRadius: 1 }} />
+                    </CardContent>
+                  </Card>
+                </Grid>
+              ))}
+
+            {!loading && posts.map((post) => (
+              <Grid key={post._id} xs={12} md={4} sm={6} padding={1}>
+                <Card className="destination-card" sx={{ height: "100%", display: "flex", flexDirection: "column" }}>
+                  <CardActionArea component={Link} href={`/blog/${post.slug?.current}`}>
                     <CardMedia component="div" sx={{ height: 200, position: "relative" }}>
-                      <Image src={tip.image || "/placeholder.svg"} alt={tip.title} fill style={{ objectFit: "cover" }} />
+                      <Image
+                        src={post?.mainImage?.asset?.url || "/placeholder.svg"}
+                        alt={post.title}
+                        fill
+                        style={{ objectFit: "cover" }}
+                      />
                     </CardMedia>
                     <CardContent sx={{ flexGrow: 1 }}>
-                      <Chip label={tip.category} size="small" color="primary" sx={{ mb: 1 }} />
                       <Typography gutterBottom variant="h6" component="h3">
-                        {tip.title}
+                        {post.title}
                       </Typography>
-                      <Typography variant="body2" color="text.secondary" paragraph>
-                        {tip.excerpt}
-                      </Typography>
-                      <Typography variant="caption" color="text.secondary">
-                        {tip.readTime}
-                      </Typography>
+                      {post.shortDescription && (
+                        <Typography variant="body2" color="text.secondary" paragraph>
+                          {post.shortDescription}
+                        </Typography>
+                      )}
+                      {post.publishedAt && (
+                        <Typography variant="caption" color="text.secondary">
+                          {new Date(post.publishedAt).toLocaleDateString()}
+                        </Typography>
+                      )}
                     </CardContent>
                   </CardActionArea>
                 </Card>
               </Grid>
-            ))} */}
+            ))}
           </Grid>
         </TabPanel>
 
@@ -443,69 +477,6 @@ export default async function TravelTipsPage() {
         </TabPanel>
 
         <Divider sx={{ my: 8 }} />
-
-        {/* Quick Tips Section */}
-        <Box sx={{ mb: 8 }}>
-          <Typography variant="h4" component="h2" fontWeight={600} gutterBottom textAlign="center">
-            Quick Travel Tips
-          </Typography>
-          <Typography variant="body1" paragraph textAlign="center" sx={{ maxWidth: "800px", mx: "auto", mb: 4 }}>
-            Essential advice for Muslim travelers to make your journey smoother and more enjoyable.
-          </Typography>
-
-          <Grid container spacing={3}>
-            {[
-              {
-                title: "Research Local Customs",
-                description:
-                  "Understand the local customs and dress codes of your destination, especially regarding modest dress.",
-                icon: <Language color="primary" sx={{ fontSize: 40 }} />,
-              },
-              {
-                title: "Pack Modestly",
-                description:
-                  "Pack lightweight, modest clothing that's appropriate for different activities and weather conditions.",
-                icon: <Luggage color="primary" sx={{ fontSize: 40 }} />,
-              },
-              {
-                title: "Download Essential Apps",
-                description:
-                  "Prayer times, qibla finder, halal food locator, and translation apps are must-haves for Muslim travelers.",
-                icon: <Mosque color="primary" sx={{ fontSize: 40 }} />,
-              },
-              {
-                title: "Carry Travel Documents",
-                description:
-                  "Keep copies of important documents like passports, visas, and travel insurance in both digital and physical formats.",
-                icon: <HealthAndSafety color="primary" sx={{ fontSize: 40 }} />,
-              },
-              {
-                title: "Budget for Halal Options",
-                description:
-                  "Halal restaurants might be more expensive in some destinations, so budget accordingly.",
-                icon: <AttachMoney color="primary" sx={{ fontSize: 40 }} />,
-              },
-              {
-                title: "Connect with Local Muslims",
-                description:
-                  "Reach out to local Muslim communities for insider tips on halal food, prayer spaces, and attractions.",
-                icon: <FamilyRestroom color="primary" sx={{ fontSize: 40 }} />,
-              },
-            ].map((tip, index) => (
-              <Grid key={index} xs={12} md={4} sm={6} padding={2}>
-                <Paper sx={{ p: 3, height: "100%", display: "flex", flexDirection: "column" }}>
-                  <Box sx={{ display: "flex", justifyContent: "center", mb: 2 }}>{tip.icon}</Box>
-                  <Typography variant="h6" component="h3" gutterBottom textAlign="center">
-                    {tip.title}
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary" textAlign="center">
-                    {tip.description}
-                  </Typography>
-                </Paper>
-              </Grid>
-            ))}
-          </Grid>
-        </Box>
       </Container>
     </Box>
   )

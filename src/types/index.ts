@@ -34,8 +34,14 @@ export interface PageProps {
 export interface Blog {
   _id: Key | null | undefined;
   title: string;
-  slug: string
-  content: {
+  slug: { current: string };
+  shortDescription?: string;
+  mainImage?: { asset?: { url?: string } };
+  author?: string;
+  categories?: string[];
+  metaTitle?: string;
+  metaDescription?: string;
+  body: {
     _type: string;
     children: {
       _type: string;

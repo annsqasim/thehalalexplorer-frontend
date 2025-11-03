@@ -84,9 +84,10 @@ export async function getHomepageData() {
 }
 
 export async function getAllBlogPosts() {
-  const query = `*[_type == "blog"]{
+  const query = `*[_type == "blog"] | order(publishedAt desc){
+    _id,
     title,
-    slug,
+    slug { current },
     shortDescription,
     mainImage{
       asset->{
@@ -96,9 +97,32 @@ export async function getAllBlogPosts() {
     author,
     publishedAt,
     categories,
+    isFeatured,
     metaTitle,
     metaDescription
   }`;
 
   return await client.fetch(query);
+}
+
+export async function getBlogBySlug(slug: string) {
+  const query = `*[_type == "blog" && slug.current == $slug][0]{
+    _id,
+    title,
+    slug { current },
+    shortDescription,
+    mainImage{asset->{url}},
+    author,
+    publishedAt,
+    categories,
+    metaTitle,
+    metaDescription,
+    body
+  }`;
+  return await client.fetch(query, { slug });
+}
+
+export async function getAllBlogSlugs() {
+  const query = `*[_type == "blog" && defined(slug.current)][].slug.current`;
+  return await client.fetch<string[]>(query);
 }

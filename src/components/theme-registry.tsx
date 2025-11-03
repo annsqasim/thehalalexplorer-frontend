@@ -18,7 +18,33 @@ const theme = createTheme({
   typography: {
     fontFamily: '"Inter", "SF Pro Display", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
   },
-  shape: { borderRadius: 16 },
+  shape: { borderRadius: 4 },
+  shadows: Array(25).fill("none") as any,
+  components: {
+    MuiPaper: {
+      defaultProps: { elevation: 0 },
+      styleOverrides: {
+        root: {
+          boxShadow: "none",
+          border: "1px solid rgba(0,0,0,0.10)",
+          borderRadius: 4,
+        },
+      },
+    },
+    MuiCard: {
+      defaultProps: { elevation: 0 },
+      styleOverrides: {
+        root: {
+          boxShadow: "none",
+          border: "1px solid rgba(0,0,0,0.10)",
+          borderRadius: 4,
+        },
+      },
+    },
+    MuiButton: {
+      defaultProps: { disableElevation: true },
+    },
+  },
 });
 
 export default function ThemeRegistry({ children }: { children: React.ReactNode }) {

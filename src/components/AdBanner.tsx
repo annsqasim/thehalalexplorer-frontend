@@ -9,6 +9,7 @@ interface Props {
 
 export function AdBanner({ slot, format = "fluid" }: Props) {
   const adRef = useRef<HTMLDivElement | null>(null)
+  const clientId = process.env.NEXT_PUBLIC_ADSENSE_CLIENT || "ca-pub-5911518106581623"
 
   useEffect(() => {
     if (!adRef.current) return
@@ -62,6 +63,8 @@ export function AdBanner({ slot, format = "fluid" }: Props) {
     }
   }
 
+  // Always render; clientId falls back to your provided publisher ID
+
   return (
     <Paper
       elevation={1}
@@ -86,7 +89,7 @@ export function AdBanner({ slot, format = "fluid" }: Props) {
           width: "100%",
           minWidth: `${getMinWidth()}px`,
         }}
-        data-ad-client="ca-pub-YOUR-ADSENSE-ID"
+        data-ad-client={clientId}
         data-ad-slot={slot}
         data-ad-format={format}
         data-full-width-responsive="true"

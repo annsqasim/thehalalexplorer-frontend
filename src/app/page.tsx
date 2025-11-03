@@ -17,7 +17,7 @@ import {
 import { PortableText } from "@portabletext/react";
 import _get from 'lodash/get';
 import DestinationAutocomplete from '@/components/DestinationAutocomplete';
-import { getFeaturedDestinations, getHomepageData } from '@/lib/sanity/queries';
+import { getFeaturedDestinations, getHomepageData, getAllDestinations } from '@/lib/sanity/queries';
 import { Destination } from "@/types";
 import { AdBanner } from "@/components/AdBanner"
 
@@ -53,6 +53,7 @@ export default async function HomePage() {
   const homepageData = await getHomepageData();
   
   const featureDestinations = await getFeaturedDestinations();
+  const allDestinations = await getAllDestinations();
   const heroImage = homepageData.heroImage?.asset?.url || 'https://source.unsplash.com/1600x900/?travel,muslim';
   const aboutSection = _get(homepageData, 'aboutSection', '');
   return (
@@ -73,10 +74,8 @@ export default async function HomePage() {
           <Typography variant="h3" color="white" gutterBottom>
             Discover Muslim-Friendly Destinations
           </Typography>
-          <Paper
-            sx={{ p: '4px 8px', display: 'flex', alignItems: 'center', mt: 2 }}
-          >
-            <DestinationAutocomplete destinations={featureDestinations} />
+          <Paper sx={{ p: '4px 8px', display: 'flex', alignItems: 'center', mt: 2 }}>
+            <DestinationAutocomplete destinations={allDestinations} />
           </Paper>
         </Container>
       </div>

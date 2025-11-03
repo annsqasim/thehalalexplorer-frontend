@@ -108,6 +108,16 @@ export default function ContactPage() {
             style={{ objectFit: "cover" }}
             priority
           />
+          <Box
+            sx={{
+              position: "absolute",
+              top: 0,
+              left: 0,
+              width: "100%",
+              height: "100%",
+              background: "linear-gradient(to bottom, rgba(0,0,0,0.15), rgba(0,0,0,0.6))",
+            }}
+          />
         </Box>
         <Container maxWidth="lg" sx={{ position: "relative", zIndex: 1 }}>
           <Typography
@@ -215,7 +225,7 @@ export default function ContactPage() {
                       onChange={handleChange}
                     />
                   </Grid>
-                  <Grid xs={12} md={6}>
+                  <Grid item xs={12} md={6}>
                     <TextField
                       required
                       fullWidth
@@ -226,7 +236,7 @@ export default function ContactPage() {
                       onChange={handleChange}
                     />
                   </Grid>
-                  <Grid xs={12}>
+                  <Grid item xs={12}>
                     <TextField
                       required
                       fullWidth
@@ -243,7 +253,7 @@ export default function ContactPage() {
                       <MenuItem value="media">Media Inquiry</MenuItem>
                     </TextField>
                   </Grid>
-                  <Grid xs={12}>
+                  <Grid item xs={12}>
                     <TextField
                       fullWidth
                       label="Subject"
@@ -252,7 +262,7 @@ export default function ContactPage() {
                       onChange={handleChange}
                     />
                   </Grid>
-                  <Grid xs={12}>
+                  <Grid item xs={12}>
                     <TextField
                       required
                       fullWidth
@@ -264,7 +274,7 @@ export default function ContactPage() {
                       onChange={handleChange}
                     />
                   </Grid>
-                  <Grid xs={12} sx={{ textAlign: "right" }}>
+                  <Grid item xs={12} sx={{ textAlign: "right" }}>
                     <Button type="submit" variant="contained" color="primary" size="large" endIcon={<SendIcon />}>
                       Send Message
                     </Button>
@@ -302,7 +312,7 @@ export default function ContactPage() {
                   "We strive to keep our information as up-to-date as possible. Our team regularly reviews and updates destination information, and we also rely on community feedback to alert us to any changes.",
               },
             ].map((faq, index) => (
-              <Grid xs={12} md={6} key={index}>
+              <Grid item xs={12} md={6} key={index}>
                 <Paper sx={{ p: 3 }}>
                   <Typography variant="h6" gutterBottom>
                     {faq.question}

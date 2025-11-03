@@ -12,6 +12,7 @@ import { getDestinationBySlug } from "@/lib/sanity/queries"
 import Image from "next/image"
 import _get from "lodash/get"
 import { PageProps } from "@/types"
+import PrayerTimes from "@/components/PrayerTimes"
 
 
 export const metadata = {
@@ -153,6 +154,9 @@ export default async function DestinationsPage({ params }: { params: Promise<{ s
                 </Box>
               </CardContent>
             </Card>
+
+            {/* Prayer times for this destination */}
+            <PrayerTimes city={destination.name} country={destination.country} />
           </Grid>
         </Grid>
       </Container>
