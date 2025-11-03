@@ -6,17 +6,16 @@ import { getAllBlogSlugs, getBlogBySlug } from "@/lib/sanity/queries";
 
 export const revalidate = 60; // ISR
 
-type PageProps = {
-  params: { slug: string };
-};
+type PageParams = Promise<{ slug: string }>;
 
 export async function generateStaticParams() {
   const slugs = await getAllBlogSlugs();
   return (slugs || []).map((slug) => ({ slug }));
 }
 
-export async function generateMetadata({ params }: PageProps) {
-  const post = await getBlogBySlug(params.slug);
+export async function generateMetadata({ params }: { params: PageParams }) {
+  const { slug } = await params;
+  const post = await getBlogBySlug(slug);
   if (!post) return {};
   return {
     title: post.metaTitle || post.title,
@@ -29,8 +28,9 @@ export async function generateMetadata({ params }: PageProps) {
   };
 }
 
-export default async function BlogPostPage({ params }: PageProps) {
-  const post = await getBlogBySlug(params.slug);
+export default async function BlogPostPage({ params }: { params: PageParams }) {
+  const { slug } = await params;
+  const post = await getBlogBySlug(slug);
   if (!post) return notFound();
 
   return (
