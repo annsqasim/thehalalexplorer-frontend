@@ -126,3 +126,8 @@ export async function getAllBlogSlugs() {
   const query = `*[_type == "blog" && defined(slug.current)][].slug.current`;
   return await client.fetch<string[]>(query);
 }
+
+export async function getAllDestinationSlugs() {
+  const query = `*[_type == "destination" && defined(slug.current)][].slug.current`;
+  return await client.fetch<string[]>(query);
+}

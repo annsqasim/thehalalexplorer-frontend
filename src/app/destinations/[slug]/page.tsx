@@ -4,11 +4,12 @@ import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography"
 import Breadcrumbs from "@mui/material/Breadcrumbs"
 import Link from "next/link"
+import { notFound } from "next/navigation"
 import FeaturedDestinations from "@/components/featured-destinations"
 import { AdBanner } from "@/components/AdBanner"
 import { MosqueIcon, RestaurantIcon, CalendarIcon, InfoIcon } from "@/components/Icons"
 import { Destination } from "@/types"
-import { getDestinationBySlug } from "@/lib/sanity/queries"
+import { getDestinationBySlug, getAllDestinationSlugs } from "@/lib/sanity/queries"
 import Image from "next/image"
 import _get from "lodash/get"
 import { PageProps } from "@/types"
@@ -21,12 +22,19 @@ export const metadata = {
     "Explore our curated list of Muslim-friendly travel destinations with information on halal food, prayer facilities, and local customs.",
 }
 
+export const revalidate = 60; // ISR
+
+export async function generateStaticParams() {
+  const slugs = await getAllDestinationSlugs();
+  return (slugs || []).map((slug) => ({ slug }));
+}
+
 export default async function DestinationsPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const destination: Destination = await getDestinationBySlug(slug);
   const imageUrl = _get(destination, 'image.asset.url', '/placeholder.svg');
   if (!destination) {
-    return <Box sx={{ py: 4, textAlign: "center" }}>Destination not found.</Box>;
+    notFound();
   }
   return (
     <>
