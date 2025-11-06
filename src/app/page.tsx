@@ -1,5 +1,4 @@
 import { Metadata } from 'next';
-import { Head } from 'next/document';
 
 import {
   Box,
@@ -59,13 +58,6 @@ export default async function HomePage() {
   const aboutSection = _get(homepageData, 'aboutSection', '');
   return (
     <>
-      <Head>
-        <script
-          async
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5911518106581623"
-          crossOrigin="anonymous" />
-          <meta name="google-adsense-account" content="ca-pub-5911518106581623"></meta>
-      </Head>
       {/* Hero Section */}
       <div
         style={{
