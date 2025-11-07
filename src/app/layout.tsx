@@ -60,7 +60,10 @@ export const metadata: Metadata = {
     ],
     apple: "/apple-touch-icon.png",
   },
-}
+};
+
+const ADSENSE_CLIENT = process.env.NEXT_PUBLIC_ADSENSE_CLIENT; // ca-pub-...
+const GOOGLE_SITE_VERIFICATION = process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION; // the exact token Google gave you
 
 export default function RootLayout({
   children,
@@ -71,17 +74,24 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <head>
-          <meta name="google-adsense-account" content="ca-pub-5911518106581623" />
+          {/* Put site verification meta here (server-rendered) */}
+          {GOOGLE_SITE_VERIFICATION && (
+            <meta name="google-site-verification" content="qkD-WldpRfqgjVToUTfSI3jILgKRb8YpVFMf2H0LGbE" />
+          )}
+
+          {/* (Optional) If AdSense asked for a meta specifically, add it exactly as provided */}
+          {/* <meta name="google-adsense-account" content="ca-pub-XXXXXXXXXXXX" /> */}
         </head>
-        <Script
-          id="adsbygoogle-init"
-          async
-          src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${process.env.NEXT_PUBLIC_ADSENSE_CLIENT || 'ca-pub-5911518106581623'}`}
-          crossOrigin="anonymous"
-          strategy="afterInteractive"
-        />
         <ThemeRegistry>
           <Navbar />
+            {/* Load AdSense script only in production */}
+            {ADSENSE_CLIENT && process.env.NODE_ENV === "production" && (
+              <Script
+                src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADSENSE_CLIENT}`}
+                strategy="afterInteractive"
+                crossOrigin="anonymous"
+              />
+            )}
           {process.env.NEXT_PUBLIC_ADSENSE_SLOT_TOP && (
             <div className="container mx-auto px-4">
               <AdBanner slot={process.env.NEXT_PUBLIC_ADSENSE_SLOT_TOP as string} format="fluid" />
