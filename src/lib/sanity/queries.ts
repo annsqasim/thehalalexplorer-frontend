@@ -84,12 +84,12 @@ export async function getHomepageData() {
 }
 
 export async function getAllBlogPosts() {
-  const query = `*[_type == "blog"] | order(publishedAt desc){
+  const query = `*[_type == "blog"] | order(publishedAt desc) {
     _id,
     title,
     slug { current },
     shortDescription,
-    mainImage{
+    mainImage {
       asset->{
         url
       }
