@@ -1,41 +1,86 @@
-import Box from "@mui/material/Box"
-import Container from "@mui/material/Container"
-import Typography from "@mui/material/Typography"
-import Breadcrumbs from "@mui/material/Breadcrumbs"
-import Link from "next/link"
-import DestinationList from "@/components/DestinationList"
-import { getAllDestinations } from "@/lib/sanity/queries"
-import { Destination } from "@/types"
+import { Metadata } from "next";
+import { Section, SectionHeader } from "@/components/Section";
+import { DestinationCard } from "@/components/DestinationCard";
+import { getAllDestinations } from "@/lib/sanity/queries";
+import { Destination } from "@/types";
+import _get from "lodash/get";
+import { destinationsPageContent } from "@/data/destinations";
+import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
 
-export const metadata = {
+export const metadata: Metadata = {
   title: "Muslim-Friendly Destinations | The Halal Explorer",
   description:
     "Explore our curated list of Muslim-friendly travel destinations with information on halal food, prayer facilities, and local customs.",
-}
+  openGraph: {
+    title: "Muslim-Friendly Destinations | The Halal Explorer",
+    description: "Explore our curated list of Muslim-friendly travel destinations",
+  },
+};
 
 export default async function DestinationsPage() {
   const destinations: Destination[] = await getAllDestinations();
 
   return (
-    <Box sx={{ py: 4 }}>
-      <Container maxWidth="lg">
-        <Breadcrumbs sx={{ mb: 4 }}>
-          <Link href="/" style={{ color: "inherit", textDecoration: "none" }}>
-            Home
-          </Link>
-          <Typography color="text.primary">Destinations</Typography>
-        </Breadcrumbs>
+    <>
+      {/* Hero Section */}
+      <section className="relative bg-gradient-to-br from-brand-emerald-600 via-brand-emerald-700 to-brand-emerald-800 text-white py-20 md:py-28">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <Breadcrumb className="mb-8">
+            <BreadcrumbList>
+              <BreadcrumbItem>
+                <BreadcrumbLink href="/" className="text-white/80 hover:text-white">
+                  Home
+                </BreadcrumbLink>
+              </BreadcrumbItem>
+              <BreadcrumbSeparator className="text-white/50" />
+              <BreadcrumbItem>
+                <BreadcrumbPage className="text-white">Destinations</BreadcrumbPage>
+              </BreadcrumbItem>
+            </BreadcrumbList>
+          </Breadcrumb>
+          
+          <div className="max-w-4xl">
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6">
+              Muslim-Friendly Destinations
+            </h1>
+            <p className="text-xl md:text-2xl text-white/90 leading-relaxed">
+              Discover destinations that welcome and accommodate Muslim travelers with halal food, prayer facilities, and cultural understanding.
+            </p>
+          </div>
+        </div>
+      </section>
 
-        <Typography variant="h3" component="h1" gutterBottom sx={{ fontWeight: 700, mb: 2 }}>
-          Muslim-Friendly Destinations
-        </Typography>
+      {/* SEO Intro Section */}
+      <Section className="bg-white">
+        <div className="max-w-4xl mx-auto">
+          <div className="prose prose-lg max-w-none">
+            <p className="text-gray-700 leading-relaxed whitespace-pre-line">
+              {destinationsPageContent.seoIntro}
+            </p>
+          </div>
+        </div>
+      </Section>
 
-        <Typography variant="body1" paragraph sx={{ mb: 6, maxWidth: "800px" }}>
-          Explore our curated collection of Muslim-friendly destinations around the world. Each destination features
-          detailed information about halal food options, prayer facilities, local customs, and the best times to visit.
-        </Typography>
-      </Container>
-      <DestinationList destinations={destinations} />
-    </Box>
-  )
+      {/* Destinations Grid */}
+      <Section className="bg-gray-50">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
+          {destinations.map((destination: Destination, index: number) => (
+            <DestinationCard
+              key={destination._id}
+              name={destination.name}
+              country={destination.country}
+              description={destination.description}
+              imageUrl={_get(
+                destination,
+                "image.asset.url",
+                "https://source.unsplash.com/600x400/?travel,muslim"
+              )}
+              slug={destination.slug.current}
+              index={index}
+            />
+          ))}
+        </div>
+      </Section>
+    </>
+  );
 }

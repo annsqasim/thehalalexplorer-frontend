@@ -1,44 +1,36 @@
 import { Metadata } from 'next';
-
-import {
-  Box,
-  Button,
-  Container,
-  Grid,
-  Typography,
-  Card,
-  CardMedia,
-  CardContent,
-  TextField,
-  Paper,
-  Link
-} from '@mui/material';
-
-import { PortableText } from "@portabletext/react";
-import _get from 'lodash/get';
-import DestinationAutocomplete from '@/components/DestinationAutocomplete';
+import { Hero } from '@/components/Hero';
+import { Section, SectionHeader } from '@/components/Section';
+import { DestinationCard } from '@/components/DestinationCard';
+import { FeatureCard } from '@/components/FeatureCard';
+import { TestimonialCard } from '@/components/TestimonialCard';
+import { Button } from '@/components/ui/button';
+import { Shield, Heart, Users, ArrowRight } from 'lucide-react';
+import Link from 'next/link';
 import { getFeaturedDestinations, getHomepageData, getAllDestinations } from '@/lib/sanity/queries';
 import { Destination } from "@/types";
-import { AdBanner } from "@/components/AdBanner"
+import _get from 'lodash/get';
+import { homepageContent } from '@/data/homepage';
+import DestinationAutocomplete from '@/components/DestinationAutocomplete';
 
 export async function generateMetadata(): Promise<Metadata> {
   const homepageData = await getHomepageData();
 
   return {
-    title: homepageData?.metaTitle || "Default Title",
-    description: homepageData?.metaDescription || "Default description",
-    keywords: homepageData?.metaKeywords || [],
+    title: homepageData?.metaTitle || "The Halal Explorer - Muslim-Friendly Travel Destinations",
+    description: homepageData?.metaDescription || "Discover Muslim-friendly travel destinations around the world with information on halal food, mosques, prayer timings, and local customs.",
+    keywords: homepageData?.metaKeywords || ["Halal Travel", "Muslim-Friendly Destinations", "Halal Food", "Islamic Travel"],
     openGraph: {
-      title: homepageData?.metaTitle || "Default Title",
-      description: homepageData?.metaDescription || "Default description",
+      title: homepageData?.metaTitle || "The Halal Explorer - Muslim-Friendly Travel Destinations",
+      description: homepageData?.metaDescription || "Discover Muslim-friendly travel destinations around the world",
       images: homepageData?.heroImage?.asset?.url
         ? [{ url: homepageData.heroImage.asset.url, width: 1200, height: 630 }]
         : [],
     },
     twitter: {
       card: "summary_large_image",
-      title: homepageData?.metaTitle || "Default Title",
-      description: homepageData?.metaDescription || "Default description",
+      title: homepageData?.metaTitle || "The Halal Explorer - Muslim-Friendly Travel Destinations",
+      description: homepageData?.metaDescription || "Discover Muslim-friendly travel destinations around the world",
       images: homepageData?.heroImage?.asset?.url
         ? [homepageData.heroImage.asset.url]
         : [],
@@ -46,133 +38,135 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-
 export default async function HomePage() {
-  // Fetching homepage data from Sanity
-
   const homepageData = await getHomepageData();
-  
-  const featureDestinations = await getFeaturedDestinations();
+  const featuredDestinations = await getFeaturedDestinations();
   const allDestinations = await getAllDestinations();
-  const heroImage = homepageData.heroImage?.asset?.url || 'https://source.unsplash.com/1600x900/?travel,muslim';
-  const aboutSection = _get(homepageData, 'aboutSection', '');
+  const heroImage = homepageData?.heroImage?.asset?.url || 'https://source.unsplash.com/1600x900/?travel,muslim';
+
+  // Get up to 6 featured destinations
+  const displayDestinations = featuredDestinations.slice(0, 6);
+
   return (
     <>
       {/* Hero Section */}
-      <div
-        style={{
-          height: '60vh',
-          backgroundImage: `url(${heroImage})`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          display: 'flex',
-          alignItems: 'center',
-          position: 'relative',
-        }}
-      >
-        <Container maxWidth="lg" className='hero-content'>
-          <Typography variant="h3" color="white" gutterBottom>
-            Discover Muslim-Friendly Destinations
-          </Typography>
-          <Paper sx={{ p: '4px 8px', display: 'flex', alignItems: 'center', mt: 2 }}>
+      <Hero
+        headline={homepageContent.hero.headline}
+        subtext={homepageContent.hero.subtext}
+        primaryCta={homepageContent.hero.primaryCta}
+        secondaryCta={homepageContent.hero.secondaryCta}
+        backgroundImage={heroImage}
+      />
+
+      {/* Search Bar Section */}
+      <Section className="bg-white -mt-16 relative z-20">
+        <div className="max-w-4xl mx-auto">
+          <div className="bg-white rounded-2xl shadow-large p-6 border border-gray-100">
             <DestinationAutocomplete destinations={allDestinations} />
-          </Paper>
-        </Container>
-      </div>
+          </div>
+        </div>
+      </Section>
 
-      <Container maxWidth="lg" className="featured-content" sx={{ py: 4 }}>
-        <Typography variant="h3" gutterBottom>
-          Featured Destinations
-        </Typography>
-
-        <Grid container spacing={4}> {/* Use spacing={3} for both row & column gaps */}
-          {featureDestinations.map((place: Destination) => (
-            <Grid item key={place._id} xs={12} sm={6} md={3} lg={4}>
-              <Card sx={{ height: "100%" }}>
-                <Link
-                  href={`/destinations/${place.slug.current}`}
-                  style={{ textDecoration: "none", color: "inherit" }}
-                >
-                  <CardMedia
-                    component="img"
-                    height="200"
-                    image={
-                      _get(
-                        place,
-                        "image.asset.url",
-                        "https://source.unsplash.com/1600x900/?travel,muslim"
-                      )
-                    }
-                    alt={place.name}
-                  />
-                  <CardContent>
-                    <Typography variant="h6">{place.name}</Typography>
-                    <Typography variant="body2" color="text.secondary" noWrap>
-                      {place.description}
-                    </Typography>
-                  </CardContent>
-                </Link>
-              </Card>
-            </Grid>
+      {/* Featured Destinations */}
+      <Section className="bg-gray-50">
+        <SectionHeader
+          title="Featured Destinations"
+          description="Discover handpicked Muslim-friendly destinations that offer authentic experiences, halal cuisine, and welcoming communities."
+        />
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
+          {displayDestinations.map((destination: Destination, index: number) => (
+            <DestinationCard
+              key={destination._id}
+              name={destination.name}
+              country={destination.country}
+              description={destination.description}
+              imageUrl={_get(destination, 'image.asset.url', 'https://source.unsplash.com/600x400/?travel,muslim')}
+              slug={destination.slug.current}
+              index={index}
+            />
           ))}
-        </Grid>
-      </Container>
+        </div>
+        <div className="text-center mt-12">
+          <Button asChild size="lg" className="bg-brand-emerald-600 hover:bg-brand-emerald-700">
+            <Link href="/destinations">
+              View All Destinations
+              <ArrowRight className="ml-2 h-5 w-5" />
+            </Link>
+          </Button>
+        </div>
+      </Section>
 
-      {/* About Section */}
-      <Box sx={{ bgcolor: '#f5f5f5', py: 6 }}>
-        <Container>
-          <Typography variant="h4" gutterBottom>
-            About The Halal Explorer
-          </Typography>
-          <PortableText
-            value={aboutSection}
-            components={{
-              types: {},
-              marks: {
-                strong: ({ children }) => <strong className="text-green-700">{children}</strong>,
-              },
-              block: {
-                h3: ({ children }) => <h3 className="text-2xl font-bold mb-2">{children}</h3>,
-                h4: ({ children }) => <h4 className="text-xl font-semibold mb-2">{children}</h4>,
-                normal: ({ children }) => <p className="mb-4">{children}</p>,
-              },
-              list: {
-                bullet: ({ children }) => <ul className="list-disc pl-6">{children}</ul>,
-              },
-              listItem: {
-                bullet: ({ children }) => <li className="mb-2">{children}</li>,
-              },
-            }}
-          />
-        </Container>
-      </Box>
+      {/* Why The Halal Explorer */}
+      <Section className="bg-white">
+        <SectionHeader
+          title={homepageContent.whySection.title}
+          subtitle={homepageContent.whySection.subtitle}
+        />
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {homepageContent.whySection.features.map((feature, index) => {
+            let Icon;
+            switch (feature.icon) {
+              case 'trust':
+                Icon = Shield;
+                break;
+              case 'faith':
+                Icon = Heart;
+                break;
+              case 'community':
+                Icon = Users;
+                break;
+              default:
+                Icon = Shield;
+            }
+            return (
+              <FeatureCard
+                key={index}
+                icon={<Icon className="h-10 w-10" />}
+                title={feature.title}
+                description={feature.description}
+                index={index}
+              />
+            );
+          })}
+        </div>
+      </Section>
 
-      {/* Newsletter Section */}
-      <Box sx={{ py: 6 }}>
-        <Container>
-          <Typography variant="h5" gutterBottom>
-            Stay Updated
-          </Typography>
-          <Typography variant="body2" sx={{ mb: 2 }}>
-            Subscribe to our newsletter to receive travel tips, destination
-            highlights, and more.
-          </Typography>
-          <Box component="form" sx={{ display: 'flex', maxWidth: 400 }}>
-            <TextField fullWidth label="Your email" variant="outlined" size="small" />
-            <Button variant="contained" sx={{ ml: 2 }}>
-              Subscribe
-            </Button>
-          </Box>
-        </Container>
-      </Box>
+      {/* Testimonials */}
+      <Section className="bg-brand-sand-50">
+        <SectionHeader
+          title="What Our Community Says"
+          description="Real experiences from Muslim travelers around the world"
+        />
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {homepageContent.testimonials.map((testimonial, index) => (
+            <TestimonialCard
+              key={index}
+              quote={testimonial.quote}
+              author={testimonial.author}
+              location={testimonial.location}
+              index={index}
+            />
+          ))}
+        </div>
+      </Section>
 
-      {/* Footer */}
-        <Container className='footer'>
-          <Typography variant="body2" color='text.secondary' align="center" sx={{ py: 2 }}>
-            &copy; {new Date().getFullYear()} The Halal Explorer. All rights
-            reserved.
-          </Typography>
-        </Container>
+      {/* About Preview */}
+      <Section className="bg-white">
+        <div className="max-w-4xl mx-auto text-center">
+          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">
+            {homepageContent.aboutPreview.title}
+          </h2>
+          <p className="text-lg text-gray-600 mb-8 leading-relaxed">
+            {homepageContent.aboutPreview.description}
+          </p>
+          <Button asChild size="lg" variant="outline" className="border-brand-emerald-600 text-brand-emerald-600 hover:bg-brand-emerald-50">
+            <Link href={homepageContent.aboutPreview.cta.href}>
+              {homepageContent.aboutPreview.cta.text}
+              <ArrowRight className="ml-2 h-5 w-5" />
+            </Link>
+          </Button>
+        </div>
+      </Section>
     </>
   );
 }

@@ -1,142 +1,170 @@
-import Box from "@mui/material/Box"
-import Container from "@mui/material/Container"
-import Typography from "@mui/material/Typography"
-import Grid from "@mui/material/Grid"
-import Link from "@mui/material/Link"
-import Stack from "@mui/material/Stack"
-import FacebookIcon from "@mui/icons-material/Facebook"
-import TwitterIcon from "@mui/icons-material/Twitter"
-import InstagramIcon from "@mui/icons-material/Instagram"
-import YouTubeIcon from "@mui/icons-material/YouTube"
-import ExploreIcon from "@mui/icons-material/Explore"
+import Link from "next/link";
+import { Section } from "@/components/Section";
+import { Separator } from "@/components/ui/separator";
+import { Facebook, Twitter, Instagram, Youtube, MapPin } from "lucide-react";
 
 export default function Footer() {
   return (
-    <Box
-      component="footer"
-      sx={{
-        bgcolor: "background.paper",
-        py: 6,
-        borderTop: "1px solid",
-        borderColor: "divider",
-        mt: "auto",
-      }}
-    >
-      <Container maxWidth="lg">
-        <Grid container spacing={4}>
-          <Grid xs={12} md={4}>
-            <Box display="flex" alignItems="center" mb={2}>
-              <ExploreIcon sx={{ mr: 1, color: "primary.main" }} />
-              <Typography variant="h6" color="primary.main" fontWeight={700}>
-                The Halal Explorer
-              </Typography>
-            </Box>
-            <Typography variant="body2" color="text.secondary" paragraph>
-              Your comprehensive guide to Muslim-friendly travel destinations around the world. Discover places with
-              halal food, prayer facilities, and cultural insights.
-            </Typography>
-            <Stack direction="row" spacing={1}>
-              <Link href="#" color="inherit">
-                <FacebookIcon />
+    <footer className="bg-gray-900 text-gray-300">
+      <Section className="py-12 md:py-16">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
+          {/* Brand Column */}
+          <div className="lg:col-span-1">
+            <div className="flex items-center gap-2 mb-4">
+              <MapPin className="h-6 w-6 text-brand-emerald-500" />
+              <h3 className="text-xl font-bold text-white">The Halal Explorer</h3>
+            </div>
+            <p className="text-sm text-gray-400 mb-6 leading-relaxed">
+              Your comprehensive guide to Muslim-friendly travel destinations around the world. Discover places with halal food, prayer facilities, and cultural insights.
+            </p>
+            <div className="flex gap-4">
+              <Link
+                href="#"
+                className="text-gray-400 hover:text-brand-emerald-400 transition-colors"
+                aria-label="Facebook"
+              >
+                <Facebook className="h-5 w-5" />
               </Link>
-              <Link href="#" color="inherit">
-                <TwitterIcon />
+              <Link
+                href="#"
+                className="text-gray-400 hover:text-brand-emerald-400 transition-colors"
+                aria-label="Twitter"
+              >
+                <Twitter className="h-5 w-5" />
               </Link>
-              <Link href="#" color="inherit">
-                <InstagramIcon />
+              <Link
+                href="#"
+                className="text-gray-400 hover:text-brand-emerald-400 transition-colors"
+                aria-label="Instagram"
+              >
+                <Instagram className="h-5 w-5" />
               </Link>
-              <Link href="#" color="inherit">
-                <YouTubeIcon />
+              <Link
+                href="#"
+                className="text-gray-400 hover:text-brand-emerald-400 transition-colors"
+                aria-label="YouTube"
+              >
+                <Youtube className="h-5 w-5" />
               </Link>
-            </Stack>
-          </Grid>
+            </div>
+          </div>
 
-          <Grid xs={12} md={2}>
-            <Typography variant="subtitle1" color="text.primary" gutterBottom fontWeight={600}>
-              Explore
-            </Typography>
-            <Stack>
-              <Link href="/" color="text.secondary" underline="hover" sx={{ mb: 1 }}>
-                Home
-              </Link>
-              <Link href="/destinations" color="text.secondary" underline="hover" sx={{ mb: 1 }}>
-                Destinations
-              </Link>
-              <Link href="/search" color="text.secondary" underline="hover" sx={{ mb: 1 }}>
-                Search
-              </Link>
-              <Link href="/blog" color="text.secondary" underline="hover">
-                Travel Blog
-              </Link>
-            </Stack>
-          </Grid>
+          {/* Explore Column */}
+          <div>
+            <h4 className="text-white font-semibold mb-4">Explore</h4>
+            <ul className="space-y-3">
+              <li>
+                <Link
+                  href="/"
+                  className="text-sm text-gray-400 hover:text-brand-emerald-400 transition-colors"
+                >
+                  Home
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/destinations"
+                  className="text-sm text-gray-400 hover:text-brand-emerald-400 transition-colors"
+                >
+                  Destinations
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/blog"
+                  className="text-sm text-gray-400 hover:text-brand-emerald-400 transition-colors"
+                >
+                  Travel Blog
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/search"
+                  className="text-sm text-gray-400 hover:text-brand-emerald-400 transition-colors"
+                >
+                  Search
+                </Link>
+              </li>
+            </ul>
+          </div>
 
-          <Grid xs={12} md={2}>
-            <Typography variant="subtitle1" color="text.primary" gutterBottom fontWeight={600}>
-              Resources
-            </Typography>
-            <Stack>
-              <Link href="/prayer-times" color="text.secondary" underline="hover" sx={{ mb: 1 }}>
-                Prayer Times
-              </Link>
-              <Link href="/halal-food-guide" color="text.secondary" underline="hover" sx={{ mb: 1 }}>
-                Halal Food Guide
-              </Link>
-              <Link href="/travel-tips" color="text.secondary" underline="hover" sx={{ mb: 1 }}>
-                Travel Tips
-              </Link>
-              <Link href="/faq" color="text.secondary" underline="hover">
-                FAQ
-              </Link>
-            </Stack>
-          </Grid>
+          {/* Resources Column */}
+          <div>
+            <h4 className="text-white font-semibold mb-4">Resources</h4>
+            <ul className="space-y-3">
+              <li>
+                <Link
+                  href="/travel-tips"
+                  className="text-sm text-gray-400 hover:text-brand-emerald-400 transition-colors"
+                >
+                  Travel Tips
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/about"
+                  className="text-sm text-gray-400 hover:text-brand-emerald-400 transition-colors"
+                >
+                  About Us
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/contact"
+                  className="text-sm text-gray-400 hover:text-brand-emerald-400 transition-colors"
+                >
+                  Contact
+                </Link>
+              </li>
+            </ul>
+          </div>
 
-          <Grid xs={12} md={2}>
-            <Typography variant="subtitle1" color="text.primary" gutterBottom fontWeight={600}>
-              Company
-            </Typography>
-            <Stack>
-              <Link href="/about" color="text.secondary" underline="hover" sx={{ mb: 1 }}>
-                About Us
-              </Link>
-              <Link href="/contact" color="text.secondary" underline="hover" sx={{ mb: 1 }}>
-                Contact
-              </Link>
-              <Link href="/privacy" color="text.secondary" underline="hover" sx={{ mb: 1 }}>
-                Privacy Policy
-              </Link>
-              <Link href="/terms" color="text.secondary" underline="hover">
-                Terms of Service
-              </Link>
-            </Stack>
-          </Grid>
+          {/* Company Column */}
+          <div>
+            <h4 className="text-white font-semibold mb-4">Company</h4>
+            <ul className="space-y-3">
+              <li>
+                <Link
+                  href="/about"
+                  className="text-sm text-gray-400 hover:text-brand-emerald-400 transition-colors"
+                >
+                  About Us
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/contact"
+                  className="text-sm text-gray-400 hover:text-brand-emerald-400 transition-colors"
+                >
+                  Contact
+                </Link>
+              </li>
+            </ul>
+          </div>
+        </div>
 
-          <Grid xs={12} md={2}>
-            <Typography variant="subtitle1" color="text.primary" gutterBottom fontWeight={600}>
-              Support
-            </Typography>
-            <Stack>
-              <Link href="/help" color="text.secondary" underline="hover" sx={{ mb: 1 }}>
-                Help Center
-              </Link>
-              <Link href="/feedback" color="text.secondary" underline="hover" sx={{ mb: 1 }}>
-                Feedback
-              </Link>
-              <Link href="/contribute" color="text.secondary" underline="hover">
-                Contribute
-              </Link>
-            </Stack>
-          </Grid>
-        </Grid>
+        <Separator className="my-8 bg-gray-800" />
 
-        <Box mt={5}>
-          <Typography variant="body2" color="text.secondary" align="center">
-            {"© "}
-            {new Date().getFullYear()}
-            {" The Halal Explorer. All rights reserved."}
-          </Typography>
-        </Box>
-      </Container>
-    </Box>
-  )
+        <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-gray-400">
+          <p>
+            © {new Date().getFullYear()} The Halal Explorer. All rights reserved.
+          </p>
+          <div className="flex gap-6">
+            <Link
+              href="/privacy"
+              className="hover:text-brand-emerald-400 transition-colors"
+            >
+              Privacy Policy
+            </Link>
+            <Link
+              href="/terms"
+              className="hover:text-brand-emerald-400 transition-colors"
+            >
+              Terms of Service
+            </Link>
+          </div>
+        </div>
+      </Section>
+    </footer>
+  );
 }

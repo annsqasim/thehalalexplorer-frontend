@@ -105,7 +105,7 @@ export default function RootLayout({
           )}
           <Analytics />
           <SpeedInsights />
-          {/* <Footer /> */}
+          <Footer />
         </ThemeRegistry>
       </body>
     </html>

@@ -1,263 +1,151 @@
-"use client"
+"use client";
 
-import * as React from "react"
-import Image from "next/image"
-import AppBar from "@mui/material/AppBar"
-import Box from "@mui/material/Box"
-import Toolbar from "@mui/material/Toolbar"
-import IconButton from "@mui/material/IconButton"
-import Typography from "@mui/material/Typography"
-import Menu from "@mui/material/Menu"
-import MenuIcon from "@mui/icons-material/Menu"
-import Container from "@mui/material/Container"
-import Button from "@mui/material/Button"
-import MenuItem from "@mui/material/MenuItem"
-import ExploreIcon from "@mui/icons-material/Explore"
-import SearchIcon from "@mui/icons-material/Search"
-import Link from "next/link"
-import { usePathname } from "next/navigation"
-import { useEffect, useState } from "react"
-
+import * as React from "react";
+import Image from "next/image";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Search, Menu, X } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 const pages = [
   { name: "Home", path: "/" },
   { name: "Destinations", path: "/destinations" },
-  // { name: "Explore", path: "/explore" },
+  { name: "Blog", path: "/blog" },
   { name: "Travel Tips", path: "/travel-tips" },
   { name: "About", path: "/about" },
   { name: "Contact", path: "/contact" },
-]
+];
 
-function Navbar() {
-  const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null)
-  const pathname = usePathname()
-  const [scrolled, setScrolled] = useState(false)
+export default function Navbar() {
+  const [isOpen, setIsOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const pathname = usePathname();
 
-  // Handle scroll effect
   useEffect(() => {
     const handleScroll = () => {
-      const isScrolled = window.scrollY > 10
+      const isScrolled = window.scrollY > 10;
       if (isScrolled !== scrolled) {
-        setScrolled(isScrolled)
+        setScrolled(isScrolled);
       }
-    }
+    };
 
-    window.addEventListener("scroll", handleScroll)
+    window.addEventListener("scroll", handleScroll);
     return () => {
-      window.removeEventListener("scroll", handleScroll)
-    }
-  }, [scrolled])
-
-  const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorElNav(event.currentTarget)
-  }
-
-  const handleCloseNavMenu = () => {
-    setAnchorElNav(null)
-  }
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, [scrolled]);
 
   return (
-    <AppBar
-      position="sticky"
-      elevation={0}
-      sx={{
-        bgcolor: scrolled ? "rgba(255, 255, 255, 0.98)" : "rgba(255, 255, 255, 0.9)",
-        backdropFilter: "blur(10px)",
-        transition: "all 0.3s ease",
-        borderBottom: scrolled ? "1px solid rgba(0, 0, 0, 0.06)" : "none",
-      }}
+    <nav
+      className={cn(
+        "sticky top-0 z-50 w-full transition-all duration-300",
+        scrolled
+          ? "bg-white/95 backdrop-blur-md shadow-sm border-b border-gray-200"
+          : "bg-white/90 backdrop-blur-sm"
+      )}
     >
-      <Container maxWidth="xl">
-        <Toolbar disableGutters sx={{ py: { xs: 1.5, md: 1 }, px: { xs: 1, md: 2 } }}>
-          {/* Desktop Logo */}
-          <Box sx={{ display: { xs: "none", md: "flex" }, alignItems: "center" }}>
-            {/* <ExploreIcon sx={{ fontSize: 28, color: "#5e8b7e", mr: 1 }} />
-            <Typography
-              variant="h6"
-              noWrap
-              component={Link}
-              href="/"
-              sx={{
-                fontWeight: 700,
-                color: "#2c3c2c",
-                textDecoration: "none",
-                letterSpacing: "-0.01em",
-              }}
-            >
-              The Halal Explorer
-            </Typography> */}
-            <Image src="/the-logo.svg" alt="The Halal Explorer" width={180} height={40} />
-          </Box>
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between h-20">
+          {/* Logo */}
+          <Link href="/" className="flex items-center">
+            <Image
+              src="/the-logo.svg"
+              alt="The Halal Explorer"
+              width={180}
+              height={40}
+              className="h-8 w-auto"
+            />
+          </Link>
 
-          {/* Mobile Menu */}
-          <Box sx={{ display: { xs: "flex", md: "none" }, mr: 1 }}>
-            <IconButton
-              size="large"
-              aria-label="menu"
-              aria-controls="menu-appbar"
-              aria-haspopup="true"
-              onClick={handleOpenNavMenu}
-              sx={{ color: "#2c3c2c" }}
-            >
-              <MenuIcon />
-            </IconButton>
-            <Menu
-              id="menu-appbar"
-              anchorEl={anchorElNav}
-              anchorOrigin={{
-                vertical: "bottom",
-                horizontal: "left",
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: "top",
-                horizontal: "left",
-              }}
-              open={Boolean(anchorElNav)}
-              onClose={handleCloseNavMenu}
-              sx={{
-                display: { xs: "block", md: "none" },
-                "& .MuiPaper-root": {
-                  borderRadius: 3,
-                  mt: 1.5,
-                  boxShadow: "0 10px 40px rgba(0,0,0,0.1)",
-                  minWidth: 200,
-                  overflow: "hidden",
-                },
-              }}
-              disableScrollLock
-            >
-              {pages.map((page) => (
-                <MenuItem
-                  key={page.name}
-                  onClick={handleCloseNavMenu}
-                  component={Link}
-                  href={page.path}
-                  selected={pathname === page.path}
-                  sx={{
-                    py: 1.5,
-                    px: 2.5,
-                    "&.Mui-selected": {
-                      bgcolor: "rgba(94, 139, 126, 0.08)",
-                    },
-                    "&:hover": {
-                      bgcolor: "rgba(94, 139, 126, 0.04)",
-                    },
-                  }}
-                >
-                  <Typography
-                    sx={{
-                      fontWeight: pathname === page.path ? 600 : 400,
-                      color: pathname === page.path ? "#5e8b7e" : "#2c3c2c",
-                    }}
-                  >
-                    {page.name}
-                  </Typography>
-                </MenuItem>
-              ))}
-            </Menu>
-          </Box>
-
-          {/* Mobile Logo */}
-          <Box
-            sx={{ flexGrow: 1, display: { xs: "flex", md: "none" }, alignItems: "center", justifyContent: "center" }}
-          >
-            <ExploreIcon sx={{ fontSize: 24, color: "#5e8b7e", mr: 1 }} />
-            <Typography
-              variant="h6"
-              noWrap
-              component={Link}
-              href="/"
-              sx={{
-                fontWeight: 700,
-                color: "#2c3c2c",
-                textDecoration: "none",
-                fontSize: "1.1rem",
-                letterSpacing: "-0.01em",
-              }}
-            >
-              The Halal Explorer
-            </Typography>
-          </Box>
-
-          {/* Desktop Menu */}
-          <Box
-            sx={{
-              flexGrow: 1,
-              display: { xs: "none", md: "flex" },
-              justifyContent: "center",
-              ml: 4,
-            }}
-          >
+          {/* Desktop Navigation */}
+          <div className="hidden md:flex items-center gap-1">
             {pages.map((page) => {
-              const isActive = pathname === page.path
-
+              const isActive = pathname === page.path;
               return (
-                <Button
+                <Link
                   key={page.name}
-                  component={Link}
                   href={page.path}
-                  onClick={handleCloseNavMenu}
-                  sx={{
-                    mx: 0.5,
-                    px: 2,
-                    py: 1,
-                    color: isActive ? "#5e8b7e" : "#2c3c2c",
-                    fontWeight: isActive ? 600 : 400,
-                    position: "relative",
-                    "&:hover": {
-                      backgroundColor: "transparent",
-                      color: "#5e8b7e",
-                    },
-                    "&::after": isActive
-                      ? {
-                          content: '""',
-                          position: "absolute",
-                          bottom: 8,
-                          left: "50%",
-                          width: "20px",
-                          height: "2px",
-                          bgcolor: "#5e8b7e",
-                          borderRadius: "2px",
-                          transform: "translateX(-50%)",
-                        }
-                      : {},
-                  }}
+                  className={cn(
+                    "px-4 py-2 rounded-lg text-sm font-medium transition-colors relative",
+                    isActive
+                      ? "text-brand-emerald-600 bg-brand-emerald-50"
+                      : "text-gray-700 hover:text-brand-emerald-600 hover:bg-gray-100"
+                  )}
                 >
                   {page.name}
-                </Button>
-              )
+                </Link>
+              );
             })}
-          </Box>
+          </div>
 
           {/* Search Button */}
-          <Box sx={{ display: "flex" }}>
+          <div className="hidden md:flex items-center gap-3">
             <Button
-              variant="contained"
-              color="primary"
-              component={Link}
-              href="/search"
-              startIcon={<SearchIcon />}
-              sx={{
-                display: { xs: "none", md: "flex" },
-                borderRadius: "12px",
-                py: 1,
-                px: 2.5,
-                boxShadow: "none",
-                transition: "all 0.2s ease",
-                "&:hover": {
-                  boxShadow: "0 6px 20px rgba(94, 139, 126, 0.15)",
-                  transform: "translateY(-2px)",
-                },
-              }}
+              asChild
+              variant="outline"
+              size="sm"
+              className="border-gray-300"
             >
-              Search
+              <Link href="/search">
+                <Search className="h-4 w-4 mr-2" />
+                Search
+              </Link>
             </Button>
-          </Box>
-        </Toolbar>
-      </Container>
-    </AppBar>
-  )
-}
+          </div>
 
-export default Navbar
+          {/* Mobile Menu Button */}
+          <button
+            className="md:hidden p-2 rounded-lg text-gray-700 hover:bg-gray-100"
+            onClick={() => setIsOpen(!isOpen)}
+            aria-label="Toggle menu"
+          >
+            {isOpen ? (
+              <X className="h-6 w-6" />
+            ) : (
+              <Menu className="h-6 w-6" />
+            )}
+          </button>
+        </div>
+
+        {/* Mobile Menu */}
+        {isOpen && (
+          <div className="md:hidden py-4 border-t border-gray-200">
+            <div className="flex flex-col gap-2">
+              {pages.map((page) => {
+                const isActive = pathname === page.path;
+                return (
+                  <Link
+                    key={page.name}
+                    href={page.path}
+                    onClick={() => setIsOpen(false)}
+                    className={cn(
+                      "px-4 py-2 rounded-lg text-sm font-medium transition-colors",
+                      isActive
+                        ? "text-brand-emerald-600 bg-brand-emerald-50"
+                        : "text-gray-700 hover:text-brand-emerald-600 hover:bg-gray-100"
+                    )}
+                  >
+                    {page.name}
+                  </Link>
+                );
+              })}
+              <Button
+                asChild
+                variant="outline"
+                size="sm"
+                className="mt-2 border-gray-300"
+              >
+                <Link href="/search" onClick={() => setIsOpen(false)}>
+                  <Search className="h-4 w-4 mr-2" />
+                  Search
+                </Link>
+              </Button>
+            </div>
+          </div>
+        )}
+      </div>
+    </nav>
+  );
+}
