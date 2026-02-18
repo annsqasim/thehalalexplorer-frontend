@@ -1,6 +1,5 @@
 "use client";
 
-import { motion } from "framer-motion";
 import { ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
@@ -22,7 +21,7 @@ export function Section({
       id={id}
       className={cn("py-16 md:py-24 lg:py-32", className)}
     >
-      <div className={cn("container mx-auto px-4 sm:px-6 lg:px-8", containerClassName)}>
+      <div className={cn("max-w-7xl mx-auto px-4 sm:px-6 lg:px-8", containerClassName)}>
         {children}
       </div>
     </section>
@@ -43,24 +42,20 @@ export function SectionHeader({
   className,
 }: SectionHeaderProps) {
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-100px" }}
-      transition={{ duration: 0.6 }}
+    <div
       className={cn("text-center max-w-3xl mx-auto mb-12 md:mb-16", className)}
     >
       {subtitle && (
-        <p className="text-brand-emerald-600 font-semibold text-sm uppercase tracking-wider mb-3">
+        <p className="text-primary font-semibold text-sm uppercase tracking-wider mb-3">
           {subtitle}
         </p>
       )}
-      <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-4">
+      <h2 className="text-3xl md:text-4xl lg:text-5xl font-serif font-bold text-slate-900 dark:text-white mb-4">
         {title}
       </h2>
       {description && (
-        <p className="text-lg text-gray-600 leading-relaxed">{description}</p>
+        <p className="text-lg text-slate-600 dark:text-slate-400 leading-relaxed">{description}</p>
       )}
-    </motion.div>
+    </div>
   );
 }

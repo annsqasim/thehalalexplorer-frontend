@@ -1,6 +1,6 @@
 import type React from "react"
 import type { Metadata } from "next"
-import { Inter } from "next/font/google"
+import { Plus_Jakarta_Sans, Playfair_Display } from "next/font/google"
 import "./globals.css"
 import ThemeRegistry from "@/components/theme-registry"
 import Navbar from "@/components/navbar"
@@ -10,7 +10,17 @@ import { SpeedInsights } from '@vercel/speed-insights/next';
 import Script from "next/script"
 import { AdBanner } from "@/components/AdBanner"
 
-const inter = Inter({ subsets: ["latin"] })
+const plusJakarta = Plus_Jakarta_Sans({
+  subsets: ["latin"],
+  variable: "--font-plus-jakarta",
+  display: "swap",
+})
+const playfair = Playfair_Display({
+  subsets: ["latin"],
+  weight: ["700"],
+  variable: "--font-playfair",
+  display: "swap",
+})
 
 export const metadata: Metadata = {
   title: "The Halal Explorer - Muslim-Friendly Travel Destinations",
@@ -71,17 +81,19 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en">
-      <body className={inter.className}>
-        <head>
-          {/* Put site verification meta here (server-rendered) */}
-          {GOOGLE_SITE_VERIFICATION && (
-            <meta name="google-site-verification" content="qkD-WldpRfqgjVToUTfSI3jILgKRb8YpVFMf2H0LGbE" />
-          )}
-
-          {/* (Optional) If AdSense asked for a meta specifically, add it exactly as provided */}
-          {/* <meta name="google-adsense-account" content="ca-pub-XXXXXXXXXXXX" /> */}
-        </head>
+    <html lang="en" className={`${plusJakarta.variable} ${playfair.variable}`} suppressHydrationWarning>
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=Playfair+Display:ital,wght@0,700;1,700&family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&display=swap"
+          rel="stylesheet"
+        />
+        {GOOGLE_SITE_VERIFICATION && (
+          <meta name="google-site-verification" content="qkD-WldpRfqgjVToUTfSI3jILgKRb8YpVFMf2H0LGbE" />
+        )}
+      </head>
+      <body className={`${plusJakarta.className} antialiased text-slate-800`}>
         <ThemeRegistry>
           <Navbar />
             {/* Load AdSense script only in production */}

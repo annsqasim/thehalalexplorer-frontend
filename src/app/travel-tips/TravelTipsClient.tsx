@@ -31,6 +31,7 @@ import {
 } from "@mui/icons-material"
 import { useState } from "react"
 import Image from "next/image"
+import { PLACEHOLDER_IMAGE } from "@/lib/constants"
 import Link from "next/link"
 import { Blog } from "@/types"
 
@@ -266,7 +267,7 @@ export default function TravelTipsClient({ blogs }: { blogs: Blog[] }) {
                   >
                     <CardActionArea component={Link} href={`/travel-tips/${tip.id}`}>
                       <CardMedia component="div" sx={{ height: 200, position: "relative" }}>
-                        <Image src={tip.image || "/placeholder.svg"} alt={tip.title} fill style={{ objectFit: "cover" }} />
+                        <Image src={tip.image || PLACEHOLDER_IMAGE} alt={tip.title} fill style={{ objectFit: "cover" }} />
                       </CardMedia>
                       <CardContent sx={{ flexGrow: 1 }}>
                         <Chip label={tip.category} size="small" color="primary" sx={{ mb: 1 }} />
@@ -387,7 +388,7 @@ export default function TravelTipsClient({ blogs }: { blogs: Blog[] }) {
                         <CardActionArea component={Link} href={`/travel-tips/${tip.id}`}>
                           <CardMedia component="div" sx={{ height: 200, position: "relative" }}>
                             <Image
-                              src={tip.image || "/placeholder.svg"}
+                              src={tip.image || PLACEHOLDER_IMAGE}
                               alt={tip.title}
                               fill
                               style={{ objectFit: "cover" }}

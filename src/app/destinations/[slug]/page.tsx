@@ -20,10 +20,11 @@ import {
   ArrowRight,
   Shield
 } from "lucide-react";
-import { getDestinationBySlug, getAllDestinationSlugs } from "@/lib/sanity/queries";
+import { getDestinationBySlug, getAllDestinationSlugs } from "@/lib/destinations";
 import { Destination } from "@/types";
 import _get from "lodash/get";
 import PrayerTimes from "@/components/PrayerTimes";
+import { PLACEHOLDER_IMAGE } from "@/lib/constants";
 import { AdBanner } from "@/components/AdBanner";
 
 export const revalidate = 60;
@@ -47,13 +48,14 @@ export async function generateMetadata({
     };
   }
 
+  const imageUrl = _get(destination, "image.asset.url", "");
   return {
     title: `${destination.name}, ${destination.country} - Muslim-Friendly Travel Guide | The Halal Explorer`,
     description: destination.description || `Discover ${destination.name}, ${destination.country} - a Muslim-friendly destination with halal food, prayer facilities, and cultural insights.`,
     openGraph: {
       title: `${destination.name}, ${destination.country} - Muslim-Friendly Travel Guide`,
       description: destination.description,
-      images: destination.image?.asset?.url ? [{ url: destination.image.asset.url }] : [],
+      images: imageUrl ? [{ url: imageUrl }] : [],
     },
   };
 }
@@ -64,13 +66,10 @@ export default async function DestinationDetailPage({
   params: Promise<{ slug: string }> 
 }) {
   const { slug } = await params;
-  const destination: Destination = await getDestinationBySlug(slug);
-  
-  if (!destination) {
-    notFound();
-  }
+  const destination = await getDestinationBySlug(slug);
+  if (!destination) notFound();
 
-  const imageUrl = _get(destination, 'image.asset.url', 'https://source.unsplash.com/1600x900/?travel');
+  const imageUrl = _get(destination, "image.asset.url", PLACEHOLDER_IMAGE);
   
   const navSections = [
     { id: "about", label: "About" },

@@ -33,6 +33,7 @@ import { Search as SearchIcon, FilterList as FilterListIcon } from "@mui/icons-m
 import Link from "next/link"
 import Image from "next/image"
 import { allDestinations, regions } from "@/lib/mock-data"
+import { PLACEHOLDER_IMAGE } from "@/lib/constants"
 
 export default function SearchPage() {
   const searchParams = useSearchParams()
@@ -285,7 +286,7 @@ export default function SearchPage() {
                         <CardActionArea component={Link} href={`/destinations/${destination.slug}`}>
                           <CardMedia component="div" sx={{ height: 200, position: "relative" }}>
                             <Image
-                              src={destination.imageUrl || "/placeholder.svg"}
+                              src={destination.imageUrl || PLACEHOLDER_IMAGE}
                               alt={destination.name}
                               fill
                               style={{ objectFit: "cover" }}

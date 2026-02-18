@@ -23,7 +23,7 @@ export interface Destination {
       text: string;
     }[];
   }[];
-  image?: string; // Optional
+  image?: string | { asset?: { url?: string } }; // Sanity shape or URL
   isFeatured?: boolean; // Optional
 }
 

@@ -2,15 +2,14 @@
 
 import { PortableText, PortableTextComponents } from "@portabletext/react";
 import type { PortableTextBlock } from "@portabletext/types";
+import { PLACEHOLDER_IMAGE } from "@/lib/constants";
 
 const components: PortableTextComponents = {
   types: {
     image: ({ value }) => {
-      // Basic inline image support; customize if needed
-      const url = value?.asset?.url;
-      if (!url) return null;
+      const url = value?.asset?.url || PLACEHOLDER_IMAGE;
       return (
-        <img src={url} alt={value?.alt || ""} className="my-6 rounded-md" />
+        <img src={url} alt={value?.alt || "Image"} className="my-6 rounded-md" />
       );
     },
   },

@@ -32,7 +32,8 @@ import {
 import { useEffect, useState } from "react"
 import Image from "next/image"
 import Link from "next/link"
-import { getAllBlogPosts } from "@/lib/sanity/queries"
+import { PLACEHOLDER_IMAGE } from "@/lib/constants"
+import { getAllBlogPosts } from "@/lib/blog"
 import type { Blog } from "@/types"
 
 interface TabPanelProps {
@@ -239,7 +240,7 @@ export default function TravelTipsPage() {
                   <CardActionArea component={Link} href={`/blog/${post.slug?.current}`}>
                     <CardMedia component="div" sx={{ height: 200, position: "relative" }}>
                       <Image
-                        src={post?.mainImage?.asset?.url || "/placeholder.svg"}
+                        src={post?.mainImage?.asset?.url || PLACEHOLDER_IMAGE}
                         alt={post.title}
                         fill
                         style={{ objectFit: "cover" }}
@@ -367,7 +368,7 @@ export default function TravelTipsPage() {
                       <CardActionArea component={Link} href={`/travel-tips/${tip.id}`}>
                         <CardMedia component="div" sx={{ height: 200, position: "relative" }}>
                           <Image
-                            src={tip.image || "/placeholder.svg"}
+                            src={tip.image || PLACEHOLDER_IMAGE}
                             alt={tip.title}
                             fill
                             style={{ objectFit: "cover" }}

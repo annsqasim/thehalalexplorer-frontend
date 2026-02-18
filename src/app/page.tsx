@@ -7,15 +7,21 @@ import { TestimonialCard } from '@/components/TestimonialCard';
 import { Button } from '@/components/ui/button';
 import { Shield, Heart, Users, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
-import { getFeaturedDestinations, getHomepageData, getAllDestinations } from '@/lib/sanity/queries';
+import { getFeaturedDestinations, getAllDestinations } from '@/lib/destinations';
+import { getHomepageData } from '@/lib/sanity/queries';
 import { Destination } from "@/types";
 import _get from 'lodash/get';
 import { homepageContent } from '@/data/homepage';
+import { PLACEHOLDER_IMAGE } from '@/lib/constants';
 import DestinationAutocomplete from '@/components/DestinationAutocomplete';
 
 export async function generateMetadata(): Promise<Metadata> {
-  const homepageData = await getHomepageData();
-
+  let homepageData;
+  try {
+    homepageData = await getHomepageData();
+  } catch {
+    homepageData = null;
+  }
   return {
     title: homepageData?.metaTitle || "The Halal Explorer - Muslim-Friendly Travel Destinations",
     description: homepageData?.metaDescription || "Discover Muslim-friendly travel destinations around the world with information on halal food, mosques, prayer timings, and local customs.",
@@ -39,10 +45,16 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function HomePage() {
-  const homepageData = await getHomepageData();
+  let homepageData;
+  try {
+    homepageData = await getHomepageData();
+  } catch {
+    homepageData = null;
+  }
   const featuredDestinations = await getFeaturedDestinations();
   const allDestinations = await getAllDestinations();
-  const heroImage = homepageData?.heroImage?.asset?.url || 'https://source.unsplash.com/1600x900/?travel,muslim';
+  const heroImage = homepageData?.heroImage?.asset?.url || "https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=1600";
+  const placeholderImage = PLACEHOLDER_IMAGE;
 
   // Get up to 6 featured destinations
   const displayDestinations = featuredDestinations.slice(0, 6);
@@ -61,14 +73,14 @@ export default async function HomePage() {
       {/* Search Bar Section */}
       <Section className="bg-white -mt-16 relative z-20">
         <div className="max-w-4xl mx-auto">
-          <div className="bg-white rounded-2xl shadow-large p-6 border border-gray-100">
+          <div className="bg-white rounded-3xl shadow-lg p-6 border border-slate-100 dark:border-slate-800">
             <DestinationAutocomplete destinations={allDestinations} />
           </div>
         </div>
       </Section>
 
       {/* Featured Destinations */}
-      <Section className="bg-gray-50">
+      <Section className="bg-white dark:bg-slate-900">
         <SectionHeader
           title="Featured Destinations"
           description="Discover handpicked Muslim-friendly destinations that offer authentic experiences, halal cuisine, and welcoming communities."
@@ -80,14 +92,14 @@ export default async function HomePage() {
               name={destination.name}
               country={destination.country}
               description={destination.description}
-              imageUrl={_get(destination, 'image.asset.url', 'https://source.unsplash.com/600x400/?travel,muslim')}
+              imageUrl={_get(destination, 'image.asset.url', placeholderImage)}
               slug={destination.slug.current}
               index={index}
             />
           ))}
         </div>
         <div className="text-center mt-12">
-          <Button asChild size="lg" className="bg-brand-emerald-600 hover:bg-brand-emerald-700">
+          <Button asChild size="lg" className="bg-primary hover:bg-primary/90 text-white rounded-xl">
             <Link href="/destinations">
               View All Destinations
               <ArrowRight className="ml-2 h-5 w-5" />
@@ -97,7 +109,7 @@ export default async function HomePage() {
       </Section>
 
       {/* Why The Halal Explorer */}
-      <Section className="bg-white">
+      <Section className="bg-slate-50 dark:bg-slate-900/50">
         <SectionHeader
           title={homepageContent.whySection.title}
           subtitle={homepageContent.whySection.subtitle}
@@ -121,7 +133,7 @@ export default async function HomePage() {
             return (
               <FeatureCard
                 key={index}
-                icon={<Icon className="h-10 w-10" />}
+                icon={<Icon className="h-10 w-10 text-primary" />}
                 title={feature.title}
                 description={feature.description}
                 index={index}
@@ -132,7 +144,7 @@ export default async function HomePage() {
       </Section>
 
       {/* Testimonials */}
-      <Section className="bg-brand-sand-50">
+      <Section className="bg-emerald-50/50 dark:bg-emerald-950/20">
         <SectionHeader
           title="What Our Community Says"
           description="Real experiences from Muslim travelers around the world"
@@ -151,15 +163,15 @@ export default async function HomePage() {
       </Section>
 
       {/* About Preview */}
-      <Section className="bg-white">
+      <Section className="bg-white dark:bg-slate-900">
         <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">
+          <h2 className="text-3xl md:text-4xl font-serif font-bold text-slate-900 dark:text-white mb-6">
             {homepageContent.aboutPreview.title}
           </h2>
-          <p className="text-lg text-gray-600 mb-8 leading-relaxed">
+          <p className="text-lg text-slate-600 dark:text-slate-400 mb-8 leading-relaxed">
             {homepageContent.aboutPreview.description}
           </p>
-          <Button asChild size="lg" variant="outline" className="border-brand-emerald-600 text-brand-emerald-600 hover:bg-brand-emerald-50">
+          <Button asChild size="lg" variant="outline" className="border-primary text-primary hover:bg-primary/10 rounded-xl">
             <Link href={homepageContent.aboutPreview.cta.href}>
               {homepageContent.aboutPreview.cta.text}
               <ArrowRight className="ml-2 h-5 w-5" />

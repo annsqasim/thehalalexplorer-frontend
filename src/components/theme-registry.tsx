@@ -13,15 +13,18 @@ const customShadows: Shadows = Array(25).fill("none") as unknown as Shadows;
 
 const theme = createTheme({
   palette: {
-    primary: { main: "#5e8b7e", light: "#a9b78a", dark: "#3a5a40", contrastText: "#ffffff" },
-    secondary: { main: "#a9b78a", light: "#e2ded5", dark: "#5e8b7e", contrastText: "#2c3c2c" },
-    background: { default: "#ffffff", paper: "#ffffff" },
-    text: { primary: "#2c3c2c", secondary: "#5e8b7e" },
+    primary: { main: "#10B981", light: "#34d399", dark: "#059669", contrastText: "#ffffff" },
+    secondary: { main: "#0F172A", light: "#334155", dark: "#020617", contrastText: "#ffffff" },
+    background: { default: "#F8FAFC", paper: "#ffffff" },
+    text: { primary: "#0f172a", secondary: "#64748b" },
   },
   typography: {
-    fontFamily: '"Inter", "SF Pro Display", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+    fontFamily: '"Plus Jakarta Sans", system-ui, sans-serif',
+    h1: { fontFamily: '"Playfair Display", Georgia, serif', fontWeight: 700 },
+    h2: { fontFamily: '"Playfair Display", Georgia, serif', fontWeight: 700 },
+    h3: { fontFamily: '"Playfair Display", Georgia, serif', fontWeight: 700 },
   },
-  shape: { borderRadius: 4 },
+  shape: { borderRadius: 12 },
   shadows: customShadows,
   components: {
     MuiPaper: {

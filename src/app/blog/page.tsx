@@ -4,16 +4,24 @@ import Link from "next/link";
 import { Section, SectionHeader } from "@/components/Section";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { getAllBlogPosts } from "@/lib/sanity/queries";
+import { getAllBlogPosts } from "@/lib/blog";
 import type { Blog } from "@/types";
 import { blogPageContent } from "@/data/blog";
 import { Clock, User } from "lucide-react";
+import { PLACEHOLDER_IMAGE } from "@/lib/constants";
 
 export const revalidate = 60;
 
 export const metadata: Metadata = {
-  title: "Travel Blog | The Halal Explorer",
-  description: "Insights, guides, and halal-friendly travel stories from Muslim travelers around the world.",
+  title: "Travel Blog | The Halal Explorer - Halal Travel Tips & Guides",
+  description: "Insights, guides, and halal-friendly travel stories from Muslim travelers. Food guides, prayer tips, and destination guides.",
+  keywords: [
+    "halal travel blog",
+    "Muslim travel tips",
+    "halal food guides",
+    "prayer while traveling",
+    "Islamic travel blog",
+  ],
   openGraph: {
     title: "Travel Blog | The Halal Explorer",
     description: "Insights, guides, and halal-friendly travel stories",
@@ -59,15 +67,13 @@ export default async function BlogIndexPage() {
             <Link href={`/blog/${featured.slug?.current}`}>
               <Card className="overflow-hidden border-0 shadow-large hover:shadow-xl transition-all duration-300 cursor-pointer group">
                 <div className="relative h-[400px] md:h-[500px]">
-                  {featured?.mainImage?.asset?.url && (
-                    <Image
-                      src={featured.mainImage.asset.url}
-                      alt={featured.title}
-                      fill
-                      className="object-cover transition-transform duration-500 group-hover:scale-105"
-                      priority
-                    />
-                  )}
+                  <Image
+                    src={featured?.mainImage?.asset?.url || PLACEHOLDER_IMAGE}
+                    alt={featured.title}
+                    fill
+                    className="object-cover transition-transform duration-500 group-hover:scale-105"
+                    priority
+                  />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
                   <div className="absolute bottom-0 left-0 right-0 p-8 md:p-12">
                     <div className="flex flex-wrap gap-2 mb-4">
@@ -124,16 +130,14 @@ export default async function BlogIndexPage() {
             {rest.map((post) => (
               <Link key={post._id} href={`/blog/${post.slug?.current}`}>
                 <Card className="h-full overflow-hidden border-0 shadow-soft hover:shadow-card-hover transition-all duration-300 cursor-pointer group">
-                  {post?.mainImage?.asset?.url && (
-                    <div className="relative h-48 overflow-hidden">
-                      <Image
-                        src={post.mainImage.asset.url}
-                        alt={post.title}
-                        fill
-                        className="object-cover transition-transform duration-500 group-hover:scale-110"
-                      />
-                    </div>
-                  )}
+                  <div className="relative h-48 overflow-hidden">
+                    <Image
+                      src={post?.mainImage?.asset?.url || PLACEHOLDER_IMAGE}
+                      alt={post.title}
+                      fill
+                      className="object-cover transition-transform duration-500 group-hover:scale-110"
+                    />
+                  </div>
                   <CardContent className="p-6">
                     <div className="flex flex-wrap gap-2 mb-3">
                       {Array.isArray(post.categories) &&

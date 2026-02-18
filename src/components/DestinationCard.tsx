@@ -1,12 +1,12 @@
 "use client";
 
-import { motion } from "framer-motion";
 import Link from "next/link";
 import Image from "next/image";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { PLACEHOLDER_IMAGE } from "@/lib/constants";
 
 interface DestinationCardProps {
   name: string;
@@ -30,20 +30,15 @@ export function DestinationCard({
   index = 0,
 }: DestinationCardProps) {
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 30 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-50px" }}
-      transition={{ duration: 0.5, delay: index * 0.1 }}
-    >
+    <div className="animate-fade-in-up">
       <Link href={`/destinations/${slug}`}>
         <Card className={cn(
-          "group overflow-hidden h-full flex flex-col cursor-pointer transition-all duration-300 hover:shadow-card-hover border-0 shadow-card",
+          "group overflow-hidden h-full flex flex-col cursor-pointer transition-all duration-300 hover:shadow-lg hover:-translate-y-1 rounded-3xl border border-slate-100 dark:border-slate-800 shadow-sm",
           className
         )}>
           <div className="relative h-64 overflow-hidden">
             <Image
-              src={imageUrl}
+              src={imageUrl || PLACEHOLDER_IMAGE}
               alt={`${name}, ${country}`}
               fill
               className="object-cover transition-transform duration-500 group-hover:scale-110"
@@ -65,25 +60,25 @@ export function DestinationCard({
           
           <div className="p-6 flex-1 flex flex-col">
             <div className="mb-2">
-              <p className="text-sm text-brand-emerald-600 font-semibold mb-1">
+              <p className="text-sm text-primary font-semibold mb-1">
                 {country}
               </p>
-              <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-brand-emerald-600 transition-colors">
+              <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2 group-hover:text-primary transition-colors">
                 {name}
               </h3>
             </div>
             
-            <p className="text-gray-600 text-sm mb-4 line-clamp-3 flex-1">
+            <p className="text-slate-600 dark:text-slate-400 text-sm mb-4 line-clamp-3 flex-1">
               {description}
             </p>
             
-            <div className="flex items-center text-brand-emerald-600 font-semibold text-sm mt-auto">
+            <div className="flex items-center text-primary font-semibold text-sm mt-auto">
               Explore
               <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
             </div>
           </div>
         </Card>
       </Link>
-    </motion.div>
+    </div>
   );
 }

@@ -12,7 +12,15 @@ import Chip from "@mui/material/Chip"
 import RestaurantIcon from "@mui/icons-material/Restaurant"
 import MosqueIcon from "@mui/icons-material/Mosque"
 import Link from "next/link"
+import _get from "lodash/get"
 import { Destination } from "@/types"
+import { PLACEHOLDER_IMAGE } from "@/lib/constants"
+
+function getImageUrl(d: Destination): string {
+  const img = d.image;
+  if (typeof img === "string") return img;
+  return _get(img, "asset.url", "") || "";
+}
 
 interface FeaturedDestinationsProps {
   destinations: Destination[]
@@ -22,7 +30,7 @@ export default function FeaturedDestinations({ destinations }: FeaturedDestinati
   return (
     <Grid container spacing={4}>
       {destinations.map((destination) => (
-        <Grid key={destination.id} xs={12} md={4} sm={6}>
+        <Grid key={String(destination._id) || destination.slug?.current} xs={12} md={4} sm={6}>
           <Card
             sx={{
               height: "100%",
@@ -38,12 +46,12 @@ export default function FeaturedDestinations({ destinations }: FeaturedDestinati
               },
             }}
           >
-            <CardActionArea component={Link} href={`/destinations/${destination.slug}`} sx={{ flexGrow: 1 }}>
+            <CardActionArea component={Link} href={`/destinations/${destination.slug?.current}`} sx={{ flexGrow: 1 }}>
               <Box sx={{ position: "relative", height: 220 }}>
                 <CardMedia
                   component="img"
                   height="220"
-                  image={destination.image}
+                  image={getImageUrl(destination) || PLACEHOLDER_IMAGE}
                   alt={destination.name}
                   sx={{ objectFit: "cover" }}
                 />

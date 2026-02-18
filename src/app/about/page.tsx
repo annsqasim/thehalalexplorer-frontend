@@ -1,303 +1,147 @@
-"use client"
-import {
-  Box,
-  Container,
-  Typography,
-  Grid,
-  Paper,
-  Divider,
-  Avatar,
-  Card,
-  CardContent,
-  List,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
-} from "@mui/material"
-import { CheckCircleOutline, ExploreOutlined } from "@mui/icons-material"
-import Image from "next/image"
-import AboutBg from '../images/about_bg.png'
-import AboutSection from '../images/about-section.jpg'
-import CoreValues from '../images/core_values.jpg'
+import { Metadata } from "next";
+import Image from "next/image";
+import Link from "next/link";
+
+export const metadata: Metadata = {
+  title: "About Us | The Halal Explorer - Empowering Muslim Travelers",
+  description: "Learn about The Halal Explorer's mission to make travel easier for Muslims worldwide. Verified halal guides, prayer facilities, and community-driven insights.",
+  keywords: ["about", "The Halal Explorer", "Muslim travel", "halal travel", "mission", "team"],
+  openGraph: {
+    title: "About Us | The Halal Explorer",
+    description: "Our mission to empower every Muslim traveler with trusted halal travel information.",
+  },
+};
+
+const stats = [
+  { value: "50+", label: "Countries Covered" },
+  { value: "1,200+", label: "Mosques Listed" },
+  { value: "500k", label: "Community Members" },
+  { value: "850+", label: "Halal Guides" },
+];
 
 export default function AboutPage() {
   return (
-    <Box>
-      {/* Hero Section */}
-      <Box
-        sx={{
-          position: "relative",
-          height: { xs: "30vh", md: "40vh" },
-          display: "flex",
-          alignItems: "center",
-          bgcolor: "primary.dark",
-          color: "white",
-          mb: 6,
-        }}
-      >
-        <Box
-          sx={{
-            position: "absolute",
-            top: 0,
-            left: 0,
-            width: "100%",
-            height: "100%",
-            zIndex: 0,
-            opacity: 0.6,
-          }}
-        >
-          <Image
-            src={AboutBg}
-            alt="About The Halal Explorer"
-            fill
-            style={{ objectFit: "cover" }}
-            priority
-          />
-          <Box
-            sx={{
-              position: "absolute",
-              top: 0,
-              left: 0,
-              width: "100%",
-              height: "100%",
-              background: "linear-gradient(to bottom, rgba(0,0,0,0.15), rgba(0,0,0,0.6))",
-            }}
-          />
-        </Box>
-        <Container maxWidth="lg" sx={{ position: "relative", zIndex: 1 }}>
-          <Typography
-            variant="h2"
-            component="h1"
-            sx={{
-              fontWeight: 700,
-              mb: 2,
-            }}
-          >
-            About Us
-          </Typography>
-          <Typography
-            variant="h6"
-            sx={{
-              maxWidth: "600px",
-            }}
-          >
-            Discover the story behind The Halal Explorer and our mission to make travel easier for Muslims worldwide.
-          </Typography>
-        </Container>
-      </Box>
-
-      <Container maxWidth="lg" sx={{ mb: 8 }}>
-        <Grid container spacing={6}>
-          <Grid item xs={12} md={6} component="div">
-            <Typography variant="h4" component="h2" fontWeight={600} gutterBottom>
+    <>
+      <section className="relative h-[60vh] min-h-[500px] flex items-center overflow-hidden">
+        <Image
+          src="https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=1920"
+          alt="Travelers exploring together"
+          fill
+          className="object-cover"
+          priority
+        />
+        <div className="absolute inset-0 bg-gradient-to-r from-slate-900/90 via-slate-900/50 to-transparent" />
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 w-full">
+          <div className="max-w-2xl">
+            <span className="inline-block px-4 py-1.5 rounded-full bg-primary/20 border border-primary/30 text-primary text-xs font-bold uppercase tracking-widest mb-6 backdrop-blur-sm">
               Our Story
-            </Typography>
-            <Typography variant="body1" paragraph>
-              The Halal Explorer was founded in 2023 with a simple mission: to make travel easier and more enjoyable for
-              Muslims around the world. We recognized that Muslim travelers have unique needs that aren't always
-              addressed by mainstream travel resources.
-            </Typography>
-            <Typography variant="body1" paragraph>
-              Our team of passionate travelers and tech enthusiasts came together to create a comprehensive platform
-              that provides detailed information on halal food options, prayer facilities, Muslim-friendly
-              accommodations, and cultural insights for destinations worldwide.
-            </Typography>
-            <Typography variant="body1">
-              What started as a small project has grown into a trusted resource for thousands of Muslim travelers
-              seeking authentic experiences without compromising their faith and values.
-            </Typography>
-          </Grid>
-          <Grid item xs={12} md={6} component="div">
-            <Box sx={{ position: "relative", height: "100%", minHeight: 300 }}>
-              <Image
-                src={AboutSection}
-                alt="The Halal Explorer team"
-                fill
-                style={{ objectFit: "cover", borderRadius: "12px" }}
-              />
-            </Box>
-          </Grid>
-        </Grid>
+            </span>
+            <h1 className="text-4xl md:text-6xl font-serif font-bold text-white mb-6 leading-tight">
+              Empowering Every <span className="text-primary">Muslim Traveler</span>
+            </h1>
+            <p className="text-lg md:text-xl text-slate-300 mb-8 leading-relaxed">
+              We started with a simple question: How can we make the beauty of the world more accessible to those who seek it while honoring their faith?
+            </p>
+          </div>
+        </div>
+      </section>
 
-        <Divider sx={{ my: 8 }} />
+      <section className="py-12 -mt-20 relative z-10 px-4 sm:px-6">
+        <div className="max-w-7xl mx-auto">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8">
+            {stats.map((stat, i) => (
+              <div
+                key={i}
+                className="bg-white dark:bg-slate-800 p-8 rounded-3xl shadow-xl border border-slate-100 dark:border-slate-700 text-center"
+              >
+                <div className="text-4xl font-bold text-primary mb-2">{stat.value}</div>
+                <div className="text-sm font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
+                  {stat.label}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
 
-        <Box sx={{ textAlign: "center", mb: 6 }}>
-          <Typography variant="h4" component="h2" fontWeight={600} gutterBottom>
-            Our Mission
-          </Typography>
-          <Typography variant="body1" sx={{ maxWidth: "800px", mx: "auto" }}>
-            We're on a mission to empower Muslim travelers with the information and resources they need to explore the
-            world confidently, while maintaining their Islamic values and practices.
-          </Typography>
-        </Box>
-
-        <Grid container spacing={4}>
-          <Grid item xs={12} md={4} component="div">
-            <Paper sx={{ p: 4, height: "100%" }}>
-              <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
-                <Avatar sx={{ bgcolor: "primary.main", mr: 2 }}>1</Avatar>
-                <Typography variant="h6" fontWeight={600}>
-                  Comprehensive Information
-                </Typography>
-              </Box>
-              <Typography variant="body2">
-                Provide detailed, accurate, and up-to-date information about Muslim-friendly travel options worldwide,
-                including halal food, prayer spaces, and accommodations.
-              </Typography>
-            </Paper>
-          </Grid>
-          <Grid item xs={12} md={4} component="div">
-            <Paper sx={{ p: 4, height: "100%" }}>
-              <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
-                <Avatar sx={{ bgcolor: "primary.main", mr: 2 }}>2</Avatar>
-                <Typography variant="h6" fontWeight={600}>
-                  Community Building
-                </Typography>
-              </Box>
-              <Typography variant="body2">
-                Foster a global community of Muslim travelers who can share experiences, tips, and recommendations to
-                help each other navigate the world.
-              </Typography>
-            </Paper>
-          </Grid>
-          <Grid item xs={12} md={4} component="div">
-            <Paper sx={{ p: 4, height: "100%" }}>
-              <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
-                <Avatar sx={{ bgcolor: "primary.main", mr: 2 }}>3</Avatar>
-                <Typography variant="h6" fontWeight={600}>
-                  Cultural Bridge
-                </Typography>
-              </Box>
-              <Typography variant="body2">
-                Promote cultural understanding and highlight the diversity of Muslim travelers and communities around
-                the world.
-              </Typography>
-            </Paper>
-          </Grid>
-        </Grid>
-
-        <Divider sx={{ my: 8 }} />
-
-        <Grid container spacing={6} alignItems="center">
-          <Grid item xs={12} md={6} component="div">
-            <Box sx={{ position: "relative", height: 400 }}>
-              <Image
-                src={CoreValues}
-                alt="Our values"
-                fill
-                style={{ objectFit: "cover", borderRadius: "12px" }}
-              />
-            </Box>
-          </Grid>
-          <Grid item xs={12} md={6} component="div">
-            <Typography variant="h4" component="h2" fontWeight={600} gutterBottom>
-              Our Values
-            </Typography>
-            <List>
-              <ListItem disableGutters>
-                <ListItemIcon>
-                  <CheckCircleOutline color="primary" />
-                </ListItemIcon>
-                <ListItemText
-                  primary="Authenticity"
-                  secondary="We provide honest, verified information that Muslim travelers can trust."
+      <section className="py-24 px-4 sm:px-6">
+        <div className="max-w-7xl mx-auto">
+          <div className="grid lg:grid-cols-2 gap-16 items-center">
+            <div>
+              <div className="flex items-center gap-3 mb-6">
+                <div className="w-12 h-12 bg-primary/10 text-primary rounded-xl flex items-center justify-center font-bold">
+                  M
+                </div>
+                <h2 className="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white">Our Mission</h2>
+              </div>
+              <div className="space-y-6 text-lg text-slate-600 dark:text-slate-400 leading-relaxed">
+                <p>
+                  The Halal Explorer was born out of a passion for discovery and a commitment to inclusivity. We believe that travel is one of the most enriching experiences a human can have, and faith should never be a barrier to exploration.
+                </p>
+                <p>
+                  Our platform provides curated, verified, and community-driven insights into destinations across the globe. From identifying the best local halal eateries to mapping out accessible prayer spaces, we handle the logistics so you can focus on the journey.
+                </p>
+              </div>
+              <div className="mt-10 flex flex-wrap gap-4">
+                <div className="flex items-center gap-3 bg-emerald-50 dark:bg-emerald-950/20 px-6 py-4 rounded-2xl border border-emerald-100 dark:border-emerald-900/50">
+                  <span className="text-primary font-bold">✓</span>
+                  <span className="font-semibold text-emerald-900 dark:text-emerald-100">Verified Listings</span>
+                </div>
+                <div className="flex items-center gap-3 bg-emerald-50 dark:bg-emerald-950/20 px-6 py-4 rounded-2xl border border-emerald-100 dark:border-emerald-900/50">
+                  <span className="text-primary font-bold">✓</span>
+                  <span className="font-semibold text-emerald-900 dark:text-emerald-100">Community Driven</span>
+                </div>
+              </div>
+            </div>
+            <div className="relative">
+              <div className="aspect-square rounded-[40px] overflow-hidden">
+                <Image
+                  src="https://images.unsplash.com/photo-1524231757912-21f4fe3a7200?w=800"
+                  alt="Travel and culture"
+                  width={800}
+                  height={800}
+                  className="w-full h-full object-cover"
                 />
-              </ListItem>
-              <ListItem disableGutters>
-                <ListItemIcon>
-                  <CheckCircleOutline color="primary" />
-                </ListItemIcon>
-                <ListItemText
-                  primary="Inclusivity"
-                  secondary="We welcome and respect Muslims of all backgrounds, cultures, and practices."
-                />
-              </ListItem>
-              <ListItem disableGutters>
-                <ListItemIcon>
-                  <CheckCircleOutline color="primary" />
-                </ListItemIcon>
-                <ListItemText
-                  primary="Excellence"
-                  secondary="We strive for excellence in all aspects of our platform and services."
-                />
-              </ListItem>
-              <ListItem disableGutters>
-                <ListItemIcon>
-                  <CheckCircleOutline color="primary" />
-                </ListItemIcon>
-                <ListItemText
-                  primary="Innovation"
-                  secondary="We continuously improve our platform to better serve the needs of Muslim travelers."
-                />
-              </ListItem>
-              <ListItem disableGutters>
-                <ListItemIcon>
-                  <CheckCircleOutline color="primary" />
-                </ListItemIcon>
-                <ListItemText
-                  primary="Community"
-                  secondary="We believe in the power of community and shared experiences."
-                />
-              </ListItem>
-            </List>
-          </Grid>
-        </Grid>
+              </div>
+              <div className="absolute -bottom-8 -left-8 bg-white dark:bg-slate-800 p-8 rounded-3xl shadow-2xl border border-slate-100 dark:border-slate-700 hidden md:block max-w-xs">
+                <p className="italic text-slate-600 dark:text-slate-400 mb-4">
+                  &quot;We want every Muslim traveler to feel at home, no matter where they are in the world.&quot;
+                </p>
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-full bg-primary/20" />
+                  <div>
+                    <div className="font-bold text-sm">The Halal Explorer Team</div>
+                    <div className="text-xs text-slate-500">Our Promise</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
 
-        <Divider sx={{ my: 8 }} />
-
-        {/* <Box sx={{ textAlign: "center", mb: 6 }}>
-          <Typography variant="h4" component="h2" fontWeight={600} gutterBottom>
-            Meet Our Team
-          </Typography>
-          <Typography variant="body1" sx={{ maxWidth: "800px", mx: "auto", mb: 4 }}>
-            The Halal Explorer is powered by a diverse team of Muslim travelers, tech enthusiasts, and industry experts
-            who are passionate about making travel accessible for all Muslims.
-          </Typography>
-        </Box>
-
-        <Grid container spacing={4}>
-          {[1, 2, 3, 4].map((member) => (
-            <Grid key={member} size={{ xs: 12, md: 6, sm: 3 }}>
-              <Card sx={{ height: "100%" }}>
-                <Box sx={{ position: "relative", height: 250 }}>
-                  <Image
-                    src="/placeholder.svg?height=400&width=300"
-                    alt={`Team member ${member}`}
-                    fill
-                    style={{ objectFit: "cover" }}
-                  />
-                </Box>
-                <CardContent>
-                  <Typography variant="h6" gutterBottom>
-                    Team Member {member}
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary" gutterBottom>
-                    {["Founder & CEO", "Travel Expert", "Tech Lead", "Content Manager"][member - 1]}
-                  </Typography>
-                  <Typography variant="body2">
-                    Passionate about travel and technology with experience in the travel industry and a deep
-                    understanding of Muslim travelers' needs.
-                  </Typography>
-                </CardContent>
-              </Card>
-            </Grid>
-          ))}
-        </Grid> */}
-
-        <Divider sx={{ my: 8 }} />
-
-        <Box sx={{ textAlign: "center" }}>
-          <ExploreOutlined sx={{ fontSize: 60, color: "primary.main", mb: 2 }} />
-          <Typography variant="h4" component="h2" fontWeight={600} gutterBottom>
-            Join Us on This Journey
-          </Typography>
-          <Typography variant="body1" sx={{ maxWidth: "800px", mx: "auto", mb: 4 }}>
-            The Halal Explorer is more than just a travel website—it's a community of like-minded travelers who share a
-            passion for exploring the world while staying true to their faith. We invite you to join us on this journey
-            of discovery, connection, and growth.
-          </Typography>
-        </Box>
-      </Container>
-    </Box>
-  )
+      <section className="py-24 px-4 sm:px-6 text-center">
+        <div className="max-w-3xl mx-auto bg-primary rounded-[40px] p-12 text-white shadow-2xl relative overflow-hidden">
+          <h2 className="text-4xl font-serif font-bold mb-6 relative z-10">Be Part of the Journey</h2>
+          <p className="text-white/80 text-lg mb-10 relative z-10 leading-relaxed">
+            Whether you&apos;re a traveler looking for advice or a local business wanting to be listed, we&apos;d love to hear from you.
+          </p>
+          <div className="flex flex-wrap justify-center gap-4 relative z-10">
+            <Link
+              href="/contact"
+              className="px-8 py-4 bg-white text-primary font-bold rounded-2xl hover:scale-105 active:scale-95 transition-all shadow-lg"
+            >
+              Get in Touch
+            </Link>
+            <Link
+              href="/destinations"
+              className="px-8 py-4 bg-primary border border-white/30 text-white font-bold rounded-2xl hover:bg-white/10 transition-all"
+            >
+              Browse Guides
+            </Link>
+          </div>
+        </div>
+      </section>
+    </>
+  );
 }

@@ -8,9 +8,10 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Clock, User, ArrowRight } from "lucide-react";
-import { getAllBlogSlugs, getBlogBySlug, getAllBlogPosts } from "@/lib/sanity/queries";
+import { getAllBlogSlugs, getBlogBySlug, getAllBlogPosts } from "@/lib/blog";
 import RichText from "@/components/RichText";
 import type { Blog } from "@/types";
+import { PLACEHOLDER_IMAGE } from "@/lib/constants";
 
 export const revalidate = 60;
 
@@ -68,15 +69,13 @@ export default async function BlogPostPage({
     <>
       {/* Hero Header */}
       <section className="relative h-[50vh] min-h-[400px] overflow-hidden">
-        {post?.mainImage?.asset?.url && (
-          <Image
-            src={post.mainImage.asset.url}
-            alt={post.title}
-            fill
-            className="object-cover"
-            priority
-          />
-        )}
+        <Image
+          src={post?.mainImage?.asset?.url || PLACEHOLDER_IMAGE}
+          alt={post.title}
+          fill
+          className="object-cover"
+          priority
+        />
         <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/60 to-black/80" />
         <div className="container relative z-10 h-full flex flex-col justify-end pb-12 px-4 sm:px-6 lg:px-8">
           <div className="max-w-4xl">
@@ -130,7 +129,15 @@ export default async function BlogPostPage({
           )}
 
           <article className="prose prose-lg prose-emerald max-w-none">
-            {post?.body && <RichText value={post.body} />}
+            {post?.body && Array.isArray(post.body) && post.body.length > 0 ? (
+              <RichText value={post.body} />
+            ) : (
+              post?.shortDescription && (
+                <p className="text-lg text-slate-700 dark:text-slate-300 leading-relaxed">
+                  {post.shortDescription}
+                </p>
+              )
+            )}
           </article>
 
           <Separator className="my-12" />
@@ -148,16 +155,14 @@ export default async function BlogPostPage({
                     href={`/blog/${relatedPost.slug?.current}`}
                   >
                     <Card className="h-full overflow-hidden border-0 shadow-soft hover:shadow-card-hover transition-all duration-300 cursor-pointer group">
-                      {relatedPost?.mainImage?.asset?.url && (
-                        <div className="relative h-40 overflow-hidden">
-                          <Image
-                            src={relatedPost.mainImage.asset.url}
-                            alt={relatedPost.title}
-                            fill
-                            className="object-cover transition-transform duration-500 group-hover:scale-110"
-                          />
-                        </div>
-                      )}
+                      <div className="relative h-40 overflow-hidden">
+                        <Image
+                          src={relatedPost?.mainImage?.asset?.url || PLACEHOLDER_IMAGE}
+                          alt={relatedPost.title}
+                          fill
+                          className="object-cover transition-transform duration-500 group-hover:scale-110"
+                        />
+                      </div>
                       <CardContent className="p-4">
                         <h3 className="font-bold text-lg mb-2 group-hover:text-brand-emerald-600 transition-colors line-clamp-2">
                           {relatedPost.title}

@@ -1,9 +1,9 @@
 "use client";
 
-import { motion } from "framer-motion";
 import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
-import { MapPin, Shield, Utensils, Calendar } from "lucide-react";
+import { MapPin, Shield, Utensils } from "lucide-react";
+import { PLACEHOLDER_IMAGE } from "@/lib/constants";
 
 interface DestinationDetailHeroProps {
   name: string;
@@ -25,7 +25,7 @@ export function DestinationDetailHero({
   return (
     <section className="relative h-[60vh] min-h-[500px] overflow-hidden">
       <Image
-        src={imageUrl}
+        src={imageUrl || PLACEHOLDER_IMAGE}
         alt={`${name}, ${country}`}
         fill
         className="object-cover"
@@ -34,12 +34,7 @@ export function DestinationDetailHero({
       <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/50 to-black/70" />
       
       <div className="container relative z-10 h-full flex flex-col justify-end pb-12 px-4 sm:px-6 lg:px-8">
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          className="max-w-4xl"
-        >
+        <div className="max-w-4xl animate-fade-in-up">
           <div className="mb-4">
             <Badge className="bg-white/20 backdrop-blur-sm text-white border-white/30 mb-4">
               {country}
@@ -71,7 +66,7 @@ export function DestinationDetailHero({
               )}
             </div>
           )}
-        </motion.div>
+        </div>
       </div>
     </section>
   );

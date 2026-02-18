@@ -1,9 +1,9 @@
 "use client";
 
-import { motion } from "framer-motion";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
+import { PLACEHOLDER_IMAGE } from "@/lib/constants";
 
 interface HeroProps {
   headline: string;
@@ -22,54 +22,42 @@ export function Hero({
 }: HeroProps) {
   return (
     <section
-      className="relative min-h-[85vh] flex items-center justify-center overflow-hidden"
+      className="relative min-h-[85vh] flex items-center overflow-hidden"
       style={{
-        backgroundImage: backgroundImage
-          ? `linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.5)), url(${backgroundImage})`
-          : "linear-gradient(135deg, #047857 0%, #059669 50%, #10b981 100%)",
+        backgroundImage: `linear-gradient(to bottom, rgba(15,23,42,0.3), rgba(15,23,42,0.7)), url(${backgroundImage || PLACEHOLDER_IMAGE})`,
         backgroundSize: "cover",
         backgroundPosition: "center",
       }}
     >
-      <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-black/40 to-black/60" />
-      
-      <div className="container relative z-10 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-4xl mx-auto text-center">
-          <motion.h1
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, ease: "easeOut" }}
-            className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-6 leading-tight"
+      <div className="absolute inset-0 hero-gradient" />
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 w-full flex items-center">
+        <div className="max-w-3xl">
+          <span className="inline-block px-4 py-1.5 bg-primary/20 backdrop-blur-md border border-primary/30 text-primary rounded-full text-xs font-bold uppercase tracking-widest mb-6">
+            Travel Without Limits
+          </span>
+          <h1
+            className="text-5xl sm:text-6xl md:text-7xl lg:text-6xl font-serif font-bold text-white mb-8 leading-tight animate-fade-in-up"
           >
             {headline}
-          </motion.h1>
-          
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
-            className="text-lg sm:text-xl md:text-2xl text-white/90 mb-8 max-w-2xl mx-auto leading-relaxed"
+          </h1>
+          <p
+            className="text-xl text-slate-200 mb-10 max-w-xl leading-relaxed animate-fade-in-up [animation-delay:100ms] [animation-fill-mode:both]"
           >
             {subtext}
-          </motion.p>
-          
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.4, ease: "easeOut" }}
-            className="flex flex-col sm:flex-row gap-4 justify-center items-center"
+          </p>
+          <div
+            className="flex flex-col sm:flex-row gap-4 animate-fade-in-up [animation-delay:200ms] [animation-fill-mode:both]"
           >
             <Button
               asChild
               size="lg"
-              className="bg-brand-emerald-600 hover:bg-brand-emerald-700 text-white px-8 py-6 text-lg rounded-xl shadow-lg hover:shadow-xl transition-all"
+              className="bg-primary hover:bg-primary/90 text-white px-8 py-6 text-lg rounded-xl shadow-lg transition-all"
             >
               <Link href={primaryCta.href}>
                 {primaryCta.text}
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Link>
             </Button>
-            
             {secondaryCta && (
               <Button
                 asChild
@@ -77,10 +65,10 @@ export function Hero({
                 variant="outline"
                 className="bg-white/10 backdrop-blur-sm border-white/20 text-white hover:bg-white/20 px-8 py-6 text-lg rounded-xl"
               >
-                <Link href={secondaryCta.href}>{secondaryCta.text}</Link>
-              </Button>
+                <Link href={secondaryCta.href}>{secondaryCta.text}            </Link>
+          </Button>
             )}
-          </motion.div>
+          </div>
         </div>
       </div>
     </section>

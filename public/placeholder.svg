@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600" fill="none">
+  <rect width="800" height="600" fill="#f1f5f9"/>
+  <g fill="#cbd5e1" stroke="#94a3b8" stroke-width="1.5">
+    <path d="M400 220c-55 0-100 45-100 100s45 100 100 100 100-45 100-100-45-100-100-100zm0 160c-33 0-60-27-60-60s27-60 60-60 60 27 60 60-27 60-60 60z"/>
+    <path d="M340 180l60-80 80 100 60-80 80 120v140H240V320z"/>
+    <circle cx="400" cy="320" r="40"/>
+  </g>
+  <text x="400" y="480" font-family="system-ui, sans-serif" font-size="18" fill="#64748b" text-anchor="middle">The Halal Explorer</text>
+  <text x="400" y="508" font-family="system-ui, sans-serif" font-size="14" fill="#94a3b8" text-anchor="middle">No image</text>
+</svg>

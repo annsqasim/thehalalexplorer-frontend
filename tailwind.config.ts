@@ -10,6 +10,8 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
+        "background-light": "#F8FAFC",
+        "background-dark": "#0F172A",
         // Brand colors - Earth + Emerald + Sand tones
         brand: {
           earth: {
@@ -58,8 +60,8 @@ const config: Config = {
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         primary: {
-          DEFAULT: "hsl(var(--primary))",
-          foreground: "hsl(var(--primary-foreground))",
+          DEFAULT: "#10B981",
+          foreground: "#ffffff",
         },
         secondary: {
           DEFAULT: "hsl(var(--secondary))",
@@ -87,13 +89,15 @@ const config: Config = {
         },
       },
       borderRadius: {
+        DEFAULT: "0.75rem",
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
       },
       fontFamily: {
-        sans: ['var(--font-inter)', 'Inter', 'system-ui', 'sans-serif'],
-        display: ['var(--font-inter)', 'Inter', 'system-ui', 'sans-serif'],
+        sans: ["var(--font-plus-jakarta)", "'Plus Jakarta Sans'", "system-ui", "sans-serif"],
+        display: ["var(--font-plus-jakarta)", "'Plus Jakarta Sans'", "system-ui", "sans-serif"],
+        serif: ["var(--font-playfair)", "'Playfair Display'", "Georgia", "serif"],
       },
       spacing: {
         '18': '4.5rem',

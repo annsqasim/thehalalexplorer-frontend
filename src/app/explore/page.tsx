@@ -35,6 +35,7 @@ import {
 import Image from "next/image"
 import Link from "next/link"
 import { allDestinations } from "@/lib/mock-data"
+import { PLACEHOLDER_IMAGE } from "@/lib/constants"
 
 // Mock experiences data
 const experiences = [
@@ -351,7 +352,7 @@ export default function ExplorePage() {
                     <CardActionArea component={Link} href={`/explore/${experience.id}`}>
                       <CardMedia component="div" sx={{ height: 200, position: "relative" }}>
                         <Image
-                          src={experience.image || "/placeholder.svg"}
+                          src={experience.image || PLACEHOLDER_IMAGE}
                           alt={experience.title}
                           fill
                           style={{ objectFit: "cover" }}
@@ -447,7 +448,7 @@ export default function ExplorePage() {
                   <CardActionArea component={Link} href={`/destinations/${destination.slug}`}>
                     <Box sx={{ position: "relative", width: "100%", height: "100%" }}>
                       <Image
-                        src={destination.imageUrl || "/placeholder.svg"}
+                        src={destination.imageUrl || PLACEHOLDER_IMAGE}
                         alt={destination.name}
                         fill
                         style={{ objectFit: "cover" }}

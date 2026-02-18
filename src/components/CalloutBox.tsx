@@ -1,6 +1,5 @@
 "use client";
 
-import { motion } from "framer-motion";
 import { Card } from "@/components/ui/card";
 import { ReactNode } from "react";
 import { cn } from "@/lib/utils";
@@ -28,25 +27,20 @@ export function CalloutBox({
   };
 
   return (
-    <motion.div
-      initial={{ opacity: 0, scale: 0.95 }}
-      whileInView={{ opacity: 1, scale: 1 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.4 }}
-    >
+    <div className="animate-scale-in">
       <Card className={cn("p-6 border-2", variants[variant], className)}>
         <div className="flex items-start gap-4">
           {icon && (
-            <div className="text-brand-emerald-600 flex-shrink-0 mt-1">
+            <div className="text-primary flex-shrink-0 mt-1">
               {icon}
             </div>
           )}
           <div className="flex-1">
             <h3 className="font-bold text-lg mb-2">{title}</h3>
-            <div className="text-gray-700">{children}</div>
+            <div className="text-slate-700 dark:text-slate-300">{children}</div>
           </div>
         </div>
       </Card>
-    </motion.div>
+    </div>
   );
 }
