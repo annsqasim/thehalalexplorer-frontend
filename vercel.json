@@ -1,0 +1,12 @@
+{
+  "crons": [
+    {
+      "path": "/api/cron/update-destinations",
+      "schedule": "0 9 * * 1"
+    },
+    {
+      "path": "/api/cron/generate-blogs",
+      "schedule": "0 10 * * 1"
+    }
+  ]
+}
