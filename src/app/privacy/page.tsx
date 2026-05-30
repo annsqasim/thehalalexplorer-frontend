@@ -39,7 +39,10 @@ export default function PrivacyPage() {
         <section>
           <h2 className="text-2xl font-bold text-slate-900 dark:text-white mt-8 mb-4">3. How We Use Information</h2>
           <p className="text-slate-600 dark:text-slate-400 leading-relaxed">
-            We use collected information to operate and improve the site, respond to inquiries, send newsletters if you have opted in, and analyze site usage. We may use third-party services (e.g. analytics, advertising) that have their own privacy practices.
+            We use collected information to operate and improve the site, respond to inquiries, send newsletters if you have opted in, and analyze site usage. We may use third-party services (e.g. analytics, advertising) that have their own privacy practices. If we display ads through Google AdSense, Google and its partners may use cookies to serve ads based on your visits to this site and other sites on the Internet. You can opt out of personalized advertising by visiting{" "}
+            <a href="https://www.google.com/settings/ads" className="text-primary hover:underline" target="_blank" rel="noopener noreferrer">
+              Google Ads Settings
+            </a>.
           </p>
         </section>
 

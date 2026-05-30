@@ -125,7 +125,9 @@ export default function FeaturedDestinations({ destinations }: FeaturedDestinati
                     <Typography variant="body2" component="span" sx={{ mr: 1, fontWeight: 500 }}>
                       Prayer Facilities:
                     </Typography>
-                    <Rating value={destination.prayerFacilities} readOnly size="small" />
+                    <Typography variant="body2" component="span" color="text.secondary">
+                      {destination.prayerFacilities ? "Available" : "—"}
+                    </Typography>
                   </Box>
                 </Box>
 

@@ -21,29 +21,6 @@ export default function Footer() {
             <p className="text-sm leading-relaxed mb-6">
               Your comprehensive guide to Muslim-friendly travel destinations around the world. Discover places with halal food, prayer facilities, and cultural insights.
             </p>
-            <div className="flex gap-3">
-              <a
-                href="#"
-                className="w-9 h-9 flex items-center justify-center rounded-full border border-slate-800 hover:border-primary hover:text-primary transition-colors"
-                aria-label="Facebook"
-              >
-                <span className="text-lg">f</span>
-              </a>
-              <a
-                href="#"
-                className="w-9 h-9 flex items-center justify-center rounded-full border border-slate-800 hover:border-primary hover:text-primary transition-colors"
-                aria-label="Twitter"
-              >
-                <span className="text-lg">𝕏</span>
-              </a>
-              <a
-                href="#"
-                className="w-9 h-9 flex items-center justify-center rounded-full border border-slate-800 hover:border-primary hover:text-primary transition-colors"
-                aria-label="Instagram"
-              >
-                <span className="text-lg">📷</span>
-              </a>
-            </div>
           </div>
 
           <div>
@@ -85,20 +62,12 @@ export default function Footer() {
           <div>
             <h5 className="text-white font-bold mb-6">Newsletter</h5>
             <p className="text-xs mb-4">Get the latest travel guides delivered to your inbox.</p>
-            <form className="relative" action="#" method="post">
-              <input
-                type="email"
-                placeholder="Email address"
-                className="w-full bg-slate-900 border border-slate-800 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all"
-              />
-              <button
-                type="submit"
-                className="absolute right-2 top-2 p-1.5 text-primary hover:bg-primary/10 rounded-lg transition-colors"
-                aria-label="Subscribe"
-              >
-                →
-              </button>
-            </form>
+            <Link
+              href="/contact"
+              className="inline-block text-sm text-primary hover:underline"
+            >
+              Contact us to subscribe →
+            </Link>
           </div>
         </div>
 

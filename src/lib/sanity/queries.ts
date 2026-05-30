@@ -11,6 +11,10 @@ export async function getDestinationBySlug(slug: string) {
     halalFoodInfo,
     prayerFacilities,
     bestTimeToVisit,
+    travelTips,
+    metaTitle,
+    metaDescription,
+    details,
     image{
       asset->{
         url
@@ -33,6 +37,11 @@ export async function getAllDestinations() {
     halalFoodInfo,
     prayerFacilities,
     bestTimeToVisit,
+    travelTips,
+    metaTitle,
+    metaDescription,
+    details,
+    isFeatured,
     image{
       asset->{
         url

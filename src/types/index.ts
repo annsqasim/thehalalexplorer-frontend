@@ -12,12 +12,16 @@ export interface Destination {
     current: string;
   };
   description: string;
-  halalFoodInfo: string;
-  halalFoodRating: number;
-  prayerFacilities: number;
-  bestTimeToVisit: string;
-  details: {
+  halalFoodInfo?: string;
+  halalFoodRating?: number;
+  prayerFacilities?: string;
+  bestTimeToVisit?: string;
+  travelTips?: string[];
+  metaTitle?: string;
+  metaDescription?: string;
+  details?: {
     _type: string;
+    style?: string;
     children: {
       _type: string;
       text: string;

@@ -1,8 +1,9 @@
 import { NextResponse } from 'next/server';
 import { GoogleGenerativeAI } from '@google/generative-ai';
+import { safeParseJSON } from '@/lib/cron/safe-parse-json';
+import { attachPortableTextKeys, type PortableTextBlock } from '@/lib/cron/portable-text';
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
-// NEW - current free model
 const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash-lite' });
 
 const SANITY_PROJECT_ID = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID!;
@@ -10,56 +11,50 @@ const SANITY_DATASET = process.env.NEXT_PUBLIC_SANITY_DATASET ?? 'production';
 const SANITY_API_TOKEN = process.env.NEXT_PUBLIC_SANITY_API_TOKEN!;
 const CRON_SECRET = process.env.CRON_SECRET!;
 
-// ─── Types ────────────────────────────────────────────────────────────────────
-
-interface HalalRestaurant {
-  name: string;
-  cuisine: string;
-  priceRange: string;
-  notes: string;
+interface BlogIdea {
+  title: string;
+  slug: string;
+  targetKeyword: string;
+  metaTitle: string;
+  metaDescription: string;
+  shortDescription: string;
+  categories: string[];
+  outline: { heading: string; points: string[] }[];
 }
 
-interface SanityDestination {
-  _id: string;
-  name: string;
-  country: string;
-  description: string;
-  halalRestaurants: HalalRestaurant[];
-  travelTips: string[];
-  seoTitle: string;
-  seoDescription: string;
+interface BlogBody {
+  body: Omit<PortableTextBlock, '_key'>[];
 }
 
-interface UpdatedContent {
-  description: string;
-  halalRestaurants: HalalRestaurant[];
-  travelTips: string[];
-  seoTitle: string;
-  seoDescription: string;
-}
-
-// ─── Sanity Helpers ───────────────────────────────────────────────────────────
-
-async function fetchDestinations(): Promise<SanityDestination[]> {
+async function fetchExistingSlugs(): Promise<string[]> {
   const query = encodeURIComponent(
-    `*[_type == "destination"] | order(_updatedAt asc) [0..4] {
-      _id, name, country, description,
-      halalRestaurants, travelTips,
-      seoTitle, seoDescription
-    }`
+    `*[_type == "blog" && defined(slug.current)].slug.current`
   );
   const url = `https://${SANITY_PROJECT_ID}.api.sanity.io/v2021-10-21/data/query/${SANITY_DATASET}?query=${query}`;
-
   const res = await fetch(url, {
     headers: { Authorization: `Bearer ${SANITY_API_TOKEN}` },
   });
   if (!res.ok) throw new Error(`Sanity fetch failed: ${res.statusText}`);
   const data = await res.json();
-  return data.result as SanityDestination[];
+  return (data.result as string[]) ?? [];
 }
 
-async function patchDestination(id: string, content: UpdatedContent) {
+async function createBlogPost(blog: BlogIdea, body: PortableTextBlock[]) {
   const url = `https://${SANITY_PROJECT_ID}.api.sanity.io/v2021-10-21/data/mutate/${SANITY_DATASET}`;
+
+  const document = {
+    _type: 'blog',
+    title: blog.title,
+    slug: { _type: 'slug', current: blog.slug },
+    author: 'The Halal Explorer Team',
+    shortDescription: blog.shortDescription,
+    body,
+    categories: blog.categories,
+    metaTitle: blog.metaTitle,
+    metaDescription: blog.metaDescription,
+    publishedAt: new Date().toISOString(),
+    isFeatured: false,
+  };
 
   const res = await fetch(url, {
     method: 'POST',
@@ -67,77 +62,103 @@ async function patchDestination(id: string, content: UpdatedContent) {
       Authorization: `Bearer ${SANITY_API_TOKEN}`,
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({
-      mutations: [{
-        patch: {
-          id,
-          set: {
-            description: content.description,
-            halalRestaurants: content.halalRestaurants,
-            travelTips: content.travelTips,
-            seoTitle: content.seoTitle,
-            seoDescription: content.seoDescription,
-          },
-        },
-      }],
-    }),
+    body: JSON.stringify({ mutations: [{ create: document }] }),
   });
-  if (!res.ok) throw new Error(`Sanity patch failed for ${id}: ${res.statusText}`);
+  if (!res.ok) {
+    const errText = await res.text();
+    throw new Error(`Sanity create failed: ${res.statusText} — ${errText}`);
+  }
   return res.json();
 }
 
-// ─── Gemini Helper ────────────────────────────────────────────────────────────
+async function generateBlogIdeas(existingSlugs: string[]): Promise<BlogIdea[]> {
+  const prompt = `You are a content director for TheHalalExplorer.com, a halal travel website.
 
-async function refreshDestinationContent(dest: SanityDestination): Promise<UpdatedContent> {
-  const prompt = `You are a senior travel writer and Muslim travel expert for TheHalalExplorer.com.
+Generate 2 blog post ideas that are highly specific, answer a real question a Muslim traveler would Google, and can be written with genuine depth (1,000+ words of useful content). Make the topics different from each other — one destination-specific, one practical/tips-based.
 
-Our site was rejected by Google AdSense for "low value content." Your writing must meet Google's E-E-A-T standards (Experience, Expertise, Authoritativeness, Trustworthiness). Every sentence must earn its place.
+Do NOT reuse these existing slugs: ${existingSlugs.slice(0, 40).join(', ')}
 
-DESTINATION: ${dest.name}, ${dest.country}
-CURRENT CONTENT: ${dest.description ?? 'None — write from scratch'}
+Topic pillars: halal food guides for specific cities, mosque guides for non-Muslim cities, Ramadan travel, Eid destinations, Muslim-friendly hotel guides, Islamic heritage sites, modest packing guides, visa guides, halal travel in Muslim-minority countries.
 
-MANDATORY REQUIREMENTS:
-1. WORD COUNT: Description must be 700-900 words. Count carefully.
-2. STRUCTURE: Use 5-6 sections with ## markdown headings (e.g. "## Islamic Heritage & History", "## Halal Food Scene", "## Mosques & Prayer Facilities", "## Muslim-Friendly Neighbourhoods", "## Best Time to Visit")
-3. SPECIFICITY: Name REAL places — actual mosque names, real restaurant names, specific neighbourhoods. No generic phrases.
-4. ISLAMIC CONTEXT: Include history of Islam in this destination — when it arrived, key figures, architecture, how faith shapes daily life.
-5. HALAL DETAILS: Specify which halal certification body operates in this country, which areas have the most halal options.
-6. PERSONAL VOICE: Write warmly as a knowledgeable Muslim friend. Use "you" to address the reader.
-7. RAMADAN/EID: Include at least one paragraph about visiting during Ramadan or Eid.
-8. RESTAURANTS: Provide 5 real, named restaurants with specific details.
-9. TIPS: Write 7 tips that only someone with genuine knowledge of ${dest.name} would know.
-
-You MUST respond with ONLY a valid JSON object. No explanation, no markdown fences, no preamble. Start your response with { and end with }.
+You MUST respond with ONLY a valid JSON object. No explanation, no markdown fences, no preamble. Start with { and end with }.
 
 {
-  "description": "700-900 word description with ## section headings embedded in the text",
-  "halalRestaurants": [
-    { "name": "Real restaurant name", "cuisine": "Specific cuisine", "priceRange": "$|$$|$$$|$$$$", "notes": "Specific useful note about this restaurant" }
-  ],
-  "travelTips": [
-    "Specific expert tip 1 naming a specific place, time, or insider detail",
-    "Specific expert tip 2",
-    "Specific expert tip 3",
-    "Specific expert tip 4",
-    "Specific expert tip 5",
-    "Specific expert tip 6",
-    "Specific expert tip 7"
-  ],
-  "seoTitle": "Under 60 chars — destination name + halal travel",
-  "seoDescription": "150-160 chars — specific benefit for Muslim travelers"
+  "blogs": [
+    {
+      "title": "Specific compelling blog title",
+      "slug": "url-friendly-slug",
+      "targetKeyword": "specific long-tail SEO keyword",
+      "metaTitle": "SEO title under 60 chars",
+      "metaDescription": "150-160 chars with keyword and clear value",
+      "shortDescription": "2-3 compelling sentences that make a Muslim traveler want to read this",
+      "categories": ["Food", "Destinations"],
+      "outline": [
+        { "heading": "Introduction", "points": ["specific hook", "what reader will learn"] },
+        { "heading": "Section 2 title", "points": ["point 1", "point 2", "point 3"] },
+        { "heading": "Section 3 title", "points": ["point 1", "point 2"] },
+        { "heading": "Section 4 title", "points": ["point 1", "point 2"] },
+        { "heading": "Section 5 title", "points": ["point 1", "point 2"] },
+        { "heading": "Conclusion", "points": ["summary", "call to action"] }
+      ]
+    },
+    {
+      "title": "Second blog title",
+      "slug": "second-slug",
+      "targetKeyword": "second keyword",
+      "metaTitle": "Second meta title",
+      "metaDescription": "Second meta description",
+      "shortDescription": "Second short description",
+      "categories": ["Travel Tips"],
+      "outline": [
+        { "heading": "Introduction", "points": ["hook"] },
+        { "heading": "Section", "points": ["point"] },
+        { "heading": "Conclusion", "points": ["cta"] }
+      ]
+    }
+  ]
 }`;
 
   const result = await model.generateContent(prompt);
   const raw = result.response.text();
-
-  // Strip any markdown fences Gemini might add despite instructions
-  const cleaned = raw.replace(/```json|```/g, '').trim();
-  const match = cleaned.match(/\{[\s\S]*\}/);
-  if (!match) throw new Error(`No JSON in Gemini response for ${dest.name}`);
-  return JSON.parse(match[0]) as UpdatedContent;
+  const parsed = safeParseJSON<{ blogs: BlogIdea[] }>(raw, 'blog ideas');
+  return parsed.blogs;
 }
 
-// ─── Route Handler ────────────────────────────────────────────────────────────
+async function writeBlogPost(idea: BlogIdea): Promise<PortableTextBlock[]> {
+  const prompt = `You are an expert Muslim travel writer for TheHalalExplorer.com. Google rejected our site for "low value content" — this post must demonstrate genuine expertise and depth to pass Google's E-E-A-T quality review.
+
+BLOG BRIEF:
+Title: ${idea.title}
+Target keyword: "${idea.targetKeyword}" — use naturally 4-5 times
+Outline: ${JSON.stringify(idea.outline, null, 2)}
+
+MANDATORY STANDARDS:
+1. LENGTH: 1,100-1,300 words total. Every paragraph must contain specific, useful information.
+2. SPECIFICITY: Name real places, use accurate details, give concrete advice — no filler sentences
+3. NO FILLER: Never write "this city has much to offer" or "there are many options" — be specific always
+4. MUSLIM PERSPECTIVE: Naturally weave in halal food, prayer, modest travel throughout — as narrative, not checklist
+5. STRUCTURE: Each section needs 2-3 substantial prose paragraphs — no bullet points in body content
+6. INTRO: First paragraph must open with a specific, vivid detail — not a generic travel statement
+7. CONCLUSION: End with a warm call to action inviting readers to explore TheHalalExplorer for more guides
+
+You MUST respond with ONLY a valid JSON object. No explanation, no markdown fences, no preamble. Start with { and end with }.
+
+{
+  "body": [
+    { "_type": "block", "style": "normal", "children": [{ "_type": "span", "text": "Full opening paragraph — minimum 4 sentences, specific and vivid..." }] },
+    { "_type": "block", "style": "h2", "children": [{ "_type": "span", "text": "First Section Heading" }] },
+    { "_type": "block", "style": "normal", "children": [{ "_type": "span", "text": "Section paragraph 1..." }] },
+    { "_type": "block", "style": "normal", "children": [{ "_type": "span", "text": "Section paragraph 2..." }] }
+  ]
+}
+
+Use "style": "h2" for headings, "style": "normal" for paragraphs. Include 18-22 blocks minimum. All body content must be prose paragraphs — no bullet-point style blocks.`;
+
+  const result = await model.generateContent(prompt);
+  const raw = result.response.text();
+  const parsed = safeParseJSON<BlogBody>(raw, idea.title);
+  return attachPortableTextKeys(parsed.body);
+}
 
 export async function GET(request: Request) {
   const authHeader = request.headers.get('authorization');
@@ -145,25 +166,36 @@ export async function GET(request: Request) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
-  const results: { name: string; success: boolean; error?: string }[] = [];
+  const results: { title: string; success: boolean; error?: string }[] = [];
 
   try {
-    const destinations = await fetchDestinations();
+    const existingSlugs = await fetchExistingSlugs();
+    const ideas = await generateBlogIdeas(existingSlugs);
 
-    for (const dest of destinations) {
+    for (const idea of ideas) {
+      if (existingSlugs.includes(idea.slug)) {
+        results.push({ title: idea.title, success: false, error: 'Slug already exists' });
+        continue;
+      }
+
       try {
-        const updated = await refreshDestinationContent(dest);
-        await patchDestination(dest._id, updated);
-        results.push({ name: dest.name, success: true });
-        console.log(`✅ Updated: ${dest.name}`);
+        const body = await writeBlogPost(idea);
+        await createBlogPost(idea, body);
+        results.push({ title: idea.title, success: true });
+        console.log(`✅ Created blog: ${idea.title}`);
       } catch (err) {
         const msg = err instanceof Error ? err.message : 'Unknown error';
-        results.push({ name: dest.name, success: false, error: msg });
-        console.error(`❌ Failed: ${dest.name} — ${msg}`);
+        results.push({ title: idea.title, success: false, error: msg });
+        console.error(`❌ Failed blog: ${idea.title} — ${msg}`);
       }
     }
 
-    return NextResponse.json({ ok: true, ran: new Date().toISOString(), results });
+    return NextResponse.json({
+      ok: true,
+      ran: new Date().toISOString(),
+      blogsCreated: results.filter((r) => r.success).length,
+      results,
+    });
   } catch (err) {
     const msg = err instanceof Error ? err.message : 'Unknown error';
     return NextResponse.json({ ok: false, error: msg }, { status: 500 });

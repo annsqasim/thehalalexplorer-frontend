@@ -13,10 +13,10 @@ export const metadata: Metadata = {
 };
 
 const stats = [
-  { value: "50+", label: "Countries Covered" },
-  { value: "1,200+", label: "Mosques Listed" },
-  { value: "500k", label: "Community Members" },
-  { value: "850+", label: "Halal Guides" },
+  { value: "70+", label: "Destinations Covered" },
+  { value: "45+", label: "Travel Guides" },
+  { value: "Growing", label: "Community" },
+  { value: "Free", label: "To Use" },
 ];
 
 export default function AboutPage() {
