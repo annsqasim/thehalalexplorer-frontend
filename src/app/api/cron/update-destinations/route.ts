@@ -1,42 +1,55 @@
 import { NextResponse } from 'next/server';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import { safeParseJSON } from '@/lib/cron/safe-parse-json';
-import { attachPortableTextKeys, type PortableTextBlock } from '@/lib/cron/portable-text';
+import { buildDestinationContentPrompt } from '@/lib/cron/destination-content-prompt';
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
 const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash-lite' });
 
 const SANITY_PROJECT_ID = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID!;
 const SANITY_DATASET = process.env.NEXT_PUBLIC_SANITY_DATASET ?? 'production';
-const SANITY_API_TOKEN = process.env.NEXT_PUBLIC_SANITY_API_TOKEN!;
+const SANITY_API_TOKEN = process.env.SANITY_API_TOKEN!;
 const CRON_SECRET = process.env.CRON_SECRET!;
 
 interface SanityDestination {
   _id: string;
   name: string;
   country: string;
-  description?: string;
-  halalFoodInfo?: string;
-  prayerFacilities?: string;
-  bestTimeToVisit?: string;
+  slug?: { current: string };
 }
 
-interface UpdatedContent {
-  description: string;
-  halalFoodInfo: string;
+interface QuickFacts {
+  visa: string;
+  currency: string;
+  timezone: string;
+  muslimPopulation: string;
+  language: string;
+  dressCode: string;
+  safety: string;
+}
+
+interface GeneratedDestination {
+  intro: string;
+  about: string;
+  whyMuslimsLoveIt: string[];
+  halalFood: string;
   prayerFacilities: string;
+  muslimTravelTips: string[];
   bestTimeToVisit: string;
-  travelTips: string[];
+  quickFacts: QuickFacts;
+  conclusion: string;
   metaTitle: string;
   metaDescription: string;
-  details: Omit<PortableTextBlock, '_key'>[];
+}
+
+function buildPrompt(dest: SanityDestination): string {
+  return buildDestinationContentPrompt(dest.name, dest.country);
 }
 
 async function fetchDestinations(): Promise<SanityDestination[]> {
   const query = encodeURIComponent(
     `*[_type == "destination"] | order(_updatedAt asc) [0..4] {
-      _id, name, country, description,
-      halalFoodInfo, prayerFacilities, bestTimeToVisit
+      _id, name, country, slug
     }`
   );
   const url = `https://${SANITY_PROJECT_ID}.api.sanity.io/v2021-10-21/data/query/${SANITY_DATASET}?query=${query}`;
@@ -49,9 +62,8 @@ async function fetchDestinations(): Promise<SanityDestination[]> {
   return data.result as SanityDestination[];
 }
 
-async function patchDestination(id: string, content: UpdatedContent) {
+async function patchDestination(id: string, content: GeneratedDestination) {
   const url = `https://${SANITY_PROJECT_ID}.api.sanity.io/v2021-10-21/data/mutate/${SANITY_DATASET}`;
-  const details = attachPortableTextKeys(content.details);
 
   const res = await fetch(url, {
     method: 'POST',
@@ -64,14 +76,18 @@ async function patchDestination(id: string, content: UpdatedContent) {
         patch: {
           id,
           set: {
-            description: content.description,
-            halalFoodInfo: content.halalFoodInfo,
+            description: content.intro.slice(0, 280),
+            intro: content.intro,
+            about: content.about,
+            whyMuslimsLoveIt: content.whyMuslimsLoveIt,
+            halalFoodInfo: content.halalFood,
             prayerFacilities: content.prayerFacilities,
+            travelTips: content.muslimTravelTips,
             bestTimeToVisit: content.bestTimeToVisit,
-            travelTips: content.travelTips,
+            quickFacts: content.quickFacts,
+            conclusion: content.conclusion,
             metaTitle: content.metaTitle,
             metaDescription: content.metaDescription,
-            details,
           },
         },
       }],
@@ -84,52 +100,10 @@ async function patchDestination(id: string, content: UpdatedContent) {
   return res.json();
 }
 
-async function refreshDestinationContent(dest: SanityDestination): Promise<UpdatedContent> {
-  const prompt = `You are a senior travel writer and Muslim travel expert for TheHalalExplorer.com.
-
-Our site was rejected by Google AdSense for "low value content." Your writing must meet Google's E-E-A-T standards (Experience, Expertise, Authoritativeness, Trustworthiness). Every sentence must earn its place.
-
-DESTINATION: ${dest.name}, ${dest.country}
-CURRENT CONTENT: ${dest.description ?? 'None — write from scratch'}
-
-MANDATORY REQUIREMENTS:
-1. DESCRIPTION: Write a 120-150 word intro paragraph for cards and meta descriptions.
-2. HALAL FOOD INFO: 250-350 words naming real restaurants, certification bodies, and neighborhoods with the best halal options.
-3. PRAYER FACILITIES: 200-300 words naming real mosques, prayer rooms in malls/airports, and qibla tips.
-4. BEST TIME TO VISIT: One detailed paragraph covering weather, Ramadan/Eid, and peak seasons.
-5. DETAILS: Full guide as portable text blocks — 600-800 words across 5-6 h2 sections (Islamic heritage, neighborhoods, practical tips, Ramadan/Eid, getting around). Use h2 for section headings and normal for paragraphs.
-6. SPECIFICITY: Name REAL places — actual mosque names, real restaurant names, specific neighbourhoods. No generic phrases.
-7. TRAVEL TIPS: 7 tips that only someone with genuine knowledge of ${dest.name} would know.
-
-You MUST respond with ONLY a valid JSON object. No explanation, no markdown fences, no preamble. Start your response with { and end with }.
-
-{
-  "description": "120-150 word intro paragraph",
-  "halalFoodInfo": "250-350 words about halal food with named restaurants",
-  "prayerFacilities": "200-300 words about mosques and prayer rooms",
-  "bestTimeToVisit": "Detailed paragraph about when to visit",
-  "travelTips": [
-    "Specific expert tip 1",
-    "Specific expert tip 2",
-    "Specific expert tip 3",
-    "Specific expert tip 4",
-    "Specific expert tip 5",
-    "Specific expert tip 6",
-    "Specific expert tip 7"
-  ],
-  "metaTitle": "Under 60 chars — destination name + halal travel",
-  "metaDescription": "150-160 chars — specific benefit for Muslim travelers",
-  "details": [
-    { "_type": "block", "style": "h2", "children": [{ "_type": "span", "text": "Islamic Heritage & History" }] },
-    { "_type": "block", "style": "normal", "children": [{ "_type": "span", "text": "Substantial paragraph with specific details..." }] }
-  ]
-}
-
-Include 14-18 blocks in details. Use style h2 for headings and normal for paragraphs only.`;
-
-  const result = await model.generateContent(prompt);
+async function refreshDestinationContent(dest: SanityDestination): Promise<GeneratedDestination> {
+  const result = await model.generateContent(buildPrompt(dest));
   const raw = result.response.text();
-  return safeParseJSON<UpdatedContent>(raw, dest.name);
+  return safeParseJSON<GeneratedDestination>(raw, dest.name);
 }
 
 export async function GET(request: Request) {

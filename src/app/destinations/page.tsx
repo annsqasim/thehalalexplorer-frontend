@@ -2,6 +2,7 @@ import { Metadata } from "next";
 import { Section, SectionHeader } from "@/components/Section";
 import { DestinationCard } from "@/components/DestinationCard";
 import { getAllDestinations } from "@/lib/destinations";
+import { getDestinationExcerpt } from "@/lib/destination-content";
 import { Destination } from "@/types";
 import _get from "lodash/get";
 import { destinationsPageContent } from "@/data/destinations";
@@ -79,7 +80,7 @@ export default async function DestinationsPage() {
               key={destination._id}
               name={destination.name}
               country={destination.country}
-              description={destination.description}
+              description={getDestinationExcerpt(destination)}
               imageUrl={_get(destination, "image.asset.url", PLACEHOLDER_IMAGE)}
               slug={destination.slug.current}
               index={index}

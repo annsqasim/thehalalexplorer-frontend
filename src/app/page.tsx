@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Shield, Heart, Users, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 import { getFeaturedDestinations, getAllDestinations } from '@/lib/destinations';
+import { getDestinationExcerpt } from '@/lib/destination-content';
 import { getHomepageData } from '@/lib/sanity/queries';
 import { Destination } from "@/types";
 import _get from 'lodash/get';
@@ -91,7 +92,7 @@ export default async function HomePage() {
               key={destination._id}
               name={destination.name}
               country={destination.country}
-              description={destination.description}
+              description={getDestinationExcerpt(destination)}
               imageUrl={_get(destination, 'image.asset.url', placeholderImage)}
               slug={destination.slug.current}
               index={index}

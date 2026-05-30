@@ -8,7 +8,7 @@ const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash-lite' });
 
 const SANITY_PROJECT_ID = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID!;
 const SANITY_DATASET = process.env.NEXT_PUBLIC_SANITY_DATASET ?? 'production';
-const SANITY_API_TOKEN = process.env.NEXT_PUBLIC_SANITY_API_TOKEN!;
+const SANITY_API_TOKEN = process.env.SANITY_API_TOKEN!;
 const CRON_SECRET = process.env.CRON_SECRET!;
 
 interface BlogIdea {

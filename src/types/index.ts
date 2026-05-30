@@ -2,6 +2,16 @@
 
 import { Key } from "react";
 
+export interface DestinationQuickFacts {
+  visa?: string;
+  currency?: string;
+  timezone?: string;
+  muslimPopulation?: string;
+  language?: string;
+  dressCode?: string;
+  safety?: string;
+}
+
 export interface Destination {
   _id: Key | null | undefined;
   _type: string;
@@ -11,12 +21,17 @@ export interface Destination {
   slug: {
     current: string;
   };
-  description: string;
+  description?: string;
+  intro?: string;
+  about?: string;
+  whyMuslimsLoveIt?: string[];
   halalFoodInfo?: string;
   halalFoodRating?: number;
   prayerFacilities?: string;
   bestTimeToVisit?: string;
   travelTips?: string[];
+  quickFacts?: DestinationQuickFacts;
+  conclusion?: string;
   metaTitle?: string;
   metaDescription?: string;
   details?: {
@@ -27,8 +42,8 @@ export interface Destination {
       text: string;
     }[];
   }[];
-  image?: string | { asset?: { url?: string } }; // Sanity shape or URL
-  isFeatured?: boolean; // Optional
+  image?: string | { asset?: { url?: string } };
+  isFeatured?: boolean;
 }
 
 export interface PageProps {

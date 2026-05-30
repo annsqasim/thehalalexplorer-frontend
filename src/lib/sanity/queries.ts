@@ -1,43 +1,21 @@
 // lib/sanity/queries.ts
 import { client } from '../sanity';
 
-export async function getDestinationBySlug(slug: string) {
-  const query = `*[_type == "destination" && slug.current == $slug][0]{
+const destinationFields = `
     _id,
     name,
     country,
     slug,
     description,
+    intro,
+    about,
+    whyMuslimsLoveIt,
     halalFoodInfo,
     prayerFacilities,
     bestTimeToVisit,
     travelTips,
-    metaTitle,
-    metaDescription,
-    details,
-    image{
-      asset->{
-        url
-      }
-    }
-  }`;
-
-  const params = { slug };
-
-  return await client.fetch(query, params);
-}
-
-export async function getAllDestinations() {
-  const query = `*[_type == "destination"]{
-    _id,
-    name,
-    country,
-    slug,
-    description,
-    halalFoodInfo,
-    prayerFacilities,
-    bestTimeToVisit,
-    travelTips,
+    quickFacts,
+    conclusion,
     metaTitle,
     metaDescription,
     details,
@@ -47,7 +25,18 @@ export async function getAllDestinations() {
         url
       }
     }
-  }`;
+`;
+
+export async function getDestinationBySlug(slug: string) {
+  const query = `*[_type == "destination" && slug.current == $slug][0]{${destinationFields}}`;
+
+  const params = { slug };
+
+  return await client.fetch(query, params);
+}
+
+export async function getAllDestinations() {
+  const query = `*[_type == "destination"]{${destinationFields}}`;
 
   return await client.fetch(query);
 }
@@ -59,6 +48,7 @@ export async function getFeaturedDestinations() {
     country,
     slug,
     description,
+    intro,
     halalFoodInfo,
     prayerFacilities,
     bestTimeToVisit,
