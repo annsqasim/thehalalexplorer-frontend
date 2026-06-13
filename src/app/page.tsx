@@ -27,9 +27,13 @@ export async function generateMetadata(): Promise<Metadata> {
     title: homepageData?.metaTitle || "The Halal Explorer - Muslim-Friendly Travel Destinations",
     description: homepageData?.metaDescription || "Discover Muslim-friendly travel destinations around the world with information on halal food, mosques, prayer timings, and local customs.",
     keywords: homepageData?.metaKeywords || ["Halal Travel", "Muslim-Friendly Destinations", "Halal Food", "Islamic Travel"],
+    alternates: {
+      canonical: homepageData?.canonicalUrl || "/",
+    },
     openGraph: {
       title: homepageData?.metaTitle || "The Halal Explorer - Muslim-Friendly Travel Destinations",
       description: homepageData?.metaDescription || "Discover Muslim-friendly travel destinations around the world",
+      url: homepageData?.canonicalUrl || "/",
       images: homepageData?.heroImage?.asset?.url
         ? [{ url: homepageData.heroImage.asset.url, width: 1200, height: 630 }]
         : [],

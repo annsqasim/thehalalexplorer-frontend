@@ -34,6 +34,7 @@ export interface Destination {
   conclusion?: string;
   metaTitle?: string;
   metaDescription?: string;
+  canonicalUrl?: string;
   details?: {
     _type: string;
     style?: string;
@@ -60,6 +61,7 @@ export interface Blog {
   categories?: string[];
   metaTitle?: string;
   metaDescription?: string;
+  canonicalUrl?: string;
   body: {
     _type: string;
     children: {

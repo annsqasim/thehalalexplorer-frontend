@@ -65,9 +65,13 @@ export async function generateMetadata({
   return {
     title,
     description,
+    alternates: {
+      canonical: destination.canonicalUrl || `/destinations/${slug}`,
+    },
     openGraph: {
       title,
       description,
+      url: destination.canonicalUrl || `/destinations/${slug}`,
       images: imageUrl ? [{ url: imageUrl }] : [],
     },
   };

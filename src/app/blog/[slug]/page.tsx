@@ -37,9 +37,13 @@ export async function generateMetadata({
   return {
     title: post.metaTitle || post.title,
     description: post.metaDescription || post.shortDescription,
+    alternates: {
+      canonical: post.canonicalUrl || `/blog/${slug}`,
+    },
     openGraph: {
       title: post.metaTitle || post.title,
       description: post.metaDescription || post.shortDescription,
+      url: post.canonicalUrl || `/blog/${slug}`,
       images: post?.mainImage?.asset?.url
         ? [{ url: post.mainImage.asset.url }]
         : [],

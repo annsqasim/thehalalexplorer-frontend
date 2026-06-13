@@ -18,6 +18,7 @@ const destinationFields = `
     conclusion,
     metaTitle,
     metaDescription,
+    canonicalUrl,
     details,
     isFeatured,
     image{
@@ -71,6 +72,7 @@ export async function getHomepageData() {
     metaTitle,
     metaDescription,
     metaKeywords,
+    canonicalUrl,
     heroImage{
       asset->{
         _id,
@@ -98,7 +100,8 @@ export async function getAllBlogPosts() {
     categories,
     isFeatured,
     metaTitle,
-    metaDescription
+    metaDescription,
+    canonicalUrl
   }`;
 
   return await client.fetch(query);
@@ -116,6 +119,7 @@ export async function getBlogBySlug(slug: string) {
     categories,
     metaTitle,
     metaDescription,
+    canonicalUrl,
     body
   }`;
   return await client.fetch(query, { slug });
