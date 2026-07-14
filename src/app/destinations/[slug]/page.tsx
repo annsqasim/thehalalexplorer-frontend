@@ -10,6 +10,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import { ProductCarousel } from "@/components/ProductCarousel";
 import {
   Info,
   Utensils,
@@ -181,6 +182,7 @@ export default async function DestinationDetailPage({
     hasPrayerFacilities && { id: "prayer-facilities", label: "Prayer Facilities" },
     travelTips.length > 0 && { id: "travel-tips", label: "Travel Tips" },
     destination.bestTimeToVisit && { id: "best-time", label: "Best Time to Visit" },
+    destination.affiliateProducts && destination.affiliateProducts.length > 0 && { id: "pack-for-trip", label: "Pack for This Trip" },
     destination.conclusion && { id: "conclusion", label: "Plan Your Trip" },
     hasDetails && { id: "guide", label: "Full Guide" },
     { id: "quick-facts", label: "Quick Facts" },
@@ -281,6 +283,16 @@ export default async function DestinationDetailPage({
                 icon={<Calendar className="h-6 w-6" />}
               >
                 <FormattedProse text={destination.bestTimeToVisit} />
+              </ContentSection>
+            )}
+
+            {destination.affiliateProducts && destination.affiliateProducts.length > 0 && (
+              <ContentSection
+                id="pack-for-trip"
+                title="Pack for This Trip"
+                icon={<Compass className="h-6 w-6" />}
+              >
+                <ProductCarousel products={destination.affiliateProducts} />
               </ContentSection>
             )}
 

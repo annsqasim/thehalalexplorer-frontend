@@ -4,11 +4,13 @@ import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
 import { MapPin, Shield, Utensils } from "lucide-react";
 import { PLACEHOLDER_IMAGE } from "@/lib/constants";
+import { HalalScoreBadge } from "@/components/HalalScoreBadge";
 
 interface DestinationDetailHeroProps {
   name: string;
   country: string;
   imageUrl: string;
+  score?: number;
   highlights?: {
     halalFood?: string;
     mosques?: string;
@@ -20,6 +22,7 @@ export function DestinationDetailHero({
   name,
   country,
   imageUrl,
+  score,
   highlights,
 }: DestinationDetailHeroProps) {
   return (
@@ -32,6 +35,12 @@ export function DestinationDetailHero({
         priority
       />
       <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/50 to-black/70" />
+
+      {score && score >= 1 && (
+        <div className="absolute top-6 right-6 z-20">
+          <HalalScoreBadge score={score} size="md" />
+        </div>
+      )}
       
       <div className="container relative z-10 h-full flex flex-col justify-end pb-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-4xl animate-fade-in-up">

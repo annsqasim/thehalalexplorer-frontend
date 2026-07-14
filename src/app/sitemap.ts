@@ -6,6 +6,7 @@ export default async function sitemap() {
     '',
     '/destinations',
     '/blog',
+    '/explore',
     '/travel-tips',
     '/about',
     '/contact',
@@ -26,10 +27,10 @@ export default async function sitemap() {
   }
 
   const destinations: Destination[] = await client.fetch(
-    `*[_type == "destination" && defined(slug.current)]{ "slug": slug.current, _updatedAt }`
+    `*[_type == "destination" && defined(slug.current) && !(_id in path("drafts.**"))]{ "slug": slug.current, _updatedAt }`
   );
   const blogs: Blog[] = await client.fetch(
-    `*[_type == "blog" && defined(slug.current)]{ "slug": slug.current, publishedAt }`
+    `*[_type == "blog" && defined(slug.current) && !(_id in path("drafts.**"))]{ "slug": slug.current, publishedAt }`
   );
 
   const now = new Date().toISOString();

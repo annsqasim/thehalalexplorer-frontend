@@ -11,122 +11,103 @@ const destinationFields = `
     about,
     whyMuslimsLoveIt,
     halalFoodInfo,
+    halalFoodItems,
     prayerFacilities,
+    mosqueItems,
     bestTimeToVisit,
     travelTips,
     quickFacts,
     conclusion,
+    muslimFriendlyScore,
+    ratings,
+    affiliateProducts[]{
+      emoji,
+      label,
+      productName,
+      description,
+      amazonUrl,
+      priceRange,
+      image{ asset->{ url } }
+    },
+    bookingComUrl,
+    region,
     metaTitle,
     metaDescription,
+    metaKeywords,
     canonicalUrl,
     details,
     isFeatured,
-    image{
-      asset->{
-        url
-      }
+    image{ asset->{ url } },
+    seoImage{ asset->{ url } },
+    nearbyDestinations[]->{
+      _id, name, country, slug
     }
 `;
 
 export async function getDestinationBySlug(slug: string) {
   const query = `*[_type == "destination" && slug.current == $slug][0]{${destinationFields}}`;
-
-  const params = { slug };
-
-  return await client.fetch(query, params);
+  return await client.fetch(query, { slug });
 }
 
 export async function getAllDestinations() {
-  const query = `*[_type == "destination"]{${destinationFields}}`;
-
+  const query = `*[_type == "destination"] | order(name asc){${destinationFields}}`;
   return await client.fetch(query);
 }
 
 export async function getFeaturedDestinations() {
   const query = `*[_type == "destination" && isFeatured == true]{
-    _id,
-    name,
-    country,
-    slug,
-    description,
-    intro,
-    halalFoodInfo,
-    prayerFacilities,
-    bestTimeToVisit,
-    image{
-      asset->{
-        url
-      }
-    }
+    _id, name, country, slug, description, intro,
+    muslimFriendlyScore, region, isFeatured,
+    image{ asset->{ url } }
   }`;
-
   return await client.fetch(query);
 }
 
 export async function getHomepageData() {
   const query = `*[_type == "homepage"][0]{
-    title,
-    subtitle,
-    description,
-    aboutSection,
-    metaTitle,
-    metaDescription,
-    metaKeywords,
-    canonicalUrl,
-    heroImage{
-      asset->{
-        _id,
-        url
-      }
-    }
+    title, subtitle, description, aboutSection,
+    metaTitle, metaDescription, metaKeywords, canonicalUrl,
+    statsBar,
+    emailCaptureTitle, emailCaptureDescription, emailCapturePerks,
+    emailCaptureCta, emailCaptureNote,
+    featuredAffiliateProducts,
+    heroImage{ asset->{ _id, url } }
   }`;
+  return await client.fetch(query);
+}
 
+export async function getLatestBlogPosts(limit = 3) {
+  const query = `*[_type in ["blog","blogPost"]] | order(publishedAt desc)[0...${limit}]{
+    _id, title, slug, shortDescription, categories, readTime,
+    mainImage{ asset->{ url } }
+  }`;
   return await client.fetch(query);
 }
 
 export async function getAllBlogPosts() {
   const query = `*[_type == "blog"] | order(publishedAt desc) {
-    _id,
-    title,
-    slug { current },
-    shortDescription,
-    mainImage {
-      asset->{
-        url
-      }
-    },
-    author,
-    publishedAt,
-    categories,
-    isFeatured,
-    metaTitle,
-    metaDescription,
-    canonicalUrl
+    _id, title, slug { current }, shortDescription,
+    mainImage { asset->{ url } }, author, publishedAt,
+    categories, isFeatured, metaTitle, metaDescription, canonicalUrl, readTime
   }`;
-
   return await client.fetch(query);
 }
 
 export async function getBlogBySlug(slug: string) {
-  const query = `*[_type == "blog" && slug.current == $slug][0]{
-    _id,
-    title,
-    slug { current },
-    shortDescription,
-    mainImage{asset->{url}},
-    author,
-    publishedAt,
-    categories,
-    metaTitle,
-    metaDescription,
-    canonicalUrl,
-    body
+  const query = `*[_type in ["blog","blogPost"] && slug.current == $slug][0]{
+    _id, title, slug { current }, shortDescription,
+    mainImage{ asset->{ url } }, seoImage{ asset->{ url } },
+    author, publishedAt, categories,
+    metaTitle, metaDescription, metaKeywords, canonicalUrl,
+    readTime, hasAffiliateLinks, affiliateProducts,
+    sidebarCtaTitle, sidebarCtaDescription, body,
+    relatedDestinations[]->{ _id, name, country, slug, image{ asset->{ url } }, description, intro }
   }`;
   return await client.fetch(query, { slug });
 }
 
 export async function getAllBlogSlugs() {
-  const query = `*[_type == "blog" && defined(slug.current)][].slug.current`;
+  const query = `*[_type in ["blog","blogPost"] && defined(slug.current)][].slug.current`;
   return await client.fetch<string[]>(query);
 }
 

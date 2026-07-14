@@ -1,9 +1,0 @@
-# *
-User-agent: *
-Allow: /
-
-# Host
-Host: https://www.thehalalexplorer.com
-
-# Sitemaps
-Sitemap: https://www.thehalalexplorer.com/sitemap.xml

@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { PLACEHOLDER_IMAGE } from "@/lib/constants";
+import { HalalScoreBadge } from "@/components/HalalScoreBadge";
 
 interface DestinationCardProps {
   name: string;
@@ -14,6 +15,7 @@ interface DestinationCardProps {
   description: string;
   imageUrl: string;
   slug: string;
+  score?: number;
   tags?: string[];
   className?: string;
   index?: number;
@@ -25,6 +27,7 @@ export function DestinationCard({
   description,
   imageUrl,
   slug,
+  score,
   tags,
   className,
   index = 0,
@@ -44,6 +47,11 @@ export function DestinationCard({
               className="object-cover transition-transform duration-500 group-hover:scale-110"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+            {score && score >= 1 && (
+              <div className="absolute top-3 right-3">
+                <HalalScoreBadge score={score} />
+              </div>
+            )}
             {tags && tags.length > 0 && (
               <div className="absolute top-4 left-4 flex flex-wrap gap-2">
                 {tags.slice(0, 2).map((tag) => (

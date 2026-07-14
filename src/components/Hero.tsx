@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import { PLACEHOLDER_IMAGE } from "@/lib/constants";
+import type { ReactNode } from "react";
 
 interface HeroProps {
   headline: string;
@@ -11,6 +12,7 @@ interface HeroProps {
   primaryCta: { text: string; href: string };
   secondaryCta?: { text: string; href: string };
   backgroundImage?: string;
+  aside?: ReactNode;
 }
 
 export function Hero({
@@ -19,6 +21,7 @@ export function Hero({
   primaryCta,
   secondaryCta,
   backgroundImage,
+  aside,
 }: HeroProps) {
   return (
     <section
@@ -30,8 +33,9 @@ export function Hero({
       }}
     >
       <div className="absolute inset-0 hero-gradient" />
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 w-full flex items-center">
-        <div className="max-w-3xl">
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 w-full py-16">
+        <div className={`grid gap-10 items-center ${aside ? 'lg:grid-cols-2' : ''}`}>
+          <div className="max-w-3xl">
           <span className="inline-block px-4 py-1.5 bg-primary/20 backdrop-blur-md border border-primary/30 text-primary rounded-full text-xs font-bold uppercase tracking-widest mb-6">
             Travel Without Limits
           </span>
@@ -69,6 +73,8 @@ export function Hero({
           </Button>
             )}
           </div>
+          </div>
+          {aside && <div className="hidden lg:block">{aside}</div>}
         </div>
       </div>
     </section>
