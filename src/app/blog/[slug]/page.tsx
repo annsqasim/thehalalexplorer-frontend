@@ -10,8 +10,9 @@ import { Separator } from "@/components/ui/separator";
 import { Clock, User, ArrowRight } from "lucide-react";
 import { getAllBlogSlugs, getBlogBySlug, getAllBlogPosts } from "@/lib/blog";
 import RichText from "@/components/RichText";
-import type { Blog } from "@/types";
+import type { Blog, AffiliateProductField } from "@/types";
 import { PLACEHOLDER_IMAGE } from "@/lib/constants";
+import { AffiliateProductCard } from "@/components/affiliate";
 
 export const revalidate = 60;
 
@@ -143,6 +144,20 @@ export default async function BlogPostPage({
               )
             )}
           </article>
+
+          {/* Recommended Affiliate Products */}
+          {post.affiliateProducts && post.affiliateProducts.length > 0 && (
+            <div className="mt-12">
+              <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-2">
+                <span>🛒</span> Recommended Travel Products
+              </h2>
+              <div className="space-y-4">
+                {post.affiliateProducts.map((product: AffiliateProductField, index: number) => (
+                  <AffiliateProductCard key={index} product={product} />
+                ))}
+              </div>
+            </div>
+          )}
 
           <Separator className="my-12" />
 

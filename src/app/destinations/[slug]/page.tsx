@@ -10,7 +10,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { ProductCarousel } from "@/components/ProductCarousel";
+import { DestinationAffiliateGrid } from "@/components/DestinationAffiliateGrid";
 import {
   Info,
   Utensils,
@@ -292,7 +292,7 @@ export default async function DestinationDetailPage({
                 title="Pack for This Trip"
                 icon={<Compass className="h-6 w-6" />}
               >
-                <ProductCarousel products={destination.affiliateProducts} />
+                <DestinationAffiliateGrid products={destination.affiliateProducts} />
               </ContentSection>
             )}
 

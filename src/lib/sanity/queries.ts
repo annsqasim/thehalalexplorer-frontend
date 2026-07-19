@@ -21,13 +21,25 @@ const destinationFields = `
     muslimFriendlyScore,
     ratings,
     affiliateProducts[]{
-      emoji,
-      label,
-      productName,
-      description,
-      amazonUrl,
-      priceRange,
-      image{ asset->{ url } }
+      _type == "reference" => @->{
+        _id,
+        productName,
+        emoji,
+        description,
+        "amazonUrl": coalesce(amazonUrlAE, amazonUrlUS, amazonUrlUK, "#"),
+        "priceRange": priceRangeAE,
+        image{ asset->{ url } }
+      },
+      _type != "reference" => {
+        emoji,
+        label,
+        productName,
+        description,
+        verdict,
+        amazonUrl,
+        priceRange,
+        image{ asset->{ url } }
+      }
     },
     bookingComUrl,
     region,
@@ -135,11 +147,49 @@ export async function getBlogBySlug(slug: string) {
     mainImage{ asset->{ url } }, seoImage{ asset->{ url } },
     author, publishedAt, categories,
     metaTitle, metaDescription, metaKeywords, canonicalUrl,
-    readTime, hasAffiliateLinks, affiliateProducts,
+    readTime, hasAffiliateLinks,
+    affiliateProducts[]{
+      _type == "reference" => @->{
+        _id,
+        productName,
+        emoji,
+        description,
+        "amazonUrl": coalesce(amazonUrlAE, amazonUrlUS, amazonUrlUK, "#"),
+        "priceRange": priceRangeAE,
+        image{ asset->{ url } }
+      },
+      _type != "reference" => {
+        rank,
+        emoji,
+        productName,
+        verdict,
+        description,
+        pros,
+        amazonUrl,
+        priceRange,
+        isBestPick,
+        image{ asset->{ url } }
+      }
+    },
     sidebarCtaTitle, sidebarCtaDescription, body,
     relatedDestinations[]->{ _id, name, country, slug, image{ asset->{ url } }, description, intro }
   }`;
-  return await client.fetch(query, { slug });
+  const data = await client.fetch(query, { slug });
+
+  if (data && (!data.affiliateProducts || data.affiliateProducts.length === 0)) {
+    const standaloneProducts = await client.fetch(`*[_type == "affiliateProduct" && isFeatured == true]{
+      _id,
+      productName,
+      emoji,
+      description,
+      "amazonUrl": coalesce(amazonUrlAE, amazonUrlUS, amazonUrlUK, "#"),
+      "priceRange": priceRangeAE,
+      image{ asset->{ url } }
+    }`);
+    data.affiliateProducts = standaloneProducts;
+  }
+
+  return data;
 }
 
 export async function getAllBlogSlugs() {
