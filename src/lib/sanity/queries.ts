@@ -70,10 +70,46 @@ export async function getHomepageData() {
     statsBar,
     emailCaptureTitle, emailCaptureDescription, emailCapturePerks,
     emailCaptureCta, emailCaptureNote,
-    featuredAffiliateProducts,
+    featuredAffiliateProducts[]{
+      _type == "reference" => @->{
+        _id,
+        productName,
+        emoji,
+        description,
+        "amazonUrl": coalesce(amazonUrlAE, amazonUrlUS, amazonUrlUK, "#"),
+        "priceRange": priceRangeAE,
+        image{ asset->{ url } }
+      },
+      _type != "reference" => {
+        emoji,
+        label,
+        productName,
+        description,
+        amazonUrl,
+        priceRange,
+        image{ asset->{ url } }
+      }
+    },
     heroImage{ asset->{ _id, url } }
   }`;
-  return await client.fetch(query);
+  const data = await client.fetch(query);
+
+  if (!data?.featuredAffiliateProducts?.length) {
+    const standaloneProducts = await client.fetch(`*[_type == "affiliateProduct" && isFeatured == true]{
+      _id,
+      productName,
+      emoji,
+      description,
+      "amazonUrl": coalesce(amazonUrlAE, amazonUrlUS, amazonUrlUK, "#"),
+      "priceRange": priceRangeAE,
+      image{ asset->{ url } }
+    }`);
+    if (data) {
+      data.featuredAffiliateProducts = standaloneProducts;
+    }
+  }
+
+  return data;
 }
 
 export async function getLatestBlogPosts(limit = 3) {

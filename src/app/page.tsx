@@ -15,6 +15,7 @@ import _get from 'lodash/get';
 import { homepageContent } from '@/data/homepage';
 import { PLACEHOLDER_IMAGE } from '@/lib/constants';
 import DestinationAutocomplete from '@/components/DestinationAutocomplete';
+import { AffiliateStrip } from '@/components/AffiliateStrip';
 
 export async function generateMetadata(): Promise<Metadata> {
   let homepageData;
@@ -147,6 +148,9 @@ export default async function HomePage() {
           })}
         </div>
       </Section>
+
+      {/* Amazon Affiliate Products Strip */}
+      <AffiliateStrip products={homepageData?.featuredAffiliateProducts} />
 
       {/* Testimonials */}
       <Section className="bg-emerald-50/50 dark:bg-emerald-950/20">
