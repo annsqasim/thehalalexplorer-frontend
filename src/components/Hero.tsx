@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import { PLACEHOLDER_IMAGE } from "@/lib/constants";
@@ -24,16 +25,18 @@ export function Hero({
   aside,
 }: HeroProps) {
   return (
-    <section
-      className="relative min-h-[85vh] flex items-center overflow-hidden"
-      style={{
-        backgroundImage: `linear-gradient(to bottom, rgba(15,23,42,0.3), rgba(15,23,42,0.7)), url(${backgroundImage || PLACEHOLDER_IMAGE})`,
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-      }}
-    >
-      <div className="absolute inset-0 hero-gradient" />
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 w-full py-16">
+    <section className="relative min-h-[85vh] flex items-center overflow-hidden">
+      <Image
+        src={backgroundImage || PLACEHOLDER_IMAGE}
+        alt={headline}
+        fill
+        priority
+        sizes="100vw"
+        className="object-cover object-center"
+      />
+      <div className="absolute inset-0 bg-slate-950/40 z-10" />
+      <div className="absolute inset-0 hero-gradient z-10" />
+      <div className="relative z-20 max-w-7xl mx-auto px-4 sm:px-6 w-full py-16">
         <div className={`grid gap-10 items-center ${aside ? 'lg:grid-cols-2' : ''}`}>
           <div className="max-w-3xl">
           <span className="inline-block px-4 py-1.5 bg-primary/20 backdrop-blur-md border border-primary/30 text-primary rounded-full text-xs font-bold uppercase tracking-widest mb-6">
