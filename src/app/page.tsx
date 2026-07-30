@@ -9,13 +9,18 @@ import { Shield, Heart, Users, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 import { getFeaturedDestinations, getAllDestinations } from '@/lib/destinations';
 import { getDestinationExcerpt } from '@/lib/destination-content';
-import { getHomepageData } from '@/lib/sanity/queries';
+import { getHomepageData, getLatestBlogPosts } from '@/lib/sanity/queries';
 import { Destination } from "@/types";
 import _get from 'lodash/get';
 import { homepageContent } from '@/data/homepage';
 import { PLACEHOLDER_IMAGE } from '@/lib/constants';
 import DestinationAutocomplete from '@/components/DestinationAutocomplete';
 import { AffiliateStrip } from '@/components/AffiliateStrip';
+import { StatsBar } from '@/components/StatsBar';
+import { BlogFeed } from '@/components/BlogFeed';
+import { EmailCaptureCard } from '@/components/affiliate';
+import { buildPageMetadata } from '@/lib/seo';
+import { SITE_URL } from '@/lib/constants/site';
 
 export async function generateMetadata(): Promise<Metadata> {
   let homepageData;
@@ -24,31 +29,27 @@ export async function generateMetadata(): Promise<Metadata> {
   } catch {
     homepageData = null;
   }
-  return {
-    title: homepageData?.metaTitle || "The Halal Explorer - Muslim-Friendly Travel Destinations",
-    description: homepageData?.metaDescription || "Discover Muslim-friendly travel destinations around the world with information on halal food, mosques, prayer timings, and local customs.",
-    keywords: homepageData?.metaKeywords || ["Halal Travel", "Muslim-Friendly Destinations", "Halal Food", "Islamic Travel"],
-    alternates: {
-      canonical: homepageData?.canonicalUrl || "/",
-    },
-    openGraph: {
-      title: homepageData?.metaTitle || "The Halal Explorer - Muslim-Friendly Travel Destinations",
-      description: homepageData?.metaDescription || "Discover Muslim-friendly travel destinations around the world",
-      url: homepageData?.canonicalUrl || "/",
-      images: homepageData?.heroImage?.asset?.url
-        ? [{ url: homepageData.heroImage.asset.url, width: 1200, height: 630 }]
-        : [],
-    },
-    twitter: {
-      card: "summary_large_image",
-      title: homepageData?.metaTitle || "The Halal Explorer - Muslim-Friendly Travel Destinations",
-      description: homepageData?.metaDescription || "Discover Muslim-friendly travel destinations around the world",
-      images: homepageData?.heroImage?.asset?.url
-        ? [homepageData.heroImage.asset.url]
-        : [],
-    },
-  };
+  return buildPageMetadata({
+    data: homepageData || {},
+    path: '/',
+    fallbackTitle: 'The Halal Explorer - Muslim-Friendly Travel Destinations',
+    fallbackDescription:
+      'Discover Muslim-friendly travel destinations around the world with information on halal food, mosques, prayer timings, and local customs.',
+  });
 }
+
+const DEFAULT_EMAIL_CAPTURE = {
+  title: "The Halal Traveller's Starter Kit",
+  description:
+    'Get our free guide with halal travel checklists, prayer tips, and destination planning essentials.',
+  perks: [
+    'Halal travel packing checklist',
+    'Prayer time & qibla app recommendations',
+    'Top 10 Muslim-friendly destinations guide',
+  ],
+  ctaText: 'Get the Free Guide →',
+  note: 'No spam. Unsubscribe anytime.',
+};
 
 export default async function HomePage() {
   let homepageData;
@@ -57,26 +58,46 @@ export default async function HomePage() {
   } catch {
     homepageData = null;
   }
-  const featuredDestinations = await getFeaturedDestinations();
-  const allDestinations = await getAllDestinations();
+  const [featuredDestinations, allDestinations, latestPosts] = await Promise.all([
+    getFeaturedDestinations(),
+    getAllDestinations(),
+    getLatestBlogPosts(3),
+  ]);
   const heroImage = homepageData?.heroImage?.asset?.url || "https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=1600";
   const placeholderImage = PLACEHOLDER_IMAGE;
-
-  // Get up to 6 featured destinations
   const displayDestinations = featuredDestinations.slice(0, 6);
+
+  const emailCapture = {
+    title: homepageData?.emailCaptureTitle || DEFAULT_EMAIL_CAPTURE.title,
+    description: homepageData?.emailCaptureDescription || DEFAULT_EMAIL_CAPTURE.description,
+    perks: homepageData?.emailCapturePerks?.length
+      ? homepageData.emailCapturePerks
+      : DEFAULT_EMAIL_CAPTURE.perks,
+    ctaText: homepageData?.emailCaptureCta || DEFAULT_EMAIL_CAPTURE.ctaText,
+    note: homepageData?.emailCaptureNote || DEFAULT_EMAIL_CAPTURE.note,
+  };
 
   return (
     <>
-      {/* Hero Section */}
       <Hero
         headline={homepageContent.hero.headline}
         subtext={homepageContent.hero.subtext}
         primaryCta={homepageContent.hero.primaryCta}
         secondaryCta={homepageContent.hero.secondaryCta}
         backgroundImage={heroImage}
+        aside={
+          <EmailCaptureCard
+            title={emailCapture.title}
+            description={emailCapture.description}
+            perks={emailCapture.perks}
+            ctaText={emailCapture.ctaText}
+            note={emailCapture.note}
+          />
+        }
       />
 
-      {/* Search Bar Section */}
+      <StatsBar stats={homepageData?.statsBar} />
+
       <Section className="bg-white -mt-16 relative z-20">
         <div className="max-w-4xl mx-auto">
           <div className="bg-white rounded-3xl shadow-lg p-6 border border-slate-100 dark:border-slate-800">
@@ -85,7 +106,6 @@ export default async function HomePage() {
         </div>
       </Section>
 
-      {/* Featured Destinations */}
       <Section className="bg-white dark:bg-slate-900">
         <SectionHeader
           title="Featured Destinations"
@@ -100,6 +120,7 @@ export default async function HomePage() {
               description={getDestinationExcerpt(destination)}
               imageUrl={_get(destination, 'image.asset.url', placeholderImage)}
               slug={destination.slug.current}
+              score={destination.muslimFriendlyScore}
               index={index}
             />
           ))}
@@ -114,7 +135,8 @@ export default async function HomePage() {
         </div>
       </Section>
 
-      {/* Why The Halal Explorer */}
+      <AffiliateStrip products={homepageData?.featuredAffiliateProducts} />
+
       <Section className="bg-slate-50 dark:bg-slate-900/50">
         <SectionHeader
           title={homepageContent.whySection.title}
@@ -149,10 +171,8 @@ export default async function HomePage() {
         </div>
       </Section>
 
-      {/* Amazon Affiliate Products Strip */}
-      <AffiliateStrip products={homepageData?.featuredAffiliateProducts} />
+      <BlogFeed posts={latestPosts || []} />
 
-      {/* Testimonials */}
       <Section className="bg-emerald-50/50 dark:bg-emerald-950/20">
         <SectionHeader
           title="What Our Community Says"
@@ -171,7 +191,6 @@ export default async function HomePage() {
         </div>
       </Section>
 
-      {/* About Preview */}
       <Section className="bg-white dark:bg-slate-900">
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="text-3xl md:text-4xl font-serif font-bold text-slate-900 dark:text-white mb-6">

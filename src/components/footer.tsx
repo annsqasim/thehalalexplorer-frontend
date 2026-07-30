@@ -56,6 +56,9 @@ export default function Footer() {
               <li>
                 <Link href="/contact" className="hover:text-primary transition-colors">Contact</Link>
               </li>
+              <li>
+                <Link href="/affiliate-disclosure" className="hover:text-primary transition-colors">Affiliate Disclosure</Link>
+              </li>
             </ul>
           </div>
 
@@ -76,6 +79,7 @@ export default function Footer() {
           <div className="flex gap-8 text-xs">
             <Link href="/privacy" className="hover:text-white transition-colors">Privacy Policy</Link>
             <Link href="/terms" className="hover:text-white transition-colors">Terms of Service</Link>
+            <Link href="/affiliate-disclosure" className="hover:text-white transition-colors">Affiliate Disclosure</Link>
           </div>
         </div>
       </div>

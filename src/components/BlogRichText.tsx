@@ -1,0 +1,88 @@
+"use client";
+
+import { PortableText, PortableTextComponents } from "@portabletext/react";
+import type { PortableTextBlock } from "@portabletext/types";
+import { PLACEHOLDER_IMAGE } from "@/lib/constants";
+import { extractTocFromBlocks } from "@/lib/portable-text-toc";
+
+function buildHeadingIdMap(blocks: PortableTextBlock[]): Map<string, string> {
+  const toc = extractTocFromBlocks(blocks);
+  const map = new Map<string, string>();
+  let tocIndex = 0;
+
+  for (const block of blocks) {
+    if (block._type !== "block") continue;
+    if (block.style !== "h2" && block.style !== "h3") continue;
+    if (block._key && toc[tocIndex]) {
+      map.set(block._key, toc[tocIndex].id);
+      tocIndex++;
+    }
+  }
+
+  return map;
+}
+
+export default function BlogRichText({ value }: { value: PortableTextBlock[] }) {
+  const headingIds = buildHeadingIdMap(value);
+
+  const components: PortableTextComponents = {
+    types: {
+      image: ({ value: imageValue }) => {
+        const url = imageValue?.asset?.url || PLACEHOLDER_IMAGE;
+        return <img src={url} alt={imageValue?.alt || "Image"} className="my-6 rounded-md" />;
+      },
+    },
+    block: {
+      h1: ({ children }) => <h1 className="text-3xl font-bold my-4">{children}</h1>,
+      h2: ({ children, value: blockValue }) => {
+        const id = blockValue._key ? headingIds.get(blockValue._key) : undefined;
+        return (
+          <h2 id={id} className="text-2xl font-semibold my-4 scroll-mt-24">
+            {children}
+          </h2>
+        );
+      },
+      h3: ({ children, value: blockValue }) => {
+        const id = blockValue._key ? headingIds.get(blockValue._key) : undefined;
+        return (
+          <h3 id={id} className="text-xl font-semibold my-3 scroll-mt-24">
+            {children}
+          </h3>
+        );
+      },
+      normal: ({ children }) => <p className="leading-7 my-3">{children}</p>,
+      blockquote: ({ children }) => (
+        <blockquote className="border-l-4 pl-4 italic my-4 text-muted-foreground">
+          {children}
+        </blockquote>
+      ),
+    },
+    marks: {
+      link: ({ children, value: markValue }) => (
+        <a
+          href={markValue?.href}
+          className="underline hover:no-underline"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          {children}
+        </a>
+      ),
+      strong: ({ children }) => <strong className="font-semibold">{children}</strong>,
+      em: ({ children }) => <em className="italic">{children}</em>,
+      code: ({ children }) => (
+        <code className="bg-muted px-1 py-0.5 rounded text-sm">{children}</code>
+      ),
+    },
+    list: {
+      bullet: ({ children }) => <ul className="list-disc pl-6 my-3">{children}</ul>,
+      number: ({ children }) => <ol className="list-decimal pl-6 my-3">{children}</ol>,
+    },
+    listItem: {
+      bullet: ({ children }) => <li className="my-1">{children}</li>,
+      number: ({ children }) => <li className="my-1">{children}</li>,
+    },
+  };
+
+  return <PortableText value={value} components={components} />;
+}

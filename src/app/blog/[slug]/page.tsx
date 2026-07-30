@@ -9,10 +9,16 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Clock, User, ArrowRight } from "lucide-react";
 import { getAllBlogSlugs, getBlogBySlug, getAllBlogPosts } from "@/lib/blog";
-import RichText from "@/components/RichText";
-import type { Blog, AffiliateProductField } from "@/types";
+import BlogRichText from "@/components/BlogRichText";
+import { extractTocFromBlocks } from "@/lib/portable-text-toc";
+import { BlogTocSidebar } from "@/components/BlogTocSidebar";
+import { DestinationCard } from "@/components/DestinationCard";
+import { getDestinationExcerpt } from "@/lib/destination-content";
+import type { Blog, AffiliateProductField, NearbyDestinationRef } from "@/types";
 import { PLACEHOLDER_IMAGE } from "@/lib/constants";
 import { AffiliateProductCard } from "@/components/affiliate";
+import type { PortableTextBlock } from "@portabletext/types";
+import _get from "lodash/get";
 
 export const revalidate = 60;
 
@@ -28,7 +34,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { slug } = await params;
   const post = await getBlogBySlug(slug);
-  
+
   if (!post) {
     return {
       title: "Post Not Found | The Halal Explorer",
@@ -59,16 +65,18 @@ export default async function BlogPostPage({
 }) {
   const { slug } = await params;
   const post = await getBlogBySlug(slug);
-  
+
   if (!post) {
     return notFound();
   }
 
-  // Get related posts (excluding current post)
   const allPosts = await getAllBlogPosts();
   const relatedPosts = allPosts
     .filter((p: Blog) => p._id !== post._id)
     .slice(0, 3);
+
+  const bodyBlocks = (post.body as PortableTextBlock[]) || [];
+  const tocItems = extractTocFromBlocks(bodyBlocks);
 
   return (
     <>
@@ -117,6 +125,12 @@ export default async function BlogPostPage({
                   </time>
                 </div>
               )}
+              {post.readTime && (
+                <div className="flex items-center gap-1 text-sm text-white/80">
+                  <span>•</span>
+                  <span>{post.readTime} min read</span>
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -124,40 +138,57 @@ export default async function BlogPostPage({
 
       {/* Article Content */}
       <Section className="bg-white">
-        <div className="max-w-4xl mx-auto">
-          {post.shortDescription && (
-            <div className="mb-8 p-6 bg-brand-emerald-50 border-l-4 border-brand-emerald-600 rounded-r-lg">
-              <p className="text-lg text-gray-700 leading-relaxed">
-                {post.shortDescription}
-              </p>
-            </div>
-          )}
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-[1fr_280px] gap-8">
+            <div className="min-w-0">
+              {post.hasAffiliateLinks && (
+                <div className="bg-[#FFFBEB] border border-[#F59E0B]/30 rounded-lg px-4 py-3 text-sm text-[#92400E] mb-6">
+                  Affiliate Disclosure: This post contains Amazon affiliate links. If you purchase through our links, we may earn a small commission at no extra cost to you. We only recommend products we genuinely use.
+                </div>
+              )}
 
-          <article className="prose prose-lg prose-emerald max-w-none">
-            {post?.body && Array.isArray(post.body) && post.body.length > 0 ? (
-              <RichText value={post.body} />
-            ) : (
-              post?.shortDescription && (
-                <p className="text-lg text-slate-700 dark:text-slate-300 leading-relaxed">
-                  {post.shortDescription}
-                </p>
-              )
-            )}
-          </article>
+              {post.shortDescription && (
+                <div className="mb-8 p-6 bg-brand-emerald-50 border-l-4 border-brand-emerald-600 rounded-r-lg">
+                  <p className="text-lg text-gray-700 leading-relaxed">
+                    {post.shortDescription}
+                  </p>
+                </div>
+              )}
 
-          {/* Recommended Affiliate Products */}
-          {post.affiliateProducts && post.affiliateProducts.length > 0 && (
-            <div className="mt-12">
-              <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-2">
-                <span>🛒</span> Recommended Travel Products
-              </h2>
-              <div className="space-y-4">
-                {post.affiliateProducts.map((product: AffiliateProductField, index: number) => (
-                  <AffiliateProductCard key={index} product={product} />
-                ))}
-              </div>
+              <article className="prose prose-lg prose-emerald max-w-none">
+                {bodyBlocks.length > 0 ? (
+                  <BlogRichText value={bodyBlocks} />
+                ) : (
+                  post?.shortDescription && (
+                    <p className="text-lg text-slate-700 dark:text-slate-300 leading-relaxed">
+                      {post.shortDescription}
+                    </p>
+                  )
+                )}
+              </article>
+
+              {/* Recommended Affiliate Products */}
+              {post.affiliateProducts && post.affiliateProducts.length > 0 && (
+                <div className="mt-12">
+                  <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-2">
+                    <span>🛒</span> Our Top Picks
+                  </h2>
+                  <div className="space-y-4">
+                    {post.affiliateProducts.map((product: AffiliateProductField, index: number) => (
+                      <AffiliateProductCard key={index} product={product} />
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
-          )}
+
+            {/* TOC & Email CTA Sidebar */}
+            <BlogTocSidebar
+              items={tocItems}
+              ctaTitle={post.sidebarCtaTitle}
+              ctaDescription={post.sidebarCtaDescription}
+            />
+          </div>
 
           <Separator className="my-12" />
 
@@ -194,6 +225,27 @@ export default async function BlogPostPage({
                       </CardContent>
                     </Card>
                   </Link>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Related Destinations Row */}
+          {post.relatedDestinations && post.relatedDestinations.length > 0 && (
+            <div className="mt-12">
+              <h2 className="text-3xl font-bold text-gray-900 mb-8">
+                Destinations Mentioned in This Guide
+              </h2>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+                {post.relatedDestinations.map((dest: NearbyDestinationRef & { description?: string; intro?: string; image?: { asset?: { url?: string } } }) => (
+                  <DestinationCard
+                    key={dest._id}
+                    name={dest.name}
+                    country={dest.country}
+                    description={getDestinationExcerpt(dest as unknown as import('@/types').Destination)}
+                    imageUrl={_get(dest, 'image.asset.url', PLACEHOLDER_IMAGE)}
+                    slug={dest.slug.current}
+                  />
                 ))}
               </div>
             </div>

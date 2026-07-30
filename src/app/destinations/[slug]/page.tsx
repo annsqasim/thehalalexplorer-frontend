@@ -11,6 +11,8 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { DestinationAffiliateGrid } from "@/components/DestinationAffiliateGrid";
+import { RatingRow, FoodItem, MosqueItem } from "@/components/destination-items";
+import { BookingComCard, NearbyDestinationsCard } from "@/components/destination-sidebar";
 import {
   Info,
   Utensils,
@@ -170,8 +172,8 @@ export default async function DestinationDetailPage({
   const whyMuslimsLoveIt = getWhyMuslimsLoveIt(destination);
   const travelTips = getMuslimTravelTips(destination);
   const hasDetails = hasPortableText(destination.details);
-  const hasHalalFood = Boolean(destination.halalFoodInfo);
-  const hasPrayerFacilities = Boolean(destination.prayerFacilities);
+  const hasHalalFood = Boolean(destination.halalFoodInfo || destination.halalFoodItems?.length);
+  const hasPrayerFacilities = Boolean(destination.prayerFacilities || destination.mosqueItems?.length);
   const safetyLevel = destination.quickFacts?.safety;
 
   const navSections = [
@@ -204,6 +206,8 @@ export default async function DestinationDetailPage({
       <StickyNav sections={navSections} />
 
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <RatingRow ratings={destination.ratings} />
+
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2 space-y-8">
             {intro && (
@@ -246,7 +250,15 @@ export default async function DestinationDetailPage({
                 title={`Halal Food in ${destination.name}`}
                 icon={<Utensils className="h-6 w-6" />}
               >
-                <FormattedProse text={destination.halalFoodInfo!} />
+                {destination.halalFoodItems && destination.halalFoodItems.length > 0 ? (
+                  <div className="space-y-3">
+                    {destination.halalFoodItems.map((item, idx) => (
+                      <FoodItem key={idx} item={item} />
+                    ))}
+                  </div>
+                ) : (
+                  <FormattedProse text={destination.halalFoodInfo!} />
+                )}
               </ContentSection>
             )}
 
@@ -256,7 +268,15 @@ export default async function DestinationDetailPage({
                 title="Prayer Facilities"
                 icon={<MapPin className="h-6 w-6" />}
               >
-                <FormattedProse text={destination.prayerFacilities!} />
+                {destination.mosqueItems && destination.mosqueItems.length > 0 ? (
+                  <div className="space-y-3">
+                    {destination.mosqueItems.map((item, idx) => (
+                      <MosqueItem key={idx} item={item} />
+                    ))}
+                  </div>
+                ) : (
+                  <FormattedProse text={destination.prayerFacilities!} />
+                )}
               </ContentSection>
             )}
 
@@ -332,6 +352,15 @@ export default async function DestinationDetailPage({
               hasHalalFood={hasHalalFood}
               hasPrayerFacilities={hasPrayerFacilities}
             />
+
+            <BookingComCard
+              destinationName={destination.name}
+              bookingComUrl={destination.bookingComUrl}
+            />
+
+            {destination.nearbyDestinations && destination.nearbyDestinations.length > 0 && (
+              <NearbyDestinationsCard destinations={destination.nearbyDestinations} />
+            )}
 
             <PrayerTimes city={destination.name} country={destination.country} />
 

@@ -1,13 +1,11 @@
 import { Metadata } from "next";
-import { Section, SectionHeader } from "@/components/Section";
-import { DestinationCard } from "@/components/DestinationCard";
+import { Section } from "@/components/Section";
 import { getAllDestinations } from "@/lib/destinations";
-import { getDestinationExcerpt } from "@/lib/destination-content";
 import { Destination } from "@/types";
-import _get from "lodash/get";
 import { destinationsPageContent } from "@/data/destinations";
-import { PLACEHOLDER_IMAGE } from "@/lib/constants";
+import { DestinationsGrid } from "@/components/DestinationsGrid";
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
+import { SITE_URL } from "@/lib/constants/site";
 
 export const metadata: Metadata = {
   title: "Muslim-Friendly Destinations | The Halal Explorer - 50+ Halal Travel Guides",
@@ -22,9 +20,11 @@ export const metadata: Metadata = {
     "halal tourism",
     "Muslim travel guide",
   ],
+  alternates: { canonical: `${SITE_URL}/destinations` },
   openGraph: {
     title: "Muslim-Friendly Destinations | The Halal Explorer",
     description: "Explore our curated list of Muslim-friendly travel destinations",
+    url: `${SITE_URL}/destinations`,
   },
 };
 
@@ -33,7 +33,6 @@ export default async function DestinationsPage() {
 
   return (
     <>
-      {/* Hero Section */}
       <section className="relative bg-gradient-to-br from-primary via-emerald-600 to-emerald-700 text-white py-20 md:py-28">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <Breadcrumb className="mb-8">
@@ -49,7 +48,7 @@ export default async function DestinationsPage() {
               </BreadcrumbItem>
             </BreadcrumbList>
           </Breadcrumb>
-          
+
           <div className="max-w-4xl">
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-serif font-bold mb-6">
               Muslim-Friendly Destinations
@@ -61,7 +60,6 @@ export default async function DestinationsPage() {
         </div>
       </section>
 
-      {/* SEO Intro Section */}
       <Section className="bg-white dark:bg-slate-900">
         <div className="max-w-4xl mx-auto">
           <div className="prose prose-lg max-w-none">
@@ -72,21 +70,8 @@ export default async function DestinationsPage() {
         </div>
       </Section>
 
-      {/* Destinations Grid */}
       <Section className="bg-slate-50 dark:bg-slate-900/50">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
-          {destinations.map((destination: Destination, index: number) => (
-            <DestinationCard
-              key={destination._id}
-              name={destination.name}
-              country={destination.country}
-              description={getDestinationExcerpt(destination)}
-              imageUrl={_get(destination, "image.asset.url", PLACEHOLDER_IMAGE)}
-              slug={destination.slug.current}
-              index={index}
-            />
-          ))}
-        </div>
+        <DestinationsGrid destinations={destinations} />
       </Section>
     </>
   );

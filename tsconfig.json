@@ -38,6 +38,8 @@
   ],
   "exclude": [
     "node_modules",
-    "next-sitemap.config.js"
+    "next-sitemap.config.js",
+    "sanity.config.ts",
+    "schemas"
   ]
 }
