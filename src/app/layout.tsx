@@ -87,6 +87,24 @@ export default function RootLayout({
         {GOOGLE_SITE_VERIFICATION && (
           <meta name="google-site-verification" content="qkD-WldpRfqgjVToUTfSI3jILgKRb8YpVFMf2H0LGbE" />
         )}
+        <script
+          data-nowprocket="true"
+          data-noptimize="1"
+          data-cfasync="false"
+          data-wpfc-render="false"
+          data-seraph-accel-crit="1"
+          data-no-defer="1"
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function () {
+                var script = document.createElement("script");
+                script.async = 1;
+                script.src = 'https://emrldco.com/NTU2MzE0.js?t=556314';
+                document.head.appendChild(script);
+              })();
+            `,
+          }}
+        />
       </head>
       <body className={`${plusJakarta.className} antialiased text-slate-800`}>
         <ThemeRegistry>
