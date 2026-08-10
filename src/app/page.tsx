@@ -21,12 +21,6 @@ import { BlogFeed } from '@/components/BlogFeed';
 import { EmailCaptureCard } from '@/components/affiliate';
 import { buildPageMetadata } from '@/lib/seo';
 import { SITE_URL } from '@/lib/constants/site';
-import {
-  buildFlightSearchUrl,
-  buildHotelSearchUrl,
-  buildViatorLink,
-  buildInsuranceLink,
-} from '@/lib/travelpayouts';
 import { TpCtaCard } from '@/components/travelpayouts/TpCtaCard';
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -157,22 +151,10 @@ export default async function HomePage() {
           </p>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            <TpCtaCard
-              type="flights"
-              href={buildFlightSearchUrl({})}
-            />
-            <TpCtaCard
-              type="hotels"
-              href={buildHotelSearchUrl('Dubai')}
-            />
-            <TpCtaCard
-              type="tours"
-              href={buildViatorLink('world')}
-            />
-            <TpCtaCard
-              type="insurance"
-              href={buildInsuranceLink()}
-            />
+            <TpCtaCard type="flights" />
+            <TpCtaCard type="hotels" destinationName="Dubai" />
+            <TpCtaCard type="tours" />
+            <TpCtaCard type="insurance" />
           </div>
         </div>
       </section>

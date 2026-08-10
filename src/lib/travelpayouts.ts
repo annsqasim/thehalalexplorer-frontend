@@ -1,68 +1,104 @@
 // lib/travelpayouts.ts
-// Central utility for all Travelpayouts link building and widget config
 
-const rawMarker = process.env.NEXT_PUBLIC_TP_MARKER
-const MARKER = (rawMarker && rawMarker !== 'YOUR_MARKER_ID') ? rawMarker : '20736'
+const MARKER = process.env.NEXT_PUBLIC_TP_MARKER || '20736'
+const TRS    = process.env.NEXT_PUBLIC_TP_TRS    || '556314'
 
-// ─── FLIGHT LINKS ────────────────────────────────────────────────
-// Build a deep-link to Aviasales flight search with affiliate marker
-export function buildFlightSearchUrl(params: {
-  origin?: string       // IATA code e.g. 'DXB'
-  destination?: string  // IATA code e.g. 'KUL'
-  departDate?: string   // YYYY-MM-DD
-  returnDate?: string   // YYYY-MM-DD
-  adults?: number
-}): string {
-  const base = 'https://tp.media/r'
-  const query = new URLSearchParams({
-    marker: MARKER,
-    trs: '233763',       // Aviasales program ID
-    p: '6809',
-    u: 'https://www.aviasales.com/search/' +
-      `${params.origin || 'anywhere'}` +
-      `${params.destination || ''}`,
-  })
-  return `${base}?${query.toString()}`
+// ─── BASE REDIRECT ────────────────────────────────────────────────
+// All Travelpayouts links go through tp.media/r with these params
+function tpLink(programId: string, destinationUrl: string): string {
+  const encoded = encodeURIComponent(destinationUrl)
+  return `https://tp.media/r?marker=${MARKER}&trs=${TRS}&p=${programId}&u=${encoded}`
 }
 
-// Simple Aviasales affiliate link for a destination
-export function buildAviasalesLink(destinationIATA: string): string {
-  return `https://tp.media/r?marker=${MARKER}&trs=233763&p=6809&u=https%3A%2F%2Fwww.aviasales.com%2Fsearch%2FDXB${destinationIATA || ''}1`
+// ─── FLIGHTS — Aviasales ─────────────────────────────────────────
+// programId 6809 = Aviasales
+// URL format: aviasales.com/search/ORIGINDESTN1  (IATA codes, no spaces)
+export function buildFlightLink(originIATA = 'DXB', destinationIATA = ''): string {
+  const dest = destinationIATA
+    ? `https://www.aviasales.com/search/${originIATA}${destinationIATA}1`
+    : `https://www.aviasales.com`
+  return tpLink('6809', dest)
 }
 
-// ─── HOTEL LINKS ─────────────────────────────────────────────────
-// Build Hotellook deep-link for a specific city
-export function buildHotelSearchUrl(cityName: string): string {
-  const encoded = encodeURIComponent(cityName)
-  return `https://tp.media/r?marker=${MARKER}&trs=233763&p=6890&u=https%3A%2F%2Fhotellook.com%2Fsearch%3Fdestination%3D${encoded}`
+// ─── HOTELS — Hotellook ──────────────────────────────────────────
+// programId 101 = Hotellook (correct ID — 6890 was wrong)
+export function buildHotelLink(cityName = ''): string {
+  const dest = cityName
+    ? `https://hotellook.com/search?destination=${encodeURIComponent(cityName)}&adults=2`
+    : `https://hotellook.com`
+  return tpLink('101', dest)
 }
 
-// ─── TOUR / ACTIVITY LINKS ───────────────────────────────────────
-// Viator deep-link for activities in a destination
-export function buildViatorLink(destinationName: string): string {
-  const encoded = encodeURIComponent(destinationName)
-  return `https://tp.media/r?marker=${MARKER}&trs=233763&p=4053&u=https%3A%2F%2Fwww.viator.com%2Fsearch%2F${encoded}`
+// ─── TOURS — Viator ──────────────────────────────────────────────
+// programId 4034 = Viator (correct — 4053 was wrong)
+export function buildToursLink(destinationName = ''): string {
+  const dest = destinationName
+    ? `https://www.viator.com/search/${encodeURIComponent(destinationName)}`
+    : `https://www.viator.com`
+  return tpLink('4034', dest)
 }
 
-// GetYourGuide deep-link
-export function buildGYGLink(destinationSlug: string): string {
-  return `https://tp.media/r?marker=${MARKER}&trs=233763&p=5526&u=https%3A%2F%2Fwww.getyourguide.com%2F${destinationSlug}-l`
-}
-
-// ─── INSURANCE LINKS ─────────────────────────────────────────────
+// ─── INSURANCE — World Nomads ────────────────────────────────────
+// programId 1822 = World Nomads
 export function buildInsuranceLink(): string {
-  return `https://tp.media/r?marker=${MARKER}&trs=233763&p=4363&u=https%3A%2F%2Fwww.worldnomads.com`
+  return tpLink('1822', 'https://www.worldnomads.com/travel-insurance')
 }
 
-// ─── CAR RENTAL LINKS ────────────────────────────────────────────
-export function buildCarRentalLink(cityName: string): string {
-  const encoded = encodeURIComponent(cityName)
-  return `https://tp.media/r?marker=${MARKER}&trs=233763&p=211&u=https%3A%2F%2Fwww.rentalcars.com%2FSearchResults.do%3FpickUpName%3D${encoded}`
+// ─── CAR RENTAL — Rentalcars ─────────────────────────────────────
+// programId 211 = Rentalcars.com
+export function buildCarRentalLink(cityName = ''): string {
+  const dest = cityName
+    ? `https://www.rentalcars.com/SearchResults.do?pickUpName=${encodeURIComponent(cityName)}`
+    : `https://www.rentalcars.com`
+  return tpLink('211', dest)
 }
 
-// ─── SHARED LINK PROPS ───────────────────────────────────────────
-// Always use these on affiliate links — required by Travelpayouts TOS
+// ─── REQUIRED ON ALL AFFILIATE LINKS ─────────────────────────────
 export const TP_LINK_PROPS = {
   target: '_blank' as const,
   rel: 'noopener noreferrer sponsored',
+}
+
+// ─── IATA CODE MAP ───────────────────────────────────────────────
+// Use this when iataCode is not set in Sanity yet
+export const IATA_MAP: Record<string, string> = {
+  'dubai':          'DXB',
+  'kuala-lumpur':   'KUL',
+  'istanbul':       'IST',
+  'marrakech':      'RAK',
+  'bali':           'DPS',
+  'jakarta':        'CGK',
+  'singapore':      'SIN',
+  'tokyo':          'NRT',
+  'paris':          'CDG',
+  'london':         'LHR',
+  'rome':           'FCO',
+  'sydney':         'SYD',
+  'delhi':          'DEL',
+  'bangkok':        'BKK',
+  'doha':           'DOH',
+  'cairo':          'CAI',
+  'muscat':         'MCT',
+  'amsterdam':      'AMS',
+  'barcelona':      'BCN',
+  'berlin':         'BER',
+  'vienna':         'VIE',
+  'toronto':        'YYZ',
+  'new-york-city':  'JFK',
+  'los-angeles':    'LAX',
+  'chicago':        'ORD',
+  'zanzibar':       'ZNZ',
+  'nairobi':        'NBO',
+  'abu-dhabi':      'AUH',
+  'riyadh':         'RUH',
+  'makkah':         'JED',
+  'madinah':        'MED',
+  'sarajevo':       'SJJ',
+  'baku':           'GYD',
+  'tashkent':       'TAS',
+}
+
+// Helper: get IATA from slug or iataCode field
+export function getIATA(slug: string, iataCode?: string): string {
+  return iataCode || IATA_MAP[slug] || ''
 }

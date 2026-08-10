@@ -24,10 +24,7 @@ import {
   Compass,
 } from "lucide-react";
 import {
-  buildAviasalesLink,
-  buildHotelSearchUrl,
-  buildViatorLink,
-  buildInsuranceLink,
+  getIATA,
 } from "@/lib/travelpayouts";
 import { TpCtaCard } from "@/components/travelpayouts/TpCtaCard";
 import { FlightSearchWidget } from "@/components/travelpayouts/FlightSearchWidget";
@@ -175,6 +172,7 @@ export default async function DestinationDetailPage({
   const destination = await getDestinationBySlug(slug);
   if (!destination) notFound();
 
+  const iata = getIATA(destination.slug.current, destination.iataCode);
   const imageUrl = _get(destination, "image.asset.url", PLACEHOLDER_IMAGE);
   const intro = getDestinationIntro(destination);
   const about = getDestinationAbout(destination);
@@ -330,25 +328,10 @@ export default async function DestinationDetailPage({
 
               {/* 2x2 grid of CTA cards on desktop, stacked on mobile */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <TpCtaCard
-                  type="flights"
-                  destinationName={destination.name}
-                  href={buildAviasalesLink(destination.iataCode || '')}
-                />
-                <TpCtaCard
-                  type="hotels"
-                  destinationName={destination.name}
-                  href={buildHotelSearchUrl(destination.name)}
-                />
-                <TpCtaCard
-                  type="tours"
-                  destinationName={destination.name}
-                  href={buildViatorLink(destination.name)}
-                />
-                <TpCtaCard
-                  type="insurance"
-                  href={buildInsuranceLink()}
-                />
+                <TpCtaCard type="flights" destinationName={destination.name} destinationIATA={iata} />
+                <TpCtaCard type="hotels"  destinationName={destination.name} />
+                <TpCtaCard type="tours"   destinationName={destination.name} />
+                <TpCtaCard type="insurance" />
               </div>
             </section>
 
@@ -399,27 +382,25 @@ export default async function DestinationDetailPage({
               hasPrayerFacilities={hasPrayerFacilities}
             />
 
-            {/* FLIGHT SEARCH */}
+            {/* FLIGHT SEARCH WIDGET */}
             <FlightSearchWidget
-              destination={destination.iataCode}
+              originIATA="DXB"
+              destinationIATA={iata}
+              destinationName={destination.name}
             />
 
-            {/* HOTEL SEARCH */}
-            <HotelSearchWidget
-              destination={destination.name}
-            />
+            {/* HOTEL SEARCH WIDGET */}
+            <HotelSearchWidget destinationName={destination.name} />
 
             {/* TOURS CTA */}
             <TpCtaCard
               type="tours"
               destinationName={destination.name}
-              href={buildViatorLink(destination.name)}
             />
 
-            {/* INSURANCE CTA — show on every destination */}
+            {/* INSURANCE CTA */}
             <TpCtaCard
               type="insurance"
-              href={buildInsuranceLink()}
             />
 
             <BookingComCard

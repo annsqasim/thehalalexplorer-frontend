@@ -1,85 +1,92 @@
-// Simple CTA card with Travelpayouts deep-link
-// Use when you want a button rather than a full search form
-// Matches existing site card styling exactly
+// components/travelpayouts/TpCtaCard.tsx
+// NO 'use client' needed — this is a server component
 
-import { TP_LINK_PROPS } from '@/lib/travelpayouts'
+import {
+  buildFlightLink,
+  buildHotelLink,
+  buildToursLink,
+  buildInsuranceLink,
+  buildCarRentalLink,
+  TP_LINK_PROPS,
+} from '@/lib/travelpayouts'
 
 type CtaType = 'flights' | 'hotels' | 'tours' | 'insurance' | 'cars'
 
 interface Props {
   type: CtaType
-  destinationName?: string   // City name e.g. "Kuala Lumpur"
-  href: string               // Pre-built affiliate URL from lib/travelpayouts.ts
+  destinationName?: string  // city name e.g. "Istanbul"
+  destinationSlug?: string  // slug e.g. "istanbul" (used to look up IATA)
+  destinationIATA?: string  // IATA code e.g. "IST" (most accurate)
 }
 
 const CONFIG: Record<CtaType, {
   emoji: string
-  title: string
+  title: (dest?: string) => string
   desc: string
   btnText: string
-  btnColor: string
 }> = {
   flights: {
     emoji: '✈️',
-    title: 'Search Flights',
-    desc: 'Compare 100+ airlines. Best prices guaranteed.',
+    title: (dest) => dest ? `Flights to ${dest}` : 'Search Flights',
+    desc: 'Compare 100+ airlines. Find the cheapest fare.',
     btnText: 'Find Cheapest Flights →',
-    btnColor: 'bg-[#1D6A5B] hover:bg-[#16574A]',
   },
   hotels: {
     emoji: '🏨',
-    title: 'Book Hotels',
-    desc: 'Muslim-friendly hotels with halal breakfast and prayer facilities.',
+    title: (dest) => dest ? `Hotels in ${dest}` : 'Find Hotels',
+    desc: 'Muslim-friendly hotels. Halal breakfast, prayer mats.',
     btnText: 'Browse Hotels →',
-    btnColor: 'bg-[#1D6A5B] hover:bg-[#16574A]',
   },
   tours: {
     emoji: '🗺️',
-    title: 'Halal-Friendly Activities',
+    title: (dest) => dest ? `Activities in ${dest}` : 'Browse Activities',
     desc: 'Food tours, mosque visits, city walks and more.',
     btnText: 'Browse Activities →',
-    btnColor: 'bg-[#1D6A5B] hover:bg-[#16574A]',
   },
   insurance: {
     emoji: '🛡️',
-    title: 'Travel Insurance',
-    desc: 'Protect your trip. Medical, cancellation, and baggage cover.',
-    btnText: 'Get a Quote →',
-    btnColor: 'bg-[#F59E0B] hover:bg-[#D97706]',
+    title: () => 'Travel Insurance',
+    desc: 'Medical, cancellation, and baggage cover from $30.',
+    btnText: 'Get a Free Quote →',
   },
   cars: {
     emoji: '🚗',
-    title: 'Rent a Car',
-    desc: 'Compare car rental prices from trusted providers.',
+    title: (dest) => dest ? `Car Rental in ${dest}` : 'Rent a Car',
+    desc: 'Compare prices from trusted rental companies.',
     btnText: 'Compare Car Rentals →',
-    btnColor: 'bg-[#1D6A5B] hover:bg-[#16574A]',
   },
 }
 
-export function TpCtaCard({ type, destinationName, href }: Props) {
+function buildHref(type: CtaType, destinationName?: string, destinationIATA?: string): string {
+  switch (type) {
+    case 'flights':   return buildFlightLink('DXB', destinationIATA || '')
+    case 'hotels':    return buildHotelLink(destinationName || '')
+    case 'tours':     return buildToursLink(destinationName || '')
+    case 'insurance': return buildInsuranceLink()
+    case 'cars':      return buildCarRentalLink(destinationName || '')
+    default:          return '#'
+  }
+}
+
+export function TpCtaCard({ type, destinationName, destinationIATA }: Props) {
   const config = CONFIG[type]
+  const href = buildHref(type, destinationName, destinationIATA)
 
   return (
-    // Matches existing site card style: bg-white border border-gray-200 rounded-xl
-    <div className="bg-white border border-gray-200 rounded-xl p-5 shadow-soft flex flex-col justify-between h-full">
+    <div className="bg-white border border-gray-200 rounded-xl p-5 flex flex-col gap-3">
+      <div className="text-2xl">{config.emoji}</div>
       <div>
-        <div className="text-2xl mb-3">{config.emoji}</div>
-        <h3 className="font-semibold text-gray-900 text-base mb-1">
-          {destinationName ? `${config.title} to ${destinationName}` : config.title}
+        <h3 className="font-semibold text-gray-900 text-sm mb-1">
+          {config.title(destinationName)}
         </h3>
-        <p className="text-gray-500 text-sm leading-relaxed mb-4">
+        <p className="text-gray-500 text-xs leading-relaxed">
           {config.desc}
         </p>
       </div>
       <a
         href={href}
-        suppressHydrationWarning
         {...TP_LINK_PROPS}
-        className={`
-          block w-full text-center text-white font-semibold text-sm
-          py-2.5 rounded-lg transition-colors mt-auto
-          ${config.btnColor}
-        `}
+        className="mt-auto block w-full text-center bg-[#1D6A5B] hover:bg-[#16574A] text-white font-semibold text-sm py-2.5 rounded-lg transition-colors"
       >
         {config.btnText}
       </a>

@@ -17,11 +17,7 @@ import { getDestinationExcerpt } from "@/lib/destination-content";
 import type { Blog, AffiliateProductField, NearbyDestinationRef } from "@/types";
 import { PLACEHOLDER_IMAGE } from "@/lib/constants";
 import { AffiliateProductCard } from "@/components/affiliate";
-import {
-  buildFlightSearchUrl,
-  buildHotelSearchUrl,
-  buildInsuranceLink,
-} from "@/lib/travelpayouts";
+import { getIATA } from "@/lib/travelpayouts";
 import { TpCtaCard } from "@/components/travelpayouts/TpCtaCard";
 import type { PortableTextBlock } from "@portabletext/types";
 import _get from "lodash/get";
@@ -199,16 +195,14 @@ export default async function BlogPostPage({
                   <TpCtaCard
                     type="flights"
                     destinationName={post.relatedDestinations?.[0]?.name}
-                    href={buildFlightSearchUrl({})}
+                    destinationIATA={post.relatedDestinations?.[0] ? getIATA(post.relatedDestinations[0].slug?.current || '', (post.relatedDestinations[0] as unknown as { iataCode?: string }).iataCode) : undefined}
                   />
                   <TpCtaCard
                     type="hotels"
                     destinationName={post.relatedDestinations?.[0]?.name}
-                    href={buildHotelSearchUrl(post.relatedDestinations?.[0]?.name || '')}
                   />
                   <TpCtaCard
                     type="insurance"
-                    href={buildInsuranceLink()}
                   />
                 </div>
               </div>
