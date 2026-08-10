@@ -23,6 +23,15 @@ import {
   ArrowRight,
   Compass,
 } from "lucide-react";
+import {
+  buildAviasalesLink,
+  buildHotelSearchUrl,
+  buildViatorLink,
+  buildInsuranceLink,
+} from "@/lib/travelpayouts";
+import { TpCtaCard } from "@/components/travelpayouts/TpCtaCard";
+import { FlightSearchWidget } from "@/components/travelpayouts/FlightSearchWidget";
+import { HotelSearchWidget } from "@/components/travelpayouts/HotelSearchWidget";
 import { getDestinationBySlug, getAllDestinationSlugs } from "@/lib/destinations";
 import {
   getDestinationIntro,
@@ -184,8 +193,9 @@ export default async function DestinationDetailPage({
     hasPrayerFacilities && { id: "prayer-facilities", label: "Prayer Facilities" },
     travelTips.length > 0 && { id: "travel-tips", label: "Travel Tips" },
     destination.bestTimeToVisit && { id: "best-time", label: "Best Time to Visit" },
+    { id: "plan-your-trip", label: "Plan Your Trip" },
     destination.affiliateProducts && destination.affiliateProducts.length > 0 && { id: "pack-for-trip", label: "Pack for This Trip" },
-    destination.conclusion && { id: "conclusion", label: "Plan Your Trip" },
+    destination.conclusion && { id: "conclusion", label: "Conclusion" },
     hasDetails && { id: "guide", label: "Full Guide" },
     { id: "quick-facts", label: "Quick Facts" },
   ].filter(Boolean) as { id: string; label: string }[];
@@ -306,6 +316,42 @@ export default async function DestinationDetailPage({
               </ContentSection>
             )}
 
+            {/* PLAN YOUR TRIP */}
+            <section id="plan-your-trip" className="mb-10 pb-10 border-b border-gray-200">
+              <p className="text-[#1D6A5B] text-xs font-semibold uppercase tracking-widest mb-2">
+                Plan Your Trip
+              </p>
+              <h2 className="text-gray-900 text-xl font-semibold mb-2">
+                Book Flights, Hotels & Activities
+              </h2>
+              <p className="text-gray-500 text-sm mb-6">
+                Everything you need to book your trip to {destination.name} in one place.
+              </p>
+
+              {/* 2x2 grid of CTA cards on desktop, stacked on mobile */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <TpCtaCard
+                  type="flights"
+                  destinationName={destination.name}
+                  href={buildAviasalesLink(destination.iataCode || '')}
+                />
+                <TpCtaCard
+                  type="hotels"
+                  destinationName={destination.name}
+                  href={buildHotelSearchUrl(destination.name)}
+                />
+                <TpCtaCard
+                  type="tours"
+                  destinationName={destination.name}
+                  href={buildViatorLink(destination.name)}
+                />
+                <TpCtaCard
+                  type="insurance"
+                  href={buildInsuranceLink()}
+                />
+              </div>
+            </section>
+
             {destination.affiliateProducts && destination.affiliateProducts.length > 0 && (
               <ContentSection
                 id="pack-for-trip"
@@ -317,7 +363,7 @@ export default async function DestinationDetailPage({
             )}
 
             {destination.conclusion && (
-              <ContentSection id="conclusion" title="Plan Your Trip" icon={<Compass className="h-6 w-6" />}>
+              <ContentSection id="conclusion" title="Overview & Conclusion" icon={<Compass className="h-6 w-6" />}>
                 <FormattedProse text={destination.conclusion} />
                 <div className="mt-6">
                   <Button asChild className="bg-brand-emerald-600 hover:bg-brand-emerald-700">
@@ -351,6 +397,31 @@ export default async function DestinationDetailPage({
               facts={destination.quickFacts}
               hasHalalFood={hasHalalFood}
               hasPrayerFacilities={hasPrayerFacilities}
+            />
+
+            {/* FLIGHT SEARCH */}
+            <FlightSearchWidget
+              destination={destination.iataCode}
+              marker={process.env.NEXT_PUBLIC_TP_MARKER || ''}
+            />
+
+            {/* HOTEL SEARCH */}
+            <HotelSearchWidget
+              destination={destination.name}
+              marker={process.env.NEXT_PUBLIC_TP_MARKER || ''}
+            />
+
+            {/* TOURS CTA */}
+            <TpCtaCard
+              type="tours"
+              destinationName={destination.name}
+              href={buildViatorLink(destination.name)}
+            />
+
+            {/* INSURANCE CTA — show on every destination */}
+            <TpCtaCard
+              type="insurance"
+              href={buildInsuranceLink()}
             />
 
             <BookingComCard

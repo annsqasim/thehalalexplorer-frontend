@@ -31,6 +31,12 @@ export default function AffiliateDisclosurePage() {
           through our Booking.com links, we may earn a commission.
         </p>
         <p>
+          We also participate in the Travelpayouts affiliate network. When you search
+          for or book flights, hotels, tours, or travel insurance through links on
+          our site, we may earn a commission at no additional cost to you.
+          We only partner with providers we trust.
+        </p>
+        <p>
           We only recommend products and services we genuinely believe in and that we think
           will be useful to our readers. Our editorial content is never influenced by our
           affiliate partnerships.

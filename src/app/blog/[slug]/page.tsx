@@ -17,6 +17,12 @@ import { getDestinationExcerpt } from "@/lib/destination-content";
 import type { Blog, AffiliateProductField, NearbyDestinationRef } from "@/types";
 import { PLACEHOLDER_IMAGE } from "@/lib/constants";
 import { AffiliateProductCard } from "@/components/affiliate";
+import {
+  buildFlightSearchUrl,
+  buildHotelSearchUrl,
+  buildInsuranceLink,
+} from "@/lib/travelpayouts";
+import { TpCtaCard } from "@/components/travelpayouts/TpCtaCard";
 import type { PortableTextBlock } from "@portabletext/types";
 import _get from "lodash/get";
 
@@ -180,6 +186,32 @@ export default async function BlogPostPage({
                   </div>
                 </div>
               )}
+
+              {/* Travelpayouts Booking CTA */}
+              <div className="mt-10 pt-10 border-t border-gray-200">
+                <p className="text-gray-900 font-semibold text-base mb-1">
+                  Ready to book your trip?
+                </p>
+                <p className="text-gray-500 text-sm mb-5">
+                  Compare flights, hotels, and activities with our trusted partners.
+                </p>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                  <TpCtaCard
+                    type="flights"
+                    destinationName={post.relatedDestinations?.[0]?.name}
+                    href={buildFlightSearchUrl({})}
+                  />
+                  <TpCtaCard
+                    type="hotels"
+                    destinationName={post.relatedDestinations?.[0]?.name}
+                    href={buildHotelSearchUrl(post.relatedDestinations?.[0]?.name || '')}
+                  />
+                  <TpCtaCard
+                    type="insurance"
+                    href={buildInsuranceLink()}
+                  />
+                </div>
+              </div>
             </div>
 
             {/* TOC & Email CTA Sidebar */}

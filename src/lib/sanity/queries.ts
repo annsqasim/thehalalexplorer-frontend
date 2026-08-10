@@ -42,6 +42,7 @@ const destinationFields = `
       }
     },
     bookingComUrl,
+    "iataCode": iataCode,
     region,
     metaTitle,
     metaDescription,

@@ -20,6 +20,7 @@ function staticToDestination(s: (typeof STATIC_DESTINATIONS)[0]): Destination {
     prayerFacilities: s.prayerFacilities ?? "",
     bestTimeToVisit: s.bestTimeToVisit ?? "",
     details: [],
+    iataCode: s.iataCode,
     image: s.image?.asset?.url ? { asset: { url: s.image.asset.url } } : undefined,
     isFeatured: s.isFeatured,
   };

@@ -132,6 +132,24 @@ export default function RootLayout({
           <SpeedInsights />
           <Footer />
         </ThemeRegistry>
+        {/* Travelpayouts Conversion Tracking & Content Script */}
+        <Script
+          id="tp-pixel"
+          strategy="afterInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function(tp) {
+                tp.push(['setMark', '${process.env.NEXT_PUBLIC_TP_MARKER || ''}']);
+                tp.push(['setHost', '${process.env.NEXT_PUBLIC_TP_HOST || 'www.thehalalexplorer.com'}']);
+                tp.push(['init']);
+              })(window.tp = window.tp || []);
+            `,
+          }}
+        />
+        <Script
+          src="https://tp.media/content"
+          strategy="lazyOnload"
+        />
       </body>
     </html>
   )

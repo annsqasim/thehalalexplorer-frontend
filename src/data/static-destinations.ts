@@ -9,6 +9,7 @@ export interface StaticDestination {
   country: string;
   slug: { current: string };
   description: string;
+  iataCode?: string;
   halalFoodInfo?: string;
   prayerFacilities?: string;
   bestTimeToVisit?: string;
@@ -24,6 +25,7 @@ export const STATIC_DESTINATIONS: StaticDestination[] = [
     name: "Kuala Lumpur",
     country: "Malaysia",
     slug: { current: "kuala-lumpur" },
+    iataCode: "KUL",
     description: "Kuala Lumpur is a vibrant metropolis where futuristic skyscrapers stand alongside colonial-era architecture and lush green parks. Discover a melting pot of Malay, Chinese, and Indian cultures. For Muslim travelers, it is one of the easiest cities to navigate in Southeast Asia, with halal food everywhere and prayer facilities in every mall.",
     halalFoodInfo: "100% halal food is widely available across the city, from high-end malls to local night markets. Look for JAKIM halal certification logos. Many restaurants are Muslim-owned.",
     prayerFacilities: "Prayer rooms (Surau) are ubiquitous in every major shopping mall, train station, and public building. National Mosque (Masjid Negara) and Federal Territory Mosque are must-visits.",
@@ -36,6 +38,7 @@ export const STATIC_DESTINATIONS: StaticDestination[] = [
     name: "Istanbul",
     country: "Turkey",
     slug: { current: "istanbul" },
+    iataCode: "IST",
     description: "Where East meets West, Istanbul offers stunning mosques, bazaars, and Bosphorus views. A deeply Muslim-friendly city with centuries of Islamic heritage, from the Blue Mosque to Süleymaniye.",
     halalFoodInfo: "Turkey is a Muslim-majority country; halal food is the norm. Kebabs, mezes, and Turkish delight are widely available. Alcohol is served in some venues but halal options dominate.",
     prayerFacilities: "Thousands of mosques including the iconic Blue Mosque and Hagia Sophia (museum with prayer areas). Adhan echoes across the city five times daily.",
@@ -48,6 +51,7 @@ export const STATIC_DESTINATIONS: StaticDestination[] = [
     name: "Dubai",
     country: "United Arab Emirates",
     slug: { current: "dubai" },
+    iataCode: "DXB",
     description: "Dubai blends ultra-modern luxury with Arabian tradition. World-class malls, beaches, and desert experiences await, all in a Muslim-majority environment with excellent halal dining and prayer facilities.",
     halalFoodInfo: "All food in Dubai is halal. From street shawarmas to fine dining, you can eat with complete confidence. Many hotels and restaurants cater specifically to Muslim guests.",
     prayerFacilities: "Mosques and prayer rooms are everywhere—malls, airports, hotels. Jumeirah Mosque is open for visits. Prayer times are widely observed.",
@@ -60,6 +64,7 @@ export const STATIC_DESTINATIONS: StaticDestination[] = [
     name: "Singapore",
     country: "Singapore",
     slug: { current: "singapore" },
+    iataCode: "SIN",
     description: "A clean, safe city-state with a significant Malay-Muslim community. Halal-certified eateries, mosques, and Muslim-friendly attractions make it ideal for families.",
     halalFoodInfo: "MUIS halal certification is common. Hawker centres have halal stalls; many restaurants are fully halal. Kampong Glam is the historic Muslim quarter with great food.",
     prayerFacilities: "Sultan Mosque and many other mosques; prayer rooms in Changi Airport and major malls. Very accessible for Muslim travelers.",

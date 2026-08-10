@@ -111,6 +111,13 @@ export const destination = defineType({
       description: 'Used in the sidebar "Book Hotels in [City]" CTA button',
     }),
     defineField({
+      name: 'iataCode',
+      title: 'Airport IATA Code',
+      type: 'string',
+      description: 'e.g. KUL for Kuala Lumpur, IST for Istanbul, DXB for Dubai',
+      validation: Rule => Rule.max(3).uppercase(),
+    }),
+    defineField({
       name: 'region',
       title: 'Region',
       type: 'string',

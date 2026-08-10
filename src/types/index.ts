@@ -76,6 +76,7 @@ export interface Destination {
   ratings?: DestinationRatings;
   affiliateProducts?: AffiliateProductField[];
   bookingComUrl?: string;
+  iataCode?: string;
   region?: string;
   nearbyDestinations?: NearbyDestinationRef[];
   metaTitle?: string;

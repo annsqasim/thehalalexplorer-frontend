@@ -21,6 +21,13 @@ import { BlogFeed } from '@/components/BlogFeed';
 import { EmailCaptureCard } from '@/components/affiliate';
 import { buildPageMetadata } from '@/lib/seo';
 import { SITE_URL } from '@/lib/constants/site';
+import {
+  buildFlightSearchUrl,
+  buildHotelSearchUrl,
+  buildViatorLink,
+  buildInsuranceLink,
+} from '@/lib/travelpayouts';
+import { TpCtaCard } from '@/components/travelpayouts/TpCtaCard';
 
 export async function generateMetadata(): Promise<Metadata> {
   let homepageData;
@@ -134,6 +141,41 @@ export default async function HomePage() {
           </Button>
         </div>
       </Section>
+
+      {/* HOMEPAGE — Plan Your Next Trip section */}
+      <section className="bg-[#F9FAFB] py-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <p className="text-[#1D6A5B] text-xs font-semibold uppercase tracking-widest mb-2">
+            Book Your Trip
+          </p>
+          <h2 className="text-gray-900 text-2xl font-bold mb-2">
+            Everything in one place
+          </h2>
+          <p className="text-gray-500 text-sm mb-8 max-w-lg">
+            Flights, hotels, tours, and insurance — all with our affiliate partners.
+            You pay nothing extra. We earn a small commission that keeps this site running.
+          </p>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <TpCtaCard
+              type="flights"
+              href={buildFlightSearchUrl({})}
+            />
+            <TpCtaCard
+              type="hotels"
+              href={buildHotelSearchUrl('Dubai')}
+            />
+            <TpCtaCard
+              type="tours"
+              href={buildViatorLink('world')}
+            />
+            <TpCtaCard
+              type="insurance"
+              href={buildInsuranceLink()}
+            />
+          </div>
+        </div>
+      </section>
 
       <AffiliateStrip products={homepageData?.featuredAffiliateProducts} />
 
