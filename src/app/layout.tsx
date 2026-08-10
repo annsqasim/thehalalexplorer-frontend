@@ -132,23 +132,21 @@ export default function RootLayout({
           <SpeedInsights />
           <Footer />
         </ThemeRegistry>
-        {/* Travelpayouts Conversion Tracking & Content Script */}
+        {/* Travelpayouts White Label Widget Script (wl_id=20736) */}
         <Script
-          id="tp-pixel"
+          id="tp-wl-widget"
           strategy="afterInteractive"
           dangerouslySetInnerHTML={{
             __html: `
-              (function(tp) {
-                tp.push(['setMark', '${process.env.NEXT_PUBLIC_TP_MARKER || ''}']);
-                tp.push(['setHost', '${process.env.NEXT_PUBLIC_TP_HOST || 'www.thehalalexplorer.com'}']);
-                tp.push(['init']);
-              })(window.tp = window.tp || []);
+              (function () {
+                var script = document.createElement("script");
+                script.async = 1;
+                script.type = "module";
+                script.src = "https://tpwgts.com/wl_web/main.js?wl_id=20736";
+                document.head.appendChild(script);
+              })();
             `,
           }}
-        />
-        <Script
-          src="https://tp.media/content"
-          strategy="lazyOnload"
         />
       </body>
     </html>

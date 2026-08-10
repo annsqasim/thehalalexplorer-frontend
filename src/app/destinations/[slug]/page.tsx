@@ -400,15 +400,11 @@ export default async function DestinationDetailPage({
             />
 
             {/* FLIGHT SEARCH */}
-            <FlightSearchWidget
-              destination={destination.iataCode}
-              marker={process.env.NEXT_PUBLIC_TP_MARKER || ''}
-            />
+            <FlightSearchWidget />
 
             {/* HOTEL SEARCH */}
             <HotelSearchWidget
               destination={destination.name}
-              marker={process.env.NEXT_PUBLIC_TP_MARKER || ''}
             />
 
             {/* TOURS CTA */}
