@@ -73,6 +73,7 @@ export function TpCtaCard({ type, destinationName, href }: Props) {
       </div>
       <a
         href={href}
+        suppressHydrationWarning
         {...TP_LINK_PROPS}
         className={`
           block w-full text-center text-white font-semibold text-sm
