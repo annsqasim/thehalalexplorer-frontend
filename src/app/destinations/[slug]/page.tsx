@@ -400,7 +400,9 @@ export default async function DestinationDetailPage({
             />
 
             {/* FLIGHT SEARCH */}
-            <FlightSearchWidget />
+            <FlightSearchWidget
+              destination={destination.iataCode}
+            />
 
             {/* HOTEL SEARCH */}
             <HotelSearchWidget

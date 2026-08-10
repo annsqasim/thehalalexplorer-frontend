@@ -122,20 +122,10 @@ export default function RootLayout({
           <Footer />
         </ThemeRegistry>
         {/* Travelpayouts White Label Widget Script (wl_id=20736) */}
+        {/* Travelpayouts Widget Content Script */}
         <Script
-          id="tp-wl-widget"
-          strategy="afterInteractive"
-          dangerouslySetInnerHTML={{
-            __html: `
-              (function () {
-                var script = document.createElement("script");
-                script.async = 1;
-                script.type = "module";
-                script.src = "https://tpwgts.com/wl_web/main.js?wl_id=20736";
-                document.head.appendChild(script);
-              })();
-            `,
-          }}
+          src="https://tp.media/content"
+          strategy="lazyOnload"
         />
       </body>
     </html>

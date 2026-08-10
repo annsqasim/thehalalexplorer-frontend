@@ -1,7 +1,8 @@
 // lib/travelpayouts.ts
 // Central utility for all Travelpayouts link building and widget config
 
-const MARKER = process.env.NEXT_PUBLIC_TP_MARKER || ''
+const rawMarker = process.env.NEXT_PUBLIC_TP_MARKER
+const MARKER = (rawMarker && rawMarker !== 'YOUR_MARKER_ID') ? rawMarker : '20736'
 
 // ─── FLIGHT LINKS ────────────────────────────────────────────────
 // Build a deep-link to Aviasales flight search with affiliate marker

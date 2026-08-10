@@ -1,9 +1,43 @@
-// Renders the Travelpayouts White Label flight search widget
-// The global WL script (loaded in layout.tsx) detects these container divs
-// and mounts the search form + results into them automatically.
-// Only ONE instance of this widget should exist per page (IDs are fixed).
+'use client'
+// Embeds the Travelpayouts Aviasales flight search form
+// Renders as a compact search box on destination pages and homepage
+// Props: origin (default 'DXB'), destination (pre-filled for destination pages)
 
-export function FlightSearchWidget() {
+import { useEffect, useRef } from 'react'
+
+interface Props {
+  origin?: string        // IATA code, default 'DXB'
+  destination?: string   // IATA code, pre-fills destination field
+  marker?: string        // from process.env.NEXT_PUBLIC_TP_MARKER
+  locale?: string        // default 'en'
+}
+
+export function FlightSearchWidget({ origin = 'DXB', destination, marker, locale = 'en' }: Props) {
+  const containerRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const container = containerRef.current
+    if (!container) return
+
+    const tpMarker = marker || process.env.NEXT_PUBLIC_TP_MARKER || '20736'
+
+    container.innerHTML = ''
+    const script = document.createElement('script')
+    script.src = 'https://tp.media/content'
+    script.async = true
+    script.dataset.tpWidgetLookup = 'search_form'
+    script.dataset.origin = origin
+    if (destination) script.dataset.destination = destination
+    script.dataset.locale = locale
+    script.dataset.marker = tpMarker
+    script.dataset.host = process.env.NEXT_PUBLIC_TP_HOST || 'www.thehalalexplorer.com'
+    container.appendChild(script)
+
+    return () => {
+      container.innerHTML = ''
+    }
+  }, [origin, destination, marker, locale])
+
   return (
     <div className="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-soft">
       <div className="bg-[#1D6A5B] px-4 py-3">
@@ -14,10 +48,7 @@ export function FlightSearchWidget() {
           Compare prices across 100+ airlines
         </p>
       </div>
-      <div className="p-3">
-        <div id="tpwl-search" />
-        <div id="tpwl-tickets" />
-      </div>
+      <div ref={containerRef} className="p-3 min-h-[120px]" />
       <div className="px-4 pb-3">
         <p className="text-gray-400 text-[10px]">
           Powered by Aviasales via Travelpayouts
