@@ -1,6 +1,6 @@
 // lib/travelpayouts.ts
 
-const MARKER = process.env.NEXT_PUBLIC_TP_MARKER || '20736'
+const MARKER = process.env.NEXT_PUBLIC_TP_MARKER || '757826'
 const TRS    = process.env.NEXT_PUBLIC_TP_TRS    || '556314'
 
 // ─── BASE REDIRECT ────────────────────────────────────────────────
