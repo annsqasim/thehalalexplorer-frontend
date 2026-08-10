@@ -121,12 +121,6 @@ export default function RootLayout({
           <SpeedInsights />
           <Footer />
         </ThemeRegistry>
-        {/* Travelpayouts White Label Widget Script (wl_id=20736) */}
-        {/* Travelpayouts Widget Content Script */}
-        <Script
-          src="https://tp.media/content"
-          strategy="lazyOnload"
-        />
       </body>
     </html>
   )
