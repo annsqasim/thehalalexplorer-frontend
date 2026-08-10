@@ -9,6 +9,7 @@ export function buildDestinationContentPrompt(name: string, country: string): st
 Generate a detailed, engaging, trustworthy, and SEO-optimized destination guide for Muslim travelers.
 
 Do NOT use robotic language, keyword stuffing, or generic filler.
+CRITICAL: Do NOT use em-dashes (—, --, or –) anywhere in the text. Use standard punctuation like commas, periods, or parentheses instead. Avoid robotic AI cliché words such as "nestled", "tapestry", "beacon", "furthermore", "moreover", "delve", or "realm". Write in a natural, human-written, conversational tone.
 
 DESTINATION: ${name}, ${country}
 
