@@ -7,6 +7,7 @@ import {
   buildToursLink,
   buildInsuranceLink,
   buildCarRentalLink,
+  TP_LINKS,
   TP_LINK_PROPS,
 } from '@/lib/travelpayouts'
 
@@ -59,11 +60,11 @@ const CONFIG: Record<CtaType, {
 
 function buildHref(type: CtaType, destinationName?: string, destinationIATA?: string): string {
   switch (type) {
-    case 'flights':   return buildFlightLink('DXB', destinationIATA || '')
-    case 'hotels':    return buildHotelLink(destinationName || '')
+    case 'flights':   return buildFlightLink(destinationIATA || '')
+    case 'hotels':    return buildHotelLink()
     case 'tours':     return buildToursLink(destinationName || '')
     case 'insurance': return buildInsuranceLink()
-    case 'cars':      return buildCarRentalLink(destinationName || '')
+    case 'cars':      return buildCarRentalLink()
     default:          return '#'
   }
 }

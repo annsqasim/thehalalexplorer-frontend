@@ -1,41 +1,20 @@
 'use client'
 // components/travelpayouts/FlightSearchWidget.tsx
-// Embeds official Travelpayouts Aviasales flight search widget (promo_id=7879, campaign_id=100)
-
-import { useEffect, useRef } from 'react'
+// Form redirect using aviasales.tpx.gr short links with search params
 
 interface Props {
-  originIATA?: string
-  destinationIATA?: string
-  destinationName?: string
+  originIATA?: string       // default DXB
+  destinationIATA?: string  // pre-fills destination
+  destinationName?: string  // shown in header
 }
 
 export function FlightSearchWidget({
+  originIATA = 'DXB',
+  destinationIATA,
   destinationName,
 }: Props) {
-  const containerRef = useRef<HTMLDivElement>(null)
-  const marker = process.env.NEXT_PUBLIC_TP_MARKER || '757826'
-  const trs = process.env.NEXT_PUBLIC_TP_TRS || '556314'
-
-  useEffect(() => {
-    const container = containerRef.current
-    if (!container) return
-
-    container.innerHTML = ''
-    const script = document.createElement('script')
-    script.async = true
-    script.charset = 'utf-8'
-    script.src = `https://tpwgts.com/content?currency=aed&trs=${trs}&shmarker=${marker}&show_hotels=true&powered_by=true&locale=en&searchUrl=www.aviasales.com%2Fsearch&primary_override=%231D6A5B&color_button=%231D6A5B&color_icons=%231D6A5B&dark=%23262626&light=%23FFFFFF&secondary=%23FFFFFF&special=%23C4C4C4&color_focused=%231D6A5B&border_radius=8&plain=true&promo_id=7879&campaign_id=100`
-
-    container.appendChild(script)
-
-    return () => {
-      container.innerHTML = ''
-    }
-  }, [marker, trs])
-
   return (
-    <div className="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-soft">
+    <div className="bg-white border border-gray-200 rounded-xl overflow-hidden">
       <div className="bg-[#1D6A5B] px-4 py-3">
         <p className="text-white font-semibold text-sm">
           ✈️ Search Flights {destinationName ? `to ${destinationName}` : ''}
@@ -45,7 +24,12 @@ export function FlightSearchWidget({
         </p>
       </div>
 
-      <div ref={containerRef} className="p-3 min-h-[160px]" />
+      <div className="p-4">
+        <FlightSearchForm
+          originIATA={originIATA}
+          destinationIATA={destinationIATA}
+        />
+      </div>
 
       <div className="px-4 pb-3">
         <p className="text-gray-400 text-[10px]">
@@ -53,5 +37,67 @@ export function FlightSearchWidget({
         </p>
       </div>
     </div>
+  )
+}
+
+function FlightSearchForm({
+  originIATA,
+  destinationIATA,
+}: {
+  originIATA: string
+  destinationIATA?: string
+}) {
+  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault()
+    const form   = e.currentTarget
+    const origin = (form.elements.namedItem('origin') as HTMLInputElement).value.toUpperCase()
+    const dest   = (form.elements.namedItem('dest')   as HTMLInputElement).value.toUpperCase()
+    const date   = (form.elements.namedItem('date')   as HTMLInputElement).value
+
+    // Use the tpx.gr short link with search params
+    const url = `https://aviasales.tpx.gr/4Ren7XoF?origin=${origin}&destination=${dest}&depart_date=${date}`
+    window.open(url, '_blank', 'noopener,noreferrer')
+  }
+
+  return (
+    <form onSubmit={handleSubmit} className="flex flex-col gap-3">
+      <div>
+        <label className="block text-xs font-medium text-gray-600 mb-1">From</label>
+        <input
+          name="origin"
+          defaultValue={originIATA}
+          placeholder="e.g. DXB"
+          maxLength={3}
+          required
+          className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm uppercase font-mono focus:outline-none focus:border-[#1D6A5B]"
+        />
+      </div>
+      <div>
+        <label className="block text-xs font-medium text-gray-600 mb-1">To</label>
+        <input
+          name="dest"
+          defaultValue={destinationIATA || ''}
+          placeholder="e.g. KUL"
+          maxLength={3}
+          required
+          className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm uppercase font-mono focus:outline-none focus:border-[#1D6A5B]"
+        />
+      </div>
+      <div>
+        <label className="block text-xs font-medium text-gray-600 mb-1">Departure Date</label>
+        <input
+          name="date"
+          type="date"
+          required
+          className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:border-[#1D6A5B]"
+        />
+      </div>
+      <button
+        type="submit"
+        className="w-full bg-[#1D6A5B] hover:bg-[#16574A] text-white font-semibold text-sm py-2.5 rounded-lg transition-colors"
+      >
+        🔍 Find Cheapest Flights →
+      </button>
+    </form>
   )
 }
