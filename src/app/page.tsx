@@ -31,11 +31,16 @@ export async function generateMetadata(): Promise<Metadata> {
     homepageData = null;
   }
   return buildPageMetadata({
-    data: homepageData || {},
+    data: {
+      ...homepageData,
+      metaTitle: homepageData?.metaTitle || 'The Halal Explorer | Muslim-Friendly Travel Guide',
+      metaDescription:
+        'Honest halal travel guides for Muslim travellers. Halal food, mosque locations, prayer facilities and destination ratings for 53 cities worldwide.',
+    },
     path: '/',
-    fallbackTitle: 'The Halal Explorer - Muslim-Friendly Travel Destinations',
+    fallbackTitle: 'The Halal Explorer | Muslim-Friendly Travel Guide',
     fallbackDescription:
-      'Discover Muslim-friendly travel destinations around the world with information on halal food, mosques, prayer timings, and local customs.',
+      'Honest halal travel guides for Muslim travellers. Halal food, mosque locations, prayer facilities and destination ratings for 53 cities worldwide.',
   });
 }
 

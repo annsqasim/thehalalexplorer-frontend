@@ -23,9 +23,9 @@ const playfair = Playfair_Display({
 })
 
 export const metadata: Metadata = {
-  title: "The Halal Explorer - Muslim-Friendly Travel Destinations",
+  title: "The Halal Explorer | Muslim-Friendly Travel Guide",
   description:
-    "Discover Muslim-friendly travel destinations around the world with information on halal food, mosques, prayer timings, and local customs.",
+    "Honest halal travel guides for Muslim travellers. Halal food, mosque locations, prayer facilities and destination ratings for 53 cities worldwide.",
   generator: "Next.js",
   applicationName: "The Halal Explorer",
   referrer: "origin-when-cross-origin",
@@ -46,9 +46,9 @@ export const metadata: Metadata = {
   publisher: "The Halal Explorer",
   metadataBase: new URL("https://www.thehalalexplorer.com"),
   openGraph: {
-    title: "The Halal Explorer - Muslim-Friendly Travel Destinations",
+    title: "The Halal Explorer | Muslim-Friendly Travel Guide",
     description:
-      "Discover Muslim-friendly travel destinations around the world with information on halal food, mosques, prayer timings, and local customs.",
+      "Honest halal travel guides for Muslim travellers. Halal food, mosque locations, prayer facilities and destination ratings for 53 cities worldwide.",
     url: "https://www.thehalalexplorer.com",
     siteName: "The Halal Explorer",
     images: ['https://thehalalexplorer.com/og-image.jpg'],
@@ -57,9 +57,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "The Halal Explorer - Muslim-Friendly Travel Destinations",
+    title: "The Halal Explorer | Muslim-Friendly Travel Guide",
     description:
-      "Discover Muslim-friendly travel destinations around the world with information on halal food, mosques, prayer timings, and local customs.",
+      "Honest halal travel guides for Muslim travellers. Halal food, mosque locations, prayer facilities and destination ratings for 53 cities worldwide.",
     images: ['https://thehalalexplorer.com/twitter-image.jpg'],
     creator: "@yourtwitterhandle",
   },

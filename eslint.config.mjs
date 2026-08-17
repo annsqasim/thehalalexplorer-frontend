@@ -29,6 +29,6 @@ export default [
     },
   },
   {
-    ignores: ['.next/', 'node_modules/', 'next-sitemap.config.js', 'sanity.config.ts', 'schemas/'],
+    ignores: ['.next/', 'node_modules/', 'next-sitemap.config.js', 'sanity.config.ts', 'schemas/', 'scripts/'],
   },
 ];
