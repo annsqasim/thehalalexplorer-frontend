@@ -21,6 +21,8 @@ import { getIATA } from "@/lib/travelpayouts";
 import { TpCtaCard } from "@/components/travelpayouts/TpCtaCard";
 import type { PortableTextBlock } from "@portabletext/types";
 import _get from "lodash/get";
+import { JsonLd } from "@/components/JsonLd";
+import { SITE_URL } from "@/lib/constants/site";
 
 export const revalidate = 60;
 
@@ -47,12 +49,12 @@ export async function generateMetadata({
     title: post.metaTitle || post.title,
     description: post.metaDescription || post.shortDescription,
     alternates: {
-      canonical: post.canonicalUrl || `/blog/${slug}`,
+      canonical: post.canonicalUrl || `${SITE_URL}/blog/${slug}`,
     },
     openGraph: {
       title: post.metaTitle || post.title,
       description: post.metaDescription || post.shortDescription,
-      url: post.canonicalUrl || `/blog/${slug}`,
+      url: post.canonicalUrl || `${SITE_URL}/blog/${slug}`,
       images: post?.mainImage?.asset?.url
         ? [{ url: post.mainImage.asset.url }]
         : [],
@@ -82,6 +84,31 @@ export default async function BlogPostPage({
 
   return (
     <>
+      {/* BlogPosting JSON-LD structured data */}
+      <JsonLd
+        data={{
+          '@type': 'BlogPosting',
+          headline: post.title,
+          description: post.metaDescription || post.shortDescription || '',
+          image: post?.mainImage?.asset?.url || undefined,
+          datePublished: post.publishedAt || undefined,
+          author: post.author
+            ? { '@type': 'Person', name: post.author }
+            : { '@type': 'Organization', name: 'The Halal Explorer' },
+          publisher: {
+            '@type': 'Organization',
+            name: 'The Halal Explorer',
+            logo: {
+              '@type': 'ImageObject',
+              url: 'https://www.thehalalexplorer.com/the-logo.svg',
+            },
+          },
+          mainEntityOfPage: {
+            '@type': 'WebPage',
+            '@id': `${SITE_URL}/blog/${slug}`,
+          },
+        }}
+      />
       {/* Hero Header */}
       <section className="relative h-[50vh] min-h-[400px] overflow-hidden">
         <Image

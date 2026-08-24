@@ -9,6 +9,7 @@ import type { Blog } from "@/types";
 import { blogPageContent } from "@/data/blog";
 import { Clock, User } from "lucide-react";
 import { PLACEHOLDER_IMAGE } from "@/lib/constants";
+import { SITE_URL } from "@/lib/constants/site";
 
 export const revalidate = 60;
 
@@ -22,9 +23,11 @@ export const metadata: Metadata = {
     "prayer while traveling",
     "Islamic travel blog",
   ],
+  alternates: { canonical: `${SITE_URL}/blog` },
   openGraph: {
     title: "Travel Blog | The Halal Explorer",
     description: "Insights, guides, and halal-friendly travel stories",
+    url: `${SITE_URL}/blog`,
   },
 };
 

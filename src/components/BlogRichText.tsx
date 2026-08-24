@@ -63,7 +63,7 @@ export default function BlogRichText({ value }: { value: PortableTextBlock[] }) 
           href={markValue?.href}
           className="underline hover:no-underline"
           target="_blank"
-          rel="noopener noreferrer"
+          rel="noopener noreferrer nofollow sponsored"
         >
           {children}
         </a>

@@ -27,7 +27,10 @@ export function DestinationsGrid({ destinations }: { destinations: Destination[]
   const [sort, setSort] = useState<SortKey>('default');
 
   const filtered = useMemo(() => {
-    let list = [...destinations];
+    // Filter out destinations with missing required fields
+    let list = [...destinations].filter(
+      (d) => d && d.name && d.slug?.current
+    );
     if (region !== 'all') {
       list = list.filter((d) => d.region === region);
     }

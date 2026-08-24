@@ -40,6 +40,8 @@ import {
 } from "@/lib/destination-content";
 import _get from "lodash/get";
 import PrayerTimes from "@/components/PrayerTimes";
+import { SITE_URL } from "@/lib/constants/site";
+import { JsonLd } from "@/components/JsonLd";
 import { PLACEHOLDER_IMAGE } from "@/lib/constants";
 import { AdBanner } from "@/components/AdBanner";
 import RichText from "@/components/RichText";
@@ -75,12 +77,12 @@ export async function generateMetadata({
     title,
     description,
     alternates: {
-      canonical: destination.canonicalUrl || `/destinations/${slug}`,
+      canonical: destination.canonicalUrl || `${SITE_URL}/destinations/${slug}`,
     },
     openGraph: {
       title,
       description,
-      url: destination.canonicalUrl || `/destinations/${slug}`,
+      url: destination.canonicalUrl || `${SITE_URL}/destinations/${slug}`,
       images: imageUrl ? [{ url: imageUrl }] : [],
     },
   };
@@ -200,6 +202,21 @@ export default async function DestinationDetailPage({
 
   return (
     <>
+      {/* TouristDestination JSON-LD structured data */}
+      <JsonLd
+        data={{
+          '@type': 'TouristDestination',
+          name: destination.name,
+          description: getMetaDescription(destination),
+          image: imageUrl !== PLACEHOLDER_IMAGE ? imageUrl : undefined,
+          url: `${SITE_URL}/destinations/${destination.slug.current}`,
+          touristType: 'Muslim traveler',
+          containedInPlace: {
+            '@type': 'Country',
+            name: destination.country,
+          },
+        }}
+      />
       <DestinationDetailHero
         name={destination.name}
         country={destination.country}

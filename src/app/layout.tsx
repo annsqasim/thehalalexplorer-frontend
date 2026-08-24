@@ -9,6 +9,7 @@ import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import Script from "next/script"
 import { AdBanner } from "@/components/AdBanner"
+import { JsonLd } from "@/components/JsonLd"
 
 const plusJakarta = Plus_Jakarta_Sans({
   subsets: ["latin"],
@@ -89,6 +90,29 @@ export default function RootLayout({
         )}
       </head>
       <body className={`${plusJakarta.className} antialiased text-slate-800`}>
+        <JsonLd
+          data={{
+            '@type': 'Organization',
+            name: 'The Halal Explorer',
+            url: 'https://www.thehalalexplorer.com',
+            logo: 'https://www.thehalalexplorer.com/the-logo.svg',
+            sameAs: [],
+            description:
+              'Honest halal travel guides for Muslim travellers. Halal food, mosque locations, prayer facilities and destination ratings for 53 cities worldwide.',
+          }}
+        />
+        <JsonLd
+          data={{
+            '@type': 'WebSite',
+            name: 'The Halal Explorer',
+            url: 'https://www.thehalalexplorer.com',
+            potentialAction: {
+              '@type': 'SearchAction',
+              target: 'https://www.thehalalexplorer.com/search?q={search_term_string}',
+              'query-input': 'required name=search_term_string',
+            },
+          }}
+        />
         {process.env.NODE_ENV === "production" && (
           <Script
             id="emrld-ad-script"

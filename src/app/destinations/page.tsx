@@ -4,6 +4,7 @@ import { getAllDestinations } from "@/lib/destinations";
 import { Destination } from "@/types";
 import { destinationsPageContent } from "@/data/destinations";
 import { DestinationsGrid } from "@/components/DestinationsGrid";
+import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
 import { SITE_URL } from "@/lib/constants/site";
 
@@ -29,7 +30,13 @@ export const metadata: Metadata = {
 };
 
 export default async function DestinationsPage() {
-  const destinations: Destination[] = await getAllDestinations();
+  let destinations: Destination[] = [];
+  try {
+    const result = await getAllDestinations();
+    destinations = Array.isArray(result) ? result : [];
+  } catch {
+    destinations = [];
+  }
 
   return (
     <>
@@ -71,7 +78,20 @@ export default async function DestinationsPage() {
       </Section>
 
       <Section className="bg-slate-50 dark:bg-slate-900/50">
-        <DestinationsGrid destinations={destinations} />
+        <ErrorBoundary
+          fallback={
+            <div className="rounded-xl border border-amber-200 bg-amber-50 p-8 text-center my-8">
+              <h3 className="text-lg font-semibold text-amber-800 mb-2">
+                Unable to load destinations
+              </h3>
+              <p className="text-sm text-amber-600">
+                Please try refreshing the page. If the issue persists, contact us.
+              </p>
+            </div>
+          }
+        >
+          <DestinationsGrid destinations={destinations} />
+        </ErrorBoundary>
       </Section>
     </>
   );

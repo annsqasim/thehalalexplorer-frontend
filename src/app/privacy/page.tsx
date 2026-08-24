@@ -1,13 +1,16 @@
 import { Metadata } from "next";
 import Link from "next/link";
+import { SITE_URL } from "@/lib/constants/site";
 
 export const metadata: Metadata = {
   title: "Privacy Policy | The Halal Explorer",
   description: "Privacy policy for The Halal Explorer. How we collect, use, and protect your information.",
   keywords: ["privacy", "The Halal Explorer", "data", "cookies"],
+  alternates: { canonical: `${SITE_URL}/privacy` },
   openGraph: {
     title: "Privacy Policy | The Halal Explorer",
     description: "Privacy policy for The Halal Explorer website.",
+    url: `${SITE_URL}/privacy`,
   },
 };
 

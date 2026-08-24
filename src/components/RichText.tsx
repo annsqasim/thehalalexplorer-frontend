@@ -24,7 +24,7 @@ const components: PortableTextComponents = {
   },
   marks: {
     link: ({ children, value }) => (
-      <a href={value?.href} className="underline hover:no-underline" target="_blank" rel="noopener noreferrer">
+      <a href={value?.href} className="underline hover:no-underline" target="_blank" rel="noopener noreferrer nofollow sponsored">
         {children}
       </a>
     ),
