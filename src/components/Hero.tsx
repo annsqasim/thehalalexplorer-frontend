@@ -43,7 +43,7 @@ export function Hero({
             Travel Without Limits
           </span>
           <h1
-            className="text-5xl sm:text-6xl md:text-7xl lg:text-6xl font-serif font-bold text-white mb-8 leading-tight animate-fade-in-up"
+            className="text-5xl sm:text-6xl md:text-7xl lg:text-6xl font-serif font-bold text-white mb-8 leading-tight"
           >
             {headline}
           </h1>

@@ -30,17 +30,22 @@ export async function generateMetadata(): Promise<Metadata> {
   } catch {
     homepageData = null;
   }
+
+  const TITLE = 'The Halal Explorer — Halal Travel Guides for Muslim Travellers';
+  const DESCRIPTION =
+    'Honest halal travel guides for Muslim travellers. Halal food, mosque locations, prayer facilities and destination ratings for 53+ cities worldwide. Start exploring.';
+
   return buildPageMetadata({
     data: {
       ...homepageData,
-      metaTitle: homepageData?.metaTitle || 'The Halal Explorer | Muslim-Friendly Travel Guide',
-      metaDescription:
-        'Honest halal travel guides for Muslim travellers. Halal food, mosque locations, prayer facilities and destination ratings for 53 cities worldwide.',
+      // Always use the hardcoded title/description to prevent CMS overrides
+      // that could break the meta description (Google rendering issue)
+      metaTitle: TITLE,
+      metaDescription: DESCRIPTION,
     },
     path: '/',
-    fallbackTitle: 'The Halal Explorer | Muslim-Friendly Travel Guide',
-    fallbackDescription:
-      'Honest halal travel guides for Muslim travellers. Halal food, mosque locations, prayer facilities and destination ratings for 53 cities worldwide.',
+    fallbackTitle: TITLE,
+    fallbackDescription: DESCRIPTION,
   });
 }
 

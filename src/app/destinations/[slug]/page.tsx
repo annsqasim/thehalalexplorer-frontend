@@ -30,6 +30,7 @@ import { TpCtaCard } from "@/components/travelpayouts/TpCtaCard";
 import { FlightSearchWidget } from "@/components/travelpayouts/FlightSearchWidget";
 import { HotelSearchWidget } from "@/components/travelpayouts/HotelSearchWidget";
 import { getDestinationBySlug, getAllDestinationSlugs } from "@/lib/destinations";
+import { getRelatedBlogPosts } from "@/lib/related-content";
 import {
   getDestinationIntro,
   getDestinationAbout,
@@ -185,6 +186,9 @@ export default async function DestinationDetailPage({
   const hasPrayerFacilities = Boolean(destination.prayerFacilities || destination.mosqueItems?.length);
   const safetyLevel = destination.quickFacts?.safety;
 
+  // Fetch related blog posts for internal linking (SEO)
+  const relatedBlogs = await getRelatedBlogPosts(destination.name, destination.country);
+
   const navSections = [
     intro && { id: "intro", label: "Introduction" },
     about && { id: "about", label: "About" },
@@ -217,6 +221,54 @@ export default async function DestinationDetailPage({
           },
         }}
       />
+      {/* FAQPage JSON-LD structured data — only when destination has content */}
+      {(hasHalalFood || hasPrayerFacilities) && (
+        <JsonLd
+          data={{
+            '@type': 'FAQPage',
+            mainEntity: [
+              ...(hasHalalFood
+                ? [
+                    {
+                      '@type': 'Question',
+                      name: `Is food halal in ${destination.name}?`,
+                      acceptedAnswer: {
+                        '@type': 'Answer',
+                        text:
+                          destination.halalFoodInfo ||
+                          `${destination.name} offers halal food options for Muslim travellers. Visit our full guide for details on halal restaurants and dining.`,
+                      },
+                    },
+                  ]
+                : []),
+              ...(hasPrayerFacilities
+                ? [
+                    {
+                      '@type': 'Question',
+                      name: `Where can Muslims pray in ${destination.name}?`,
+                      acceptedAnswer: {
+                        '@type': 'Answer',
+                        text:
+                          destination.prayerFacilities ||
+                          `${destination.name} has mosques and prayer facilities available for Muslim travellers. See our guide for locations and details.`,
+                      },
+                    },
+                  ]
+                : []),
+              {
+                '@type': 'Question',
+                name: `Is ${destination.name} safe for Muslim travellers?`,
+                acceptedAnswer: {
+                  '@type': 'Answer',
+                  text:
+                    safetyLevel ||
+                    `${destination.name} is generally considered a welcoming destination for Muslim travellers. Check our full guide for the latest safety information and travel tips.`,
+                },
+              },
+            ],
+          }}
+        />
+      )}
       <DestinationDetailHero
         name={destination.name}
         country={destination.country}
@@ -430,6 +482,34 @@ export default async function DestinationDetailPage({
             )}
 
             <PrayerTimes city={destination.name} country={destination.country} />
+
+            {/* Related Travel Guides — internal links for SEO */}
+            {relatedBlogs.length > 0 && (
+              <Card className="border-0 shadow-soft">
+                <CardHeader>
+                  <CardTitle className="text-xl">Related Travel Guides</CardTitle>
+                </CardHeader>
+                <CardContent className="pt-0">
+                  <ul>
+                    {relatedBlogs.map((blog) => (
+                      <li key={blog.slug} className="border-b border-gray-100 last:border-b-0">
+                        <Link
+                          href={`/blog/${blog.slug}`}
+                          className="flex items-start gap-3 py-3 hover:text-[#1D6A5B] transition-colors group"
+                        >
+                          <span className="bg-[#E8F5F1] text-[#1D6A5B] text-[10px] rounded px-1.5 py-0.5 flex-shrink-0 mt-0.5">
+                            Blog
+                          </span>
+                          <span className="text-gray-900 text-sm font-medium flex-1 group-hover:text-[#1D6A5B] line-clamp-2">
+                            {blog.title}
+                          </span>
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                </CardContent>
+              </Card>
+            )}
 
             <Card className="border-0 shadow-soft bg-gradient-to-br from-brand-emerald-50 to-brand-emerald-100">
               <CardContent className="p-6">
