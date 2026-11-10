@@ -8,7 +8,14 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Clock, User, ArrowRight } from "lucide-react";
-import { getAllBlogSlugs, getBlogBySlug, getAllBlogPosts } from "@/lib/blog";
+import {
+  getAllBlogSlugs,
+  getBlogBySlug,
+  getAllBlogPosts,
+  pickRelatedPosts,
+  extractFaqsFromBody,
+  isUmrahPost,
+} from "@/lib/blog";
 import BlogRichText from "@/components/BlogRichText";
 import { extractTocFromBlocks } from "@/lib/portable-text-toc";
 import { BlogTocSidebar } from "@/components/BlogTocSidebar";
@@ -75,12 +82,20 @@ export default async function BlogPostPage({
   }
 
   const allPosts = await getAllBlogPosts();
-  const relatedPosts = allPosts
-    .filter((p: Blog) => p._id !== post._id)
-    .slice(0, 3);
+  // Most relevant posts (shared categories and title words), not the same three everywhere
+  const relatedPosts = pickRelatedPosts(post, allPosts, 3);
 
   const bodyBlocks = (post.body as PortableTextBlock[]) || [];
   const tocItems = extractTocFromBlocks(bodyBlocks);
+  const faqs = extractFaqsFromBody(post.body);
+  const inUmrahCluster = isUmrahPost(post);
+  const breadcrumbs = [
+    { name: "Home", url: SITE_URL },
+    inUmrahCluster
+      ? { name: "Umrah Guide", url: `${SITE_URL}/umrah` }
+      : { name: "Blog", url: `${SITE_URL}/blog` },
+    { name: post.title, url: `${SITE_URL}/blog/${slug}` },
+  ];
 
   return (
     <>
@@ -92,6 +107,7 @@ export default async function BlogPostPage({
           description: post.metaDescription || post.shortDescription || '',
           image: post?.mainImage?.asset?.url || undefined,
           datePublished: post.publishedAt || undefined,
+          dateModified: post._updatedAt || post.publishedAt || undefined,
           author: post.author
             ? { '@type': 'Person', name: post.author }
             : { '@type': 'Organization', name: 'The Halal Explorer' },
@@ -109,6 +125,30 @@ export default async function BlogPostPage({
           },
         }}
       />
+      <JsonLd
+        data={{
+          '@type': 'BreadcrumbList',
+          itemListElement: breadcrumbs.map((crumb, index) => ({
+            '@type': 'ListItem',
+            position: index + 1,
+            name: crumb.name,
+            item: crumb.url,
+          })),
+        }}
+      />
+      {/* FAQPage structured data, read from the post's own FAQ section */}
+      {faqs.length >= 2 && (
+        <JsonLd
+          data={{
+            '@type': 'FAQPage',
+            mainEntity: faqs.map((faq) => ({
+              '@type': 'Question',
+              name: faq.question,
+              acceptedAnswer: { '@type': 'Answer', text: faq.answer },
+            })),
+          }}
+        />
+      )}
       {/* Hero Header */}
       <section className="relative h-[50vh] min-h-[400px] overflow-hidden">
         <Image
@@ -121,6 +161,15 @@ export default async function BlogPostPage({
         <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/60 to-black/80" />
         <div className="container relative z-10 h-full flex flex-col justify-end pb-12 px-4 sm:px-6 lg:px-8">
           <div className="max-w-4xl">
+            <nav aria-label="Breadcrumb" className="mb-4 text-sm text-white/80">
+              <Link href="/" className="hover:text-white">Home</Link>
+              <span className="mx-2">/</span>
+              {inUmrahCluster ? (
+                <Link href="/umrah" className="hover:text-white">Umrah Guide</Link>
+              ) : (
+                <Link href="/blog" className="hover:text-white">Blog</Link>
+              )}
+            </nav>
             <div className="flex flex-wrap gap-2 mb-4">
               {Array.isArray(post.categories) &&
                 post.categories.map((cat: string) => (
@@ -195,6 +244,24 @@ export default async function BlogPostPage({
                   )
                 )}
               </article>
+
+              {inUmrahCluster && (
+                <div className="mt-10 rounded-xl border border-[#1D6A5B]/20 bg-[#E8F5F1] p-6">
+                  <p className="text-[#1D6A5B] text-xs font-semibold uppercase tracking-widest mb-2">
+                    Part of our Umrah guide
+                  </p>
+                  <p className="text-gray-700 mb-4">
+                    Planning your trip? See every guide in one place: costs, visas, hotels near the Haram and the rites step by step.
+                  </p>
+                  <Link
+                    href="/umrah"
+                    className="inline-flex items-center gap-2 font-semibold text-[#1D6A5B] hover:underline"
+                  >
+                    Go to the Umrah guide
+                    <ArrowRight className="h-4 w-4" />
+                  </Link>
+                </div>
+              )}
 
               {/* Recommended Affiliate Products */}
               {post.affiliateProducts && post.affiliateProducts.length > 0 && (

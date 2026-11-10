@@ -126,7 +126,8 @@ export async function getHomepageData() {
 }
 
 export async function getLatestBlogPosts(limit = 3) {
-  const query = `*[_type in ["blog","blogPost"]] | order(publishedAt desc)[0...${limit}]{
+  // Posts without publishedAt used to sort to the top; fall back to _createdAt
+  const query = `*[_type in ["blog","blogPost"] && defined(slug.current)] | order(coalesce(publishedAt, _createdAt) desc)[0...${limit}]{
     _id, title, slug, shortDescription, categories, readTime,
     mainImage{ asset->{ url } }
   }`;
@@ -134,9 +135,10 @@ export async function getLatestBlogPosts(limit = 3) {
 }
 
 export async function getAllBlogPosts() {
-  const query = `*[_type == "blog"] | order(publishedAt desc) {
+  const query = `*[_type == "blog" && defined(slug.current)] | order(coalesce(publishedAt, _createdAt) desc) {
     _id, title, slug { current }, shortDescription,
-    mainImage { asset->{ url } }, author, publishedAt,
+    mainImage { asset->{ url } }, author,
+    "publishedAt": coalesce(publishedAt, _createdAt), _updatedAt,
     categories, isFeatured, metaTitle, metaDescription, canonicalUrl, readTime
   }`;
   return await client.fetch(query);
@@ -146,7 +148,7 @@ export async function getBlogBySlug(slug: string) {
   const query = `*[_type in ["blog","blogPost"] && slug.current == $slug][0]{
     _id, title, slug { current }, shortDescription,
     mainImage{ asset->{ url } }, seoImage{ asset->{ url } },
-    author, publishedAt, categories,
+    author, "publishedAt": coalesce(publishedAt, _createdAt), _updatedAt, categories,
     metaTitle, metaDescription, metaKeywords, canonicalUrl,
     readTime, hasAffiliateLinks,
     affiliateProducts[]{

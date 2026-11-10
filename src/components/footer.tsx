@@ -36,6 +36,9 @@ export default function Footer() {
                 <Link href="/blog" className="hover:text-primary transition-colors">Travel Blog</Link>
               </li>
               <li>
+                <Link href="/umrah" className="hover:text-primary transition-colors">Umrah Guide</Link>
+              </li>
+              <li>
                 <Link href="/search" className="hover:text-primary transition-colors">Search</Link>
               </li>
             </ul>

@@ -13,6 +13,7 @@ const pages = [
   { name: "Home", path: "/" },
   { name: "Destinations", path: "/destinations" },
   { name: "Blog", path: "/blog" },
+  { name: "Umrah Guide", path: "/umrah" },
   { name: "Travel Tips", path: "/travel-tips" },
   { name: "About", path: "/about" },
   { name: "Contact", path: "/contact" },

@@ -29,11 +29,11 @@ function staticToDestination(s: (typeof STATIC_DESTINATIONS)[0]): Destination {
 export async function getAllDestinations(): Promise<Destination[]> {
   try {
     const sanity = await getSanityDestinations();
+    // Sanity is the source of truth. The static list is only an outage
+    // fallback: mixing it in listed ~20 cities whose URLs are redirected in
+    // next.config.ts (for example Penang, which redirects to Kuala Lumpur).
     if (Array.isArray(sanity) && sanity.length > 0) {
-      const sanitySlugs = new Set(sanity.map((d: Destination) => d.slug?.current).filter(Boolean));
-      const staticOnly = STATIC_DESTINATIONS.filter((s) => !sanitySlugs.has(s.slug.current));
-      const staticAsDest = staticOnly.map(staticToDestination);
-      return [...sanity, ...staticAsDest];
+      return sanity.filter((d: Destination) => d.slug?.current);
     }
   } catch (_) {
     // Sanity not configured or error; use static only
@@ -44,7 +44,9 @@ export async function getAllDestinations(): Promise<Destination[]> {
 export async function getDestinationBySlug(slug: string): Promise<Destination | null> {
   try {
     const fromSanity = await getSanityDestinationBySlug(slug);
-    if (fromSanity) return fromSanity;
+    // A successful lookup that finds nothing is a real 404, not a reason to
+    // serve a thin hard-coded page.
+    return fromSanity ?? null;
   } catch (_) {}
   const staticOne = STATIC_DESTINATIONS.find((d) => d.slug.current === slug);
   return staticOne ? staticToDestination(staticOne) : null;
@@ -54,8 +56,7 @@ export async function getAllDestinationSlugs(): Promise<string[]> {
   try {
     const sanity = await getSanitySlugs();
     if (Array.isArray(sanity) && sanity.length > 0) {
-      const staticSlugs = STATIC_DESTINATIONS.map((d) => d.slug.current);
-      return [...new Set([...sanity, ...staticSlugs])];
+      return sanity;
     }
   } catch (_) {}
   return STATIC_DESTINATIONS.map((d) => d.slug.current);
@@ -65,4 +66,34 @@ export async function getFeaturedDestinations(): Promise<Destination[]> {
   const all = await getAllDestinations();
   const featured = all.filter((d) => (d as { isFeatured?: boolean }).isFeatured);
   return featured.length > 0 ? featured : all.slice(0, 6);
+}
+
+/**
+ * Other destinations to link from a destination page: curated nearby ones are
+ * shown in their own card, so this returns same-country, then same-region,
+ * then featured destinations. Gives every destination page real internal
+ * links instead of a single "view all" button.
+ */
+export async function getRelatedDestinations(
+  destination: Destination,
+  limit = 4
+): Promise<Destination[]> {
+  const all = await getAllDestinations();
+  const exclude = new Set<string>([
+    destination.slug.current,
+    ...(destination.nearbyDestinations ?? []).map((d) => d.slug.current),
+  ]);
+
+  return all
+    .filter((d) => d.slug?.current && !exclude.has(d.slug.current))
+    .map((d, index) => {
+      let score = 0;
+      if (d.country === destination.country) score += 4;
+      if (destination.region && d.region === destination.region) score += 2;
+      if (d.isFeatured) score += 1;
+      return { d, score, index };
+    })
+    .sort((a, b) => b.score - a.score || a.index - b.index)
+    .slice(0, limit)
+    .map(({ d }) => d);
 }
