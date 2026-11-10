@@ -16,20 +16,20 @@ export function BlogFeed({ posts }: { posts: BlogFeedItem[] }) {
   if (!posts.length) return null;
 
   return (
-    <section className="bg-white py-16">
+    <section className="bg-white py-12 md:py-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-end justify-between mb-8">
           <div>
             <p className="text-[#1D6A5B] text-xs font-semibold uppercase tracking-widest mb-1">
               From the Blog
             </p>
-            <h2 className="text-gray-900 text-2xl font-bold">Latest Travel Guides</h2>
+            <h2 className="text-gray-900 text-2xl sm:text-3xl font-serif font-bold">Latest Travel Guides</h2>
           </div>
           <Link href="/blog" className="text-[#1D6A5B] font-medium text-sm hover:underline">
             View all →
           </Link>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {posts.map((post) => (
             <Link
               key={post._id}
@@ -41,6 +41,7 @@ export function BlogFeed({ posts }: { posts: BlogFeedItem[] }) {
                   src={post.mainImage?.asset?.url || PLACEHOLDER_IMAGE}
                   alt={post.title}
                   fill
+                  sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
                   className="object-cover group-hover:scale-105 transition-transform duration-300"
                 />
               </div>

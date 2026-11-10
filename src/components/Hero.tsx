@@ -25,7 +25,7 @@ export function Hero({
   aside,
 }: HeroProps) {
   return (
-    <section className="relative min-h-[85vh] flex items-center overflow-hidden">
+    <section className="relative lg:min-h-[78vh] flex items-center overflow-hidden">
       <Image
         src={backgroundImage || PLACEHOLDER_IMAGE}
         alt={headline}
@@ -36,19 +36,19 @@ export function Hero({
       />
       <div className="absolute inset-0 bg-slate-950/40 z-10" />
       <div className="absolute inset-0 hero-gradient z-10" />
-      <div className="relative z-20 max-w-7xl mx-auto px-4 sm:px-6 w-full py-16">
+      <div className="relative z-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full py-12 md:py-16">
         <div className={`grid gap-10 items-center ${aside ? 'lg:grid-cols-2' : ''}`}>
           <div className="max-w-3xl">
           <span className="inline-block px-4 py-1.5 bg-primary/20 backdrop-blur-md border border-primary/30 text-primary rounded-full text-xs font-bold uppercase tracking-widest mb-6">
             Travel Without Limits
           </span>
           <h1
-            className="text-5xl sm:text-6xl md:text-7xl lg:text-6xl font-serif font-bold text-white mb-8 leading-tight"
+            className="text-4xl sm:text-5xl lg:text-6xl font-serif font-bold text-white mb-5 leading-tight"
           >
             {headline}
           </h1>
           <p
-            className="text-xl text-slate-200 mb-10 max-w-xl leading-relaxed animate-fade-in-up [animation-delay:100ms] [animation-fill-mode:both]"
+            className="text-lg md:text-xl text-slate-200 mb-8 max-w-xl leading-relaxed animate-fade-in-up [animation-delay:100ms] [animation-fill-mode:both]"
           >
             {subtext}
           </p>
@@ -77,7 +77,8 @@ export function Hero({
             )}
           </div>
           </div>
-          {aside && <div className="hidden lg:block">{aside}</div>}
+          {/* Shown on phones too: this is the main email sign-up */}
+          {aside && <div className="w-full max-w-md lg:max-w-none lg:justify-self-end">{aside}</div>}
         </div>
       </div>
     </section>

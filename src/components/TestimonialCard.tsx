@@ -18,9 +18,9 @@ export function TestimonialCard({
 }: TestimonialCardProps) {
   return (
     <div className="animate-fade-in-up">
-      <Card className="p-8 h-full rounded-3xl border border-slate-100 dark:border-slate-800 shadow-sm hover:shadow-lg transition-all duration-300 relative">
-        <Quote className="absolute top-6 right-6 h-12 w-12 text-primary/20" />
-        <blockquote className="text-slate-700 dark:text-slate-300 text-lg leading-relaxed mb-6 relative z-10">
+      <Card className="p-6 h-full flex flex-col rounded-3xl border border-slate-100 dark:border-slate-800 shadow-sm hover:shadow-lg transition-all duration-300 relative">
+        <Quote className="absolute top-5 right-5 h-8 w-8 text-primary/20" />
+        <blockquote className="text-slate-700 dark:text-slate-300 text-base leading-relaxed mb-5 pr-8 relative z-10 flex-1">
           &quot;{quote}&quot;
         </blockquote>
         <div className="border-t border-slate-100 dark:border-slate-800 pt-4">

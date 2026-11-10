@@ -16,14 +16,14 @@ export function StatsBar({ stats }: { stats?: StatItem[] }) {
   return (
     <section className="bg-[#0F1923]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex flex-col sm:flex-row">
+        <div className="grid grid-cols-2 lg:grid-cols-4">
           {items.map((stat, i) => (
             <div
               key={i}
-              className="flex-1 px-8 py-6 sm:py-4 text-center sm:text-left border-b sm:border-b-0 sm:border-r border-white/10 last:border-r-0 last:border-b-0"
+              className="px-4 py-5 text-center lg:px-8 lg:text-left border-white/10 odd:border-r lg:border-r lg:last:border-r-0 [&:nth-child(-n+2)]:border-b lg:[&:nth-child(-n+2)]:border-b-0"
             >
-              <div className="text-3xl font-bold text-[#1D6A5B]">{stat.number}</div>
-              <div className="text-xs text-white/50 uppercase tracking-wider mt-0.5">{stat.label}</div>
+              <div className="text-2xl sm:text-3xl font-bold text-primary">{stat.number}</div>
+              <div className="text-[11px] sm:text-xs text-white/60 uppercase tracking-wider mt-1">{stat.label}</div>
             </div>
           ))}
         </div>
