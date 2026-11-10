@@ -3,7 +3,6 @@ import { Hero } from '@/components/Hero';
 import { Section, SectionHeader } from '@/components/Section';
 import { DestinationCard } from '@/components/DestinationCard';
 import { FeatureCard } from '@/components/FeatureCard';
-import { TestimonialCard } from '@/components/TestimonialCard';
 import { Button } from '@/components/ui/button';
 import { Shield, Heart, Users, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
@@ -107,7 +106,7 @@ export default async function HomePage() {
         }
       />
 
-      <StatsBar stats={homepageData?.statsBar} />
+      <StatsBar stats={homepageData?.statsBar} destinationCount={allDestinations.length} />
 
       {/* The search used to sit in a tall section with a negative margin that
           covered the stats bar labels. It now leads the destinations section. */}
@@ -206,24 +205,6 @@ export default async function HomePage() {
       </Section>
 
       <BlogFeed posts={latestPosts || []} />
-
-      <Section className="bg-emerald-50/50 dark:bg-emerald-950/20 py-12 md:py-16 lg:py-20">
-        <SectionHeader
-          title="What Our Community Says"
-          description="Real experiences from Muslim travelers around the world"
-        />
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-5 md:gap-6">
-          {homepageContent.testimonials.map((testimonial, index) => (
-            <TestimonialCard
-              key={index}
-              quote={testimonial.quote}
-              author={testimonial.author}
-              location={testimonial.location}
-              index={index}
-            />
-          ))}
-        </div>
-      </Section>
 
       <Section className="bg-white dark:bg-slate-900 py-12 md:py-16 lg:py-20">
         <div className="max-w-3xl mx-auto text-center">
