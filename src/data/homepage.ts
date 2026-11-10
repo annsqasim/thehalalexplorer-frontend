@@ -33,23 +33,6 @@ export const homepageContent = {
       },
     ],
   },
-  testimonials: [
-    {
-      quote: "The Halal Explorer made planning our family trip to Turkey so much easier. We found amazing halal restaurants and beautiful mosques we never would have discovered otherwise.",
-      author: "Amina Hassan",
-      location: "London, UK",
-    },
-    {
-      quote: "As a solo female Muslim traveler, I appreciate the detailed safety information and prayer facility locations. This platform is a game-changer!",
-      author: "Fatima Al-Rashid",
-      location: "Dubai, UAE",
-    },
-    {
-      quote: "Finally, a travel resource that understands our needs. The destination guides are comprehensive and the halal food recommendations are spot-on.",
-      author: "Mohammed Khan",
-      location: "Toronto, Canada",
-    },
-  ],
   aboutPreview: {
     title: "About The Halal Explorer",
     description: "The Halal Explorer was founded with a simple mission: to make travel easier and more enjoyable for Muslims around the world. We recognized that Muslim travelers have unique needs that aren't always addressed by mainstream travel resources.",

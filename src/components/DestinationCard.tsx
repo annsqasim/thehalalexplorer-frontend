@@ -39,11 +39,12 @@ export function DestinationCard({
           "group overflow-hidden h-full flex flex-col cursor-pointer transition-all duration-300 hover:shadow-lg hover:-translate-y-1 rounded-3xl border border-slate-100 dark:border-slate-800 shadow-sm",
           className
         )}>
-          <div className="relative h-64 overflow-hidden">
+          <div className="relative h-44 sm:h-56 overflow-hidden">
             <Image
               src={imageUrl || PLACEHOLDER_IMAGE}
               alt={`${name}, ${country}`}
               fill
+              sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
               className="object-cover transition-transform duration-500 group-hover:scale-110"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
@@ -66,7 +67,7 @@ export function DestinationCard({
             )}
           </div>
           
-          <div className="p-6 flex-1 flex flex-col">
+          <div className="p-5 flex-1 flex flex-col">
             <div className="mb-2">
               <p className="text-sm text-primary font-semibold mb-1">
                 {country}

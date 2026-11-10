@@ -15,7 +15,7 @@ export default function Footer() {
                 alt="The Halal Explorer"
                 width={140}
                 height={32}
-                className="h-8 w-auto opacity-90"
+                className="h-8 w-auto brightness-0 invert opacity-90"
               />
             </Link>
             <p className="text-sm leading-relaxed mb-6">

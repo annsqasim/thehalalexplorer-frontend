@@ -3,7 +3,6 @@ import { Hero } from '@/components/Hero';
 import { Section, SectionHeader } from '@/components/Section';
 import { DestinationCard } from '@/components/DestinationCard';
 import { FeatureCard } from '@/components/FeatureCard';
-import { TestimonialCard } from '@/components/TestimonialCard';
 import { Button } from '@/components/ui/button';
 import { Shield, Heart, Users, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
@@ -107,22 +106,22 @@ export default async function HomePage() {
         }
       />
 
-      <StatsBar stats={homepageData?.statsBar} />
+      <StatsBar stats={homepageData?.statsBar} destinationCount={allDestinations.length} />
 
-      <Section className="bg-white -mt-16 relative z-20">
-        <div className="max-w-4xl mx-auto">
-          <div className="bg-white rounded-3xl shadow-lg p-6 border border-slate-100 dark:border-slate-800">
+      {/* The search used to sit in a tall section with a negative margin that
+          covered the stats bar labels. It now leads the destinations section. */}
+      <Section className="bg-white dark:bg-slate-900 py-12 md:py-16 lg:py-20">
+        <div className="max-w-2xl mx-auto mb-10 md:mb-12">
+          <div className="bg-white rounded-2xl shadow-md p-3 sm:p-4 border border-slate-200 dark:border-slate-800">
             <DestinationAutocomplete destinations={allDestinations} />
           </div>
         </div>
-      </Section>
 
-      <Section className="bg-white dark:bg-slate-900">
         <SectionHeader
           title="Featured Destinations"
           description="Discover handpicked Muslim-friendly destinations that offer authentic experiences, halal cuisine, and welcoming communities."
         />
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 lg:gap-8">
           {displayDestinations.map((destination: Destination, index: number) => (
             <DestinationCard
               key={destination._id}
@@ -136,7 +135,7 @@ export default async function HomePage() {
             />
           ))}
         </div>
-        <div className="text-center mt-12">
+        <div className="text-center mt-10">
           <Button asChild size="lg" className="bg-primary hover:bg-primary/90 text-white rounded-xl">
             <Link href="/destinations">
               View All Destinations
@@ -147,12 +146,12 @@ export default async function HomePage() {
       </Section>
 
       {/* HOMEPAGE — Plan Your Next Trip section */}
-      <section className="bg-[#F9FAFB] py-16">
+      <section className="bg-[#F9FAFB] py-12 md:py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <p className="text-[#1D6A5B] text-xs font-semibold uppercase tracking-widest mb-2">
             Book Your Trip
           </p>
-          <h2 className="text-gray-900 text-2xl font-bold mb-2">
+          <h2 className="text-gray-900 text-2xl sm:text-3xl font-serif font-bold mb-2">
             Everything in one place
           </h2>
           <p className="text-gray-500 text-sm mb-8 max-w-lg">
@@ -160,7 +159,7 @@ export default async function HomePage() {
             You pay nothing extra. We earn a small commission that keeps this site running.
           </p>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
             <TpCtaCard type="flights" />
             <TpCtaCard type="hotels" destinationName="Dubai" />
             <TpCtaCard type="tours" />
@@ -171,12 +170,12 @@ export default async function HomePage() {
 
       <AffiliateStrip products={homepageData?.featuredAffiliateProducts} />
 
-      <Section className="bg-slate-50 dark:bg-slate-900/50">
+      <Section className="bg-slate-50 dark:bg-slate-900/50 py-12 md:py-16 lg:py-20">
         <SectionHeader
           title={homepageContent.whySection.title}
           subtitle={homepageContent.whySection.subtitle}
         />
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5 md:gap-6">
           {homepageContent.whySection.features.map((feature, index) => {
             let Icon;
             switch (feature.icon) {
@@ -207,30 +206,12 @@ export default async function HomePage() {
 
       <BlogFeed posts={latestPosts || []} />
 
-      <Section className="bg-emerald-50/50 dark:bg-emerald-950/20">
-        <SectionHeader
-          title="What Our Community Says"
-          description="Real experiences from Muslim travelers around the world"
-        />
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {homepageContent.testimonials.map((testimonial, index) => (
-            <TestimonialCard
-              key={index}
-              quote={testimonial.quote}
-              author={testimonial.author}
-              location={testimonial.location}
-              index={index}
-            />
-          ))}
-        </div>
-      </Section>
-
-      <Section className="bg-white dark:bg-slate-900">
-        <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-3xl md:text-4xl font-serif font-bold text-slate-900 dark:text-white mb-6">
+      <Section className="bg-white dark:bg-slate-900 py-12 md:py-16 lg:py-20">
+        <div className="max-w-3xl mx-auto text-center">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-serif font-bold text-slate-900 dark:text-white mb-4">
             {homepageContent.aboutPreview.title}
           </h2>
-          <p className="text-lg text-slate-600 dark:text-slate-400 mb-8 leading-relaxed">
+          <p className="text-base md:text-lg text-slate-600 dark:text-slate-400 mb-6 leading-relaxed">
             {homepageContent.aboutPreview.description}
           </p>
           <Button asChild size="lg" variant="outline" className="border-primary text-primary hover:bg-primary/10 rounded-xl">

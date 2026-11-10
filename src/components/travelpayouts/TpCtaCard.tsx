@@ -74,7 +74,7 @@ export function TpCtaCard({ type, destinationName, destinationIATA }: Props) {
   const href = buildHref(type, destinationName, destinationIATA)
 
   return (
-    <div className="bg-white border border-gray-200 rounded-xl p-5 flex flex-col gap-3">
+    <div className="bg-white border border-gray-200 rounded-xl p-4 sm:p-5 flex flex-col gap-3 h-full">
       <div className="text-2xl">{config.emoji}</div>
       <div>
         <h3 className="font-semibold text-gray-900 text-sm mb-1">

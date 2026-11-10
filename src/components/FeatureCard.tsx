@@ -22,7 +22,7 @@ export function FeatureCard({
   return (
     <div className="animate-fade-in-up">
       <Card className={cn(
-        "p-8 h-full rounded-3xl border border-slate-100 dark:border-slate-800 shadow-sm hover:shadow-lg transition-all duration-300",
+        "p-6 h-full rounded-3xl border border-slate-100 dark:border-slate-800 shadow-sm hover:shadow-lg transition-all duration-300",
         className
       )}>
         {icon && (

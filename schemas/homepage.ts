@@ -10,13 +10,13 @@ export const homepage = defineType({
     defineField({ name: 'description', type: 'text', title: 'Description' }),
     defineField({
       name: 'statsBar',
-      title: 'Stats Bar — 4 Stats',
+      title: 'Stats Bar — up to 4 stats',
       type: 'array',
       of: [
         {
           type: 'object',
           fields: [
-            { name: 'number', type: 'string', title: 'Number (e.g. 53, $220B, 3.2K)' },
+            { name: 'number', type: 'string', title: 'Number (e.g. 52, $220B). Only use figures you can back up.' },
             { name: 'label', type: 'string', title: 'Label (e.g. Destinations Covered)' },
           ],
         },
