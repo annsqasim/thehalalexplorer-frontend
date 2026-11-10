@@ -134,6 +134,8 @@ interface EmailCaptureCardProps {
   perks: string[];
   ctaText: string;
   note: string;
+  /** Small label above the title. Defaults to the free-download badge. */
+  badge?: string;
 }
 
 export function EmailCaptureCard({
@@ -142,6 +144,7 @@ export function EmailCaptureCard({
   perks,
   ctaText,
   note,
+  badge = '🎁 Free Download',
 }: EmailCaptureCardProps) {
   const [email, setEmail] = useState('');
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
@@ -166,7 +169,7 @@ export function EmailCaptureCard({
   return (
     <div className="bg-white rounded-xl border border-gray-200 p-6 shadow-md">
       <span className="inline-block bg-[#E8F5F1] text-[#1D6A5B] text-xs font-medium rounded-full px-3 py-1 mb-4">
-        🎁 Free Download
+        {badge}
       </span>
       <h2 className="font-semibold text-gray-900 text-lg mb-2">{title}</h2>
       <p className="text-sm text-gray-600 mb-4 leading-relaxed">{description}</p>

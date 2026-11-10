@@ -276,3 +276,12 @@ h1, h2, h3, .font-serif {
 .prose-emerald a {
   @apply text-primary hover:opacity-90;
 }
+
+/* AdSense: collapse slots Google has not filled, so no empty boxes show */
+ins.adsbygoogle[data-ad-status="unfilled"] {
+  display: none !important;
+}
+
+.ad-slot:has(ins.adsbygoogle[data-ad-status="filled"]) {
+  @apply my-6;
+}

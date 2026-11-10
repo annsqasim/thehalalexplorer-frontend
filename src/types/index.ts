@@ -122,4 +122,5 @@ export interface Blog {
     children: { _type: string; text: string }[];
   }[];
   publishedAt: string;
+  _updatedAt?: string;
 }

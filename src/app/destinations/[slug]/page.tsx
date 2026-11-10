@@ -29,7 +29,7 @@ import {
 import { TpCtaCard } from "@/components/travelpayouts/TpCtaCard";
 import { FlightSearchWidget } from "@/components/travelpayouts/FlightSearchWidget";
 import { HotelSearchWidget } from "@/components/travelpayouts/HotelSearchWidget";
-import { getDestinationBySlug, getAllDestinationSlugs } from "@/lib/destinations";
+import { getDestinationBySlug, getAllDestinationSlugs, getRelatedDestinations } from "@/lib/destinations";
 import { getRelatedBlogPosts } from "@/lib/related-content";
 import {
   getDestinationIntro,
@@ -188,6 +188,9 @@ export default async function DestinationDetailPage({
 
   // Fetch related blog posts for internal linking (SEO)
   const relatedBlogs = await getRelatedBlogPosts(destination.name, destination.country);
+  // Specific city links for the "Explore more" card (same country, then same region)
+  const moreDestinations = await getRelatedDestinations(destination, 4);
+  const isUmrahCity = ["makkah", "madinah"].includes(destination.slug.current);
 
   const navSections = [
     intro && { id: "intro", label: "Introduction" },
@@ -283,6 +286,18 @@ export default async function DestinationDetailPage({
       <StickyNav sections={navSections} />
 
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        {isUmrahCity && (
+          <Link
+            href="/umrah"
+            className="mb-8 flex items-center justify-between gap-4 rounded-xl border border-[#1D6A5B]/20 bg-[#E8F5F1] px-5 py-4 transition-colors hover:border-[#1D6A5B]/50"
+          >
+            <span className="text-gray-800">
+              <span className="font-semibold text-[#1D6A5B]">Planning Umrah?</span>{" "}
+              Read our full guide: costs, hotels near the Haram and the rites step by step.
+            </span>
+            <ArrowRight className="h-5 w-5 flex-shrink-0 text-[#1D6A5B]" />
+          </Link>
+        )}
         <RatingRow ratings={destination.ratings} />
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -461,17 +476,6 @@ export default async function DestinationDetailPage({
             {/* HOTEL SEARCH WIDGET */}
             <HotelSearchWidget destinationName={destination.name} />
 
-            {/* TOURS CTA */}
-            <TpCtaCard
-              type="tours"
-              destinationName={destination.name}
-            />
-
-            {/* INSURANCE CTA */}
-            <TpCtaCard
-              type="insurance"
-            />
-
             <BookingComCard
               destinationName={destination.name}
               bookingComUrl={destination.bookingComUrl}
@@ -514,9 +518,28 @@ export default async function DestinationDetailPage({
             <Card className="border-0 shadow-soft bg-gradient-to-br from-brand-emerald-50 to-brand-emerald-100">
               <CardContent className="p-6">
                 <h3 className="font-bold text-lg mb-3">Explore More Destinations</h3>
-                <p className="text-sm text-gray-700 mb-4">
-                  Discover other Muslim-friendly destinations around the world.
-                </p>
+                {moreDestinations.length > 0 ? (
+                  <ul className="mb-4 space-y-2">
+                    {moreDestinations.map((d) => (
+                      <li key={d.slug.current}>
+                        <Link
+                          href={`/destinations/${d.slug.current}`}
+                          className="flex items-center justify-between rounded-lg bg-white/70 px-3 py-2 text-sm font-medium text-gray-900 transition-colors hover:bg-white hover:text-[#1D6A5B]"
+                        >
+                          <span>
+                            {d.name}
+                            <span className="ml-2 font-normal text-gray-500">{d.country}</span>
+                          </span>
+                          <ArrowRight className="h-4 w-4" />
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p className="text-sm text-gray-700 mb-4">
+                    Discover other Muslim-friendly destinations around the world.
+                  </p>
+                )}
                 <Button asChild className="w-full bg-brand-emerald-600 hover:bg-brand-emerald-700">
                   <Link href="/destinations">
                     View All Destinations

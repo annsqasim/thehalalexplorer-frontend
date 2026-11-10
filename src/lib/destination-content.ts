@@ -33,10 +33,11 @@ export function hasQuickFacts(facts?: DestinationQuickFacts): boolean {
 }
 
 export function getMetaDescription(destination: Destination): string {
-  return (
-    destination.metaDescription ||
-    destination.intro ||
-    destination.description ||
-    `Discover ${destination.name}, ${destination.country} — halal food, prayer facilities, and travel tips for Muslim visitors.`
-  );
+  if (destination.metaDescription) return destination.metaDescription;
+  // Search-focused fallback. The raw intro/description usually reads like an
+  // encyclopedia entry ("X is the capital of Y"), which gives searchers no
+  // reason to click, so it is only used to pad when it is short enough.
+  const base = `Halal food, mosques, prayer times and Muslim-friendly travel tips for ${destination.name}, ${destination.country}.`;
+  const extra = (destination.intro || destination.description || "").split(/(?<=[.!?])\s/)[0] ?? "";
+  return extra && base.length + 1 + extra.length <= 158 ? `${base} ${extra}` : base;
 }
