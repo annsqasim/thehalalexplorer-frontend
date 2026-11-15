@@ -248,6 +248,22 @@ export default async function UmrahHubPage() {
         </div>
       </section>
 
+      {/* Free tool */}
+      <section className="border-b border-gray-200 bg-[#E8F5F1]">
+        <div className="mx-auto flex max-w-7xl flex-col gap-4 px-4 py-6 sm:flex-row sm:items-center sm:justify-between sm:px-6 lg:px-8">
+          <p className="text-gray-800">
+            <span className="font-semibold text-[#1D6A5B]">Free Umrah cost calculator.</span>{" "}
+            Estimate your budget and get a day-by-day outline in a minute.
+          </p>
+          <Link
+            href="/umrah/planner"
+            className="inline-flex flex-shrink-0 items-center justify-center gap-2 rounded-lg bg-[#1D6A5B] px-5 py-2.5 text-sm font-semibold text-white hover:bg-[#16574A]"
+          >
+            Plan my Umrah <ArrowRight className="h-4 w-4" />
+          </Link>
+        </div>
+      </section>
+
       {/* The four rites */}
       <section className="bg-white py-14">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
