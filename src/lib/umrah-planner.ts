@@ -1,11 +1,21 @@
 /**
  * Umrah budget and itinerary model for the /umrah/planner tool.
  *
- * Everything is an ESTIMATE in GBP per person for trips from the UK. The
- * ranges come from published 2026 guides (see SOURCES) and are the same ones
- * used in the "How Much Does Umrah Cost in 2026?" post. When you re-check
- * them, update the numbers here and bump LAST_CHECKED: the page shows both.
+ * Everything is an ESTIMATE per person, shown in US dollars. The ranges come
+ * from published 2026 guides (see SOURCES), which quote pounds and riyals, so
+ * they are converted with the fixed rates below. Flights are NOT estimated:
+ * fares depend on where the traveller flies from, so they enter their own.
+ *
+ * When you re-check prices, update the numbers or rates here and bump
+ * LAST_CHECKED: the page shows it. To add a currency later, add its rate
+ * next to USD_PER_GBP and convert in `usd()`.
  */
+
+/** Mid-market rate on 13 Nov 2026. Source figures in pounds are multiplied by this. */
+export const USD_PER_GBP = 1.32;
+/** The Saudi riyal is pegged to the US dollar. */
+export const SAR_PER_USD = 3.75;
+export const CURRENCY = { code: "USD", symbol: "$", locale: "en-US" } as const;
 
 export const LAST_CHECKED = "November 2026";
 
@@ -31,11 +41,14 @@ export type FirstCity = "makkah" | "madinah";
 
 type Range = [low: number, high: number];
 
+/** Convert a pound range from the source guides to dollars. */
+const usd = ([low, high]: Range): Range => [low * USD_PER_GBP, high * USD_PER_GBP];
+
 export const HOTEL_TIERS: Record<HotelTier, { label: string; hint: string; perWeek: Range }> = {
-  budget: { label: "Budget", hint: "10 to 20 minutes' walk, or a shuttle", perWeek: [200, 300] },
-  three: { label: "3-star", hint: "A short walk from the Haram", perWeek: [300, 450] },
-  four: { label: "4-star", hint: "Close to the Haram", perWeek: [450, 600] },
-  five: { label: "5-star", hint: "Clock Tower or Jabal Omar", perWeek: [600, 900] },
+  budget: { label: "Budget", hint: "10 to 20 minutes' walk, or a shuttle", perWeek: usd([200, 300]) },
+  three: { label: "3-star", hint: "A short walk from the Haram", perWeek: usd([300, 450]) },
+  four: { label: "4-star", hint: "Close to the Haram", perWeek: usd([450, 600]) },
+  five: { label: "5-star", hint: "Clock Tower or Jabal Omar", perWeek: usd([600, 900]) },
 };
 
 export const SEASONS: Record<Season, { label: string; multiplier: Range }> = {
@@ -45,21 +58,20 @@ export const SEASONS: Record<Season, { label: string; multiplier: Range }> = {
 };
 
 export const BOARDS: Record<Board, { label: string; perWeek: Range }> = {
-  half: { label: "Half board", perWeek: [60, 100] },
-  full: { label: "Full board", perWeek: [100, 150] },
+  half: { label: "Half board", perWeek: usd([60, 100]) },
+  full: { label: "Full board", perWeek: usd([100, 150]) },
 };
 
-const FLIGHT_RETURN: Range = [400, 600]; // UK economy return
-const VISA: Range = [80, 100]; // about SAR 400 to 480 including compulsory insurance
-const TRANSPORT: Range = [50, 80]; // airport and Makkah to Madinah transfers
-const ZIYARAT: Range = [50, 100];
-const INSURANCE: Range = [20, 40];
+const VISA: Range = [400 / SAR_PER_USD, 480 / SAR_PER_USD]; // SAR 400 to 480 including compulsory insurance
+const TRANSPORT: Range = usd([50, 80]); // airport and Makkah to Madinah transfers
+const ZIYARAT: Range = usd([50, 100]);
+const INSURANCE: Range = usd([20, 40]);
 
 export const LIMITS = {
   travellers: { min: 1, max: 12 },
   nights: { min: 0, max: 21 },
   totalNights: { min: 2, max: 30 },
-  fare: { min: 50, max: 5000 },
+  fare: { min: 50, max: 10000 },
 };
 
 export interface PlannerInput {
@@ -69,7 +81,7 @@ export interface PlannerInput {
   hotel: HotelTier;
   season: Season;
   board: Board;
-  /** The traveller's own return fare per person in GBP. Leave undefined to use the typical UK range. */
+  /** The traveller's own return fare per person in USD. Flights are left out of the total when undefined. */
   ownFare?: number;
   includeZiyarat: boolean;
   includeInsurance: boolean;
@@ -95,6 +107,8 @@ export interface PlanResult {
   lines: CostLine[];
   perPerson: Range;
   group: Range;
+  /** False until the traveller enters a fare: the totals then cover everything except flights. */
+  flightsIncluded: boolean;
   totalNights: number;
   days: PlanDay[];
 }
@@ -141,13 +155,6 @@ export function buildPlan(rawInput: PlannerInput): PlanResult {
 
   if (input.ownFare) {
     add("flights", "Flights", [input.ownFare, input.ownFare], "Your own fare");
-  } else {
-    add(
-      "flights",
-      "Flights",
-      scale(FLIGHT_RETURN, season[0], season[1]),
-      "Typical UK economy return"
-    );
   }
 
   add(
@@ -171,6 +178,7 @@ export function buildPlan(rawInput: PlannerInput): PlanResult {
     lines,
     perPerson,
     group: [perPerson[0] * input.travellers, perPerson[1] * input.travellers],
+    flightsIncluded: Boolean(input.ownFare),
     totalNights,
     days: buildDays(input),
   };
@@ -258,10 +266,10 @@ function buildDays(input: PlannerInput): PlanDay[] {
   return days;
 }
 
-export function formatGBP(value: number): string {
-  return `£${Math.round(value).toLocaleString("en-GB")}`;
+export function formatMoney(value: number): string {
+  return `${CURRENCY.symbol}${Math.round(value).toLocaleString(CURRENCY.locale)}`;
 }
 
 export function formatRange([low, high]: Range): string {
-  return low === high ? formatGBP(low) : `${formatGBP(low)} to ${formatGBP(high)}`;
+  return low === high ? formatMoney(low) : `${formatMoney(low)} to ${formatMoney(high)}`;
 }

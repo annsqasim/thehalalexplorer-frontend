@@ -5,9 +5,10 @@ import {
   BOARDS,
   HOTEL_TIERS,
   LIMITS,
+  CURRENCY,
   SEASONS,
   buildPlan,
-  formatGBP,
+  formatMoney,
   formatRange,
   type Board,
   type FirstCity,
@@ -193,28 +194,28 @@ export function UmrahPlanner({ flightsHref, hotelsHref }: Props) {
 
         <div>
           <label htmlFor="fare" className={labelClass}>
-            Your return flight price per person (optional)
+            Your return flight price per person, in US dollars
           </label>
           <div className="relative">
-            <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-sm text-gray-500">£</span>
+            <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-sm text-gray-500">{CURRENCY.symbol}</span>
             <input
               id="fare"
               type="number"
               inputMode="numeric"
               min={LIMITS.fare.min}
               max={LIMITS.fare.max}
-              placeholder="Leave empty to use £400 to £600"
+              placeholder="e.g. 850"
               value={fare}
               onChange={(event) => setFare(event.target.value)}
               className={`${fieldClass} pl-7`}
             />
           </div>
           <p className="mt-1.5 text-xs text-gray-500">
-            Flying from outside the UK?{" "}
+            Fares depend on where you fly from.{" "}
             <a href={flightsHref} {...AFFILIATE_PROPS} className="font-semibold text-[#1D6A5B] hover:underline">
               Check live fares
             </a>{" "}
-            and enter the price in pounds.
+            and enter the price to complete your estimate.
           </p>
         </div>
 
@@ -235,11 +236,19 @@ export function UmrahPlanner({ flightsHref, hotelsHref }: Props) {
         <section aria-live="polite" className="rounded-2xl bg-[#0F1923] p-5 text-white sm:p-6">
           <p className="text-xs font-semibold uppercase tracking-widest text-[#F59E0B]">Estimated cost</p>
           <p className="mt-2 text-3xl font-bold sm:text-4xl">{formatRange(plan.perPerson)}</p>
-          <p className="text-sm text-white/70">per person, {plan.totalNights} nights</p>
+          <p className="text-sm text-white/70">
+            per person, {plan.totalNights} nights{plan.flightsIncluded ? ", including flights" : ", excluding flights"}
+          </p>
           {travellers > 1 && (
             <p className="mt-3 text-base">
               <span className="font-semibold">{formatRange(plan.group)}</span>{" "}
               <span className="text-white/70">for {travellers} travellers</span>
+            </p>
+          )}
+
+          {!plan.flightsIncluded && (
+            <p className="mt-4 rounded-lg border border-[#F59E0B]/40 bg-[#F59E0B]/10 px-3 py-2 text-sm text-white">
+              Flights are not included yet. Add your flight price on the left to see your full cost.
             </p>
           )}
 
@@ -252,7 +261,7 @@ export function UmrahPlanner({ flightsHref, hotelsHref }: Props) {
                     {line.note && <span className="block text-xs text-white/50">{line.note}</span>}
                   </span>
                   <span className="whitespace-nowrap font-semibold">
-                    {line.low === line.high ? formatGBP(line.low) : `${formatGBP(line.low)}–${formatGBP(line.high)}`}
+                    {line.low === line.high ? formatMoney(line.low) : `${formatMoney(line.low)}–${formatMoney(line.high)}`}
                   </span>
                 </div>
                 <div className="mt-1.5 h-1.5 rounded-full bg-white/10">
@@ -263,7 +272,8 @@ export function UmrahPlanner({ flightsHref, hotelsHref }: Props) {
           </ul>
 
           <p className="mt-5 text-xs leading-relaxed text-white/60">
-            An estimate, not a quote. Prices are per adult sharing a room, in pounds, and change with dates and demand.
+            An estimate, not a quote. Prices are per adult sharing a room, in US dollars, and change with dates,
+            demand and exchange rates.
           </p>
 
           <div className="mt-5 grid gap-2 sm:grid-cols-2 print:hidden">

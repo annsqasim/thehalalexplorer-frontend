@@ -5,12 +5,12 @@ import { UmrahPlanner } from "@/components/UmrahPlanner";
 import { EmailCaptureCard } from "@/components/affiliate";
 import { SITE_URL } from "@/lib/constants/site";
 import { buildFlightLink, buildHotelLink } from "@/lib/travelpayouts";
-import { LAST_CHECKED, SOURCES } from "@/lib/umrah-planner";
+import { LAST_CHECKED, SOURCES, USD_PER_GBP } from "@/lib/umrah-planner";
 
 const PAGE_URL = `${SITE_URL}/umrah/planner`;
 const TITLE = "Umrah Cost Calculator and Trip Planner (2026)";
 const DESCRIPTION =
-  "Estimate what your Umrah will cost per person and for your whole group. Choose your nights, hotel level and season, and get a day-by-day outline you can print.";
+  "Estimate what your Umrah will cost in US dollars, per person and for your whole group. Choose your nights, hotel level and season, add your flight price and get a day-by-day outline.";
 
 export const metadata: Metadata = {
   title: `${TITLE} | The Halal Explorer`,
@@ -29,17 +29,17 @@ const FAQS = [
   {
     question: "How accurate is this Umrah cost calculator?",
     answer:
-      "It gives a realistic range, not a quote. The figures are based on published 2026 price guides for trips from the UK. Real prices depend on your exact dates, how early you book and which hotel you choose, so always check live prices before you pay.",
+      "It gives a realistic range, not a quote. The figures are based on published 2026 price guides, converted to US dollars. Real prices depend on your exact dates, how early you book, which hotel you choose and exchange rates, so always check live prices before you pay.",
   },
   {
     question: "What does the estimate include?",
     answer:
-      "Return flights, hotels in Makkah and Madinah, the visa with its compulsory insurance, transport inside Saudi Arabia and meals. You can also add Ziyarat tours and travel insurance. It does not include shopping, gifts or vaccinations.",
+      "Hotels in Makkah and Madinah, the visa with its compulsory insurance, transport inside Saudi Arabia and meals, plus your flights once you enter the fare. You can also add Ziyarat tours and travel insurance. It does not include shopping, gifts or vaccinations.",
   },
   {
-    question: "I am not travelling from the UK. Can I still use it?",
+    question: "Why are flights not included automatically?",
     answer:
-      "Yes. Check the flight price from your city, convert it to pounds and enter it in the flight price box. Hotel, visa and transport costs in Saudi Arabia are similar wherever you fly from.",
+      "Flight prices depend on where you fly from, so a single estimate would be wrong for most people. Check the fare from your city, enter it in US dollars and the calculator adds it to your total. Hotel, visa and transport costs in Saudi Arabia are similar wherever you fly from.",
   },
   {
     question: "How many nights should I spend in Makkah and Madinah?",
@@ -74,7 +74,7 @@ export default function UmrahPlannerPage() {
           description: DESCRIPTION,
           applicationCategory: "TravelApplication",
           operatingSystem: "Any",
-          offers: { "@type": "Offer", price: "0", priceCurrency: "GBP" },
+          offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
         }}
       />
       <JsonLd
@@ -101,7 +101,7 @@ export default function UmrahPlannerPage() {
           <h1 className="mb-4 max-w-3xl font-serif text-3xl font-bold leading-tight sm:text-4xl md:text-5xl">{TITLE}</h1>
           <p className="max-w-2xl text-lg leading-relaxed text-white/85">
             Tell us about your trip and see what it is likely to cost, per person and for your whole group,
-            with a day-by-day outline. Prices are in pounds, for trips from the UK.
+            with a day-by-day outline. Prices are in US dollars. Add your own flight price, wherever you fly from.
           </p>
         </div>
       </section>
@@ -121,9 +121,9 @@ export default function UmrahPlannerPage() {
             <h2 className="mb-4 font-serif text-2xl font-bold text-gray-900 sm:text-3xl">How we estimate your cost</h2>
             <div className="space-y-4 leading-relaxed text-gray-700">
               <p>
-                The calculator adds up the main parts of an Umrah budget for one adult sharing a room: return
-                flights, hotels, the visa, transport inside Saudi Arabia and meals. Each part is a range, because
-                real prices vary, and the total is the sum of the low and high ends.
+                The calculator adds up the main parts of an Umrah budget for one adult sharing a room: hotels,
+                the visa, transport inside Saudi Arabia and meals, plus your flights once you enter the fare.
+                Each part is a range, because real prices vary, and the total is the sum of the low and high ends.
               </p>
               <p>
                 Your hotel is the biggest lever. Moving from a budget hotel to a 5-star near the Haram can
@@ -170,7 +170,10 @@ export default function UmrahPlannerPage() {
                   </li>
                 ))}
               </ul>
-              <p className="mt-3 text-xs text-gray-500">Last checked: {LAST_CHECKED}.</p>
+              <p className="mt-3 text-xs text-gray-500">
+                Last checked: {LAST_CHECKED}. Source prices in pounds are converted at £1 = ${USD_PER_GBP.toFixed(2)};
+                riyals at the fixed rate of SAR 3.75 to the dollar.
+              </p>
             </div>
           </div>
 
