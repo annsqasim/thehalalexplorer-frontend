@@ -10,6 +10,7 @@ const STATIC_PAGES: { path: string; priority: number; weekly?: boolean }[] = [
   { path: '/destinations', priority: 0.9 },
   { path: '/blog', priority: 0.9, weekly: true },
   { path: '/umrah', priority: 0.9, weekly: true },
+  { path: '/umrah/planner', priority: 0.8 },
   { path: '/explore', priority: 0.7 },
   { path: '/travel-tips', priority: 0.7 },
   { path: '/about', priority: 0.5 },
