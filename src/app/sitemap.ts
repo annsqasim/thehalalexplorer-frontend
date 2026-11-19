@@ -1,6 +1,7 @@
 import type { MetadataRoute } from 'next';
 import { SITE_URL } from '@/lib/constants/site';
 import { client } from '@/lib/sanity';
+import { getFlightRoutes } from '@/lib/flight-routes';
 
 export const revalidate = 3600;
 
@@ -10,6 +11,7 @@ const STATIC_PAGES: { path: string; priority: number; weekly?: boolean }[] = [
   { path: '/destinations', priority: 0.9 },
   { path: '/blog', priority: 0.9, weekly: true },
   { path: '/umrah', priority: 0.9, weekly: true },
+  { path: '/flights', priority: 0.7 },
   { path: '/explore', priority: 0.7 },
   { path: '/travel-tips', priority: 0.7 },
   { path: '/about', priority: 0.5 },
@@ -28,13 +30,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Same filters as the listing pages, so every published page is included.
   // lastModified uses the real edit time; publishedAt alone went stale and
   // was missing on some posts, which made them report "modified just now".
-  const [destinations, blogs] = await Promise.all([
+  const [destinations, blogs, flightRoutes] = await Promise.all([
     client.fetch<SitemapDoc[]>(
       `*[_type == "destination" && defined(slug.current) && !(_id in path("drafts.**"))]{ "slug": slug.current, "lastModified": _updatedAt }`
     ),
     client.fetch<SitemapDoc[]>(
       `*[_type == "blog" && defined(slug.current) && !(_id in path("drafts.**"))]{ "slug": slug.current, "lastModified": coalesce(_updatedAt, publishedAt) }`
     ),
+    getFlightRoutes(),
   ]);
 
   const newestBlog = blogs
@@ -61,6 +64,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       url: `${SITE_URL}/blog/${b.slug}`,
       lastModified: b.lastModified || now,
       changeFrequency: 'monthly' as const,
+      priority: 0.8,
+    })),
+    ...flightRoutes.map((r) => ({
+      url: `${SITE_URL}/flights/${r.slug}`,
+      lastModified: r.updatedAt || now,
+      changeFrequency: 'weekly' as const,
       priority: 0.8,
     })),
   ];

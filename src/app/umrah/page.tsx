@@ -8,6 +8,7 @@ import { EmailCaptureCard } from "@/components/affiliate";
 import { BookingCtaCard } from "@/components/booking/BookingCtaCard";
 import { PLACEHOLDER_IMAGE } from "@/lib/constants";
 import { SITE_URL } from "@/lib/constants/site";
+import { getFlightRoutes } from "@/lib/flight-routes";
 import type { Blog } from "@/types";
 
 export const revalidate = 300;
@@ -157,6 +158,7 @@ function PostCard({ post }: { post: Blog }) {
 
 export default async function UmrahHubPage() {
   const posts = (await getAllBlogPosts()).filter((p) => p.slug?.current && isUmrahPost(p));
+  const umrahRoutes = (await getFlightRoutes()).filter((r) => r.umrah);
   const grouped = new Map<GroupId, Blog[]>();
   for (const post of posts) {
     const id = groupFor(post);
@@ -315,6 +317,19 @@ export default async function UmrahHubPage() {
             </Link>
             , with food, prayer times and getting around.
           </p>
+          {umrahRoutes.length > 0 && (
+            <p className="mt-2 text-sm text-gray-600">
+              Flight guides with ihram timing and halal meals:{" "}
+              {umrahRoutes.map((r, i) => (
+                <span key={r.slug}>
+                  {i > 0 && " · "}
+                  <Link href={`/flights/${r.slug}`} className="font-semibold text-[#1D6A5B] hover:underline">
+                    {r.origin.city} to {r.destination.city}
+                  </Link>
+                </span>
+              ))}
+            </p>
+          )}
         </div>
       </section>
 
