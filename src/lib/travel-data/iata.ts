@@ -1,0 +1,67 @@
+/**
+ * IATA codes for each destination slug, used for flight links and fare lookups.
+ * Multi-airport cities use the city code (LON, NYC, PAR…) so searches cover
+ * every airport. A destination's `iataCode` field in Sanity overrides this.
+ */
+export const IATA_BY_SLUG: Record<string, string> = {
+  "abu-dhabi": "AUH",
+  amman: "AMM",
+  amsterdam: "AMS",
+  auckland: "AKL",
+  baku: "GYD",
+  bali: "DPS",
+  bangkok: "BKK",
+  barcelona: "BCN",
+  berlin: "BER",
+  cairo: "CAI",
+  "cape-town": "CPT",
+  casablanca: "CMN",
+  chicago: "CHI",
+  dakar: "DSS",
+  dearborn: "DTT",
+  delhi: "DEL",
+  doha: "DOH",
+  dubai: "DXB",
+  "hong-kong": "HKG",
+  islamabad: "ISB",
+  istanbul: "IST",
+  jakarta: "JKT",
+  johannesburg: "JNB",
+  "kuala-lumpur": "KUL",
+  lagos: "LOS",
+  langkawi: "LGK",
+  london: "LON",
+  "los-angeles": "LAX",
+  madinah: "MED",
+  // Makkah has no airport; pilgrims fly into Jeddah
+  makkah: "JED",
+  marrakech: "RAK",
+  melbourne: "MEL",
+  montreal: "YMQ",
+  muscat: "MCT",
+  nairobi: "NBO",
+  "new-york-city": "NYC",
+  paris: "PAR",
+  penang: "PEN",
+  riyadh: "RUH",
+  rome: "ROM",
+  samarkand: "SKD",
+  sarajevo: "SJJ",
+  singapore: "SIN",
+  stockholm: "STO",
+  sydney: "SYD",
+  taipei: "TPE",
+  tashkent: "TAS",
+  tehran: "THR",
+  tokyo: "TYO",
+  toronto: "YTO",
+  vancouver: "YVR",
+  vienna: "VIE",
+  "washington-dc": "WAS",
+  xian: "XIY",
+  zanzibar: "ZNZ",
+};
+
+export function getIATA(slug: string, iataCode?: string | null): string {
+  return iataCode || IATA_BY_SLUG[slug] || "";
+}

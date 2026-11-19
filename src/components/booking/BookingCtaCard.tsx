@@ -1,26 +1,16 @@
-// components/travelpayouts/TpCtaCard.tsx
-// NO 'use client' needed — this is a server component
+// components/booking/BookingCtaCard.tsx
+// Server component. Links come from the active travel provider; the card
+// renders nothing when the provider has no link for this product.
 
-import {
-  buildFlightLink,
-  buildHotelLink,
-  buildToursLink,
-  buildInsuranceLink,
-  buildCarRentalLink,
-  TP_LINKS,
-  TP_LINK_PROPS,
-} from '@/lib/travelpayouts'
-
-type CtaType = 'flights' | 'hotels' | 'tours' | 'insurance' | 'cars'
+import { bookingLink, bookingLinkProps, type BookingProduct } from '@/lib/travel-data'
 
 interface Props {
-  type: CtaType
+  type: BookingProduct
   destinationName?: string  // city name e.g. "Istanbul"
-  destinationSlug?: string  // slug e.g. "istanbul" (used to look up IATA)
-  destinationIATA?: string  // IATA code e.g. "IST" (most accurate)
+  destinationIATA?: string  // IATA code e.g. "IST"
 }
 
-const CONFIG: Record<CtaType, {
+const CONFIG: Record<BookingProduct, {
   emoji: string
   title: (dest?: string) => string
   desc: string
@@ -58,20 +48,10 @@ const CONFIG: Record<CtaType, {
   },
 }
 
-function buildHref(type: CtaType, destinationName?: string, destinationIATA?: string): string {
-  switch (type) {
-    case 'flights':   return buildFlightLink(destinationIATA || '')
-    case 'hotels':    return buildHotelLink()
-    case 'tours':     return buildToursLink(destinationName || '')
-    case 'insurance': return buildInsuranceLink()
-    case 'cars':      return buildCarRentalLink()
-    default:          return '#'
-  }
-}
-
-export function TpCtaCard({ type, destinationName, destinationIATA }: Props) {
+export function BookingCtaCard({ type, destinationName, destinationIATA }: Props) {
+  const href = bookingLink(type, { destinationName, destinationIATA })
+  if (!href) return null
   const config = CONFIG[type]
-  const href = buildHref(type, destinationName, destinationIATA)
 
   return (
     <div className="bg-white border border-gray-200 rounded-xl p-4 sm:p-5 flex flex-col gap-3 h-full">
@@ -86,7 +66,7 @@ export function TpCtaCard({ type, destinationName, destinationIATA }: Props) {
       </div>
       <a
         href={href}
-        {...TP_LINK_PROPS}
+        {...bookingLinkProps}
         className="mt-auto block w-full text-center bg-[#1D6A5B] hover:bg-[#16574A] text-white font-semibold text-sm py-2.5 rounded-lg transition-colors"
       >
         {config.btnText}

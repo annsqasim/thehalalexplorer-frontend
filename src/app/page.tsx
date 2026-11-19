@@ -20,7 +20,7 @@ import { BlogFeed } from '@/components/BlogFeed';
 import { EmailCaptureCard } from '@/components/affiliate';
 import { buildPageMetadata } from '@/lib/seo';
 import { SITE_URL } from '@/lib/constants/site';
-import { TpCtaCard } from '@/components/travelpayouts/TpCtaCard';
+import { BookingCtaCard } from '@/components/booking/BookingCtaCard';
 
 export async function generateMetadata(): Promise<Metadata> {
   let homepageData;
@@ -158,10 +158,10 @@ export default async function HomePage() {
           </p>
 
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
-            <TpCtaCard type="flights" />
-            <TpCtaCard type="hotels" destinationName="Dubai" />
-            <TpCtaCard type="tours" />
-            <TpCtaCard type="insurance" />
+            <BookingCtaCard type="flights" />
+            <BookingCtaCard type="hotels" destinationName="Dubai" />
+            <BookingCtaCard type="tours" />
+            <BookingCtaCard type="insurance" />
           </div>
         </div>
       </section>
