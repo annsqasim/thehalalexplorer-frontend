@@ -8,7 +8,7 @@ import { EmailCaptureCard } from "@/components/affiliate";
 import { BookingCtaCard } from "@/components/booking/BookingCtaCard";
 import { PLACEHOLDER_IMAGE } from "@/lib/constants";
 import { SITE_URL } from "@/lib/constants/site";
-import { FLIGHT_ROUTES } from "@/data/flight-routes";
+import { getFlightRoutes } from "@/lib/flight-routes";
 import type { Blog } from "@/types";
 
 export const revalidate = 300;
@@ -19,7 +19,6 @@ const DESCRIPTION =
   "A practical Umrah guide for first-timers: what it costs, visa and Nusuk rules, hotels near the Haram, and how to perform the rites step by step.";
 // Update this date whenever the rules below are re-checked against the official sources.
 const LAST_CHECKED = "November 2026";
-const umrahRoutes = FLIGHT_ROUTES.filter((r) => r.umrah);
 
 export const metadata: Metadata = {
   title: `${TITLE} | The Halal Explorer`,
@@ -159,6 +158,7 @@ function PostCard({ post }: { post: Blog }) {
 
 export default async function UmrahHubPage() {
   const posts = (await getAllBlogPosts()).filter((p) => p.slug?.current && isUmrahPost(p));
+  const umrahRoutes = (await getFlightRoutes()).filter((r) => r.umrah);
   const grouped = new Map<GroupId, Blog[]>();
   for (const post of posts) {
     const id = groupFor(post);

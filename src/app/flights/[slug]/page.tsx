@@ -5,17 +5,17 @@ import { ArrowRight, Clock, Plane, PlaneLanding, PlaneTakeoff } from "lucide-rea
 import { JsonLd } from "@/components/JsonLd";
 import { BookingCtaCard } from "@/components/booking/BookingCtaCard";
 import { FlightSearchWidget } from "@/components/booking/FlightSearchWidget";
-import { FLIGHT_ROUTES, getFlightRoute, type FlightRoute } from "@/data/flight-routes";
-import { getAllBlogPosts } from "@/lib/blog";
+import { getFlightRoute, getFlightRoutes, type FlightRoute } from "@/lib/flight-routes";
 import { SITE_URL } from "@/lib/constants/site";
 import { getRouteFares, travelProvider, type RouteFares } from "@/lib/travel-data";
 
 // Fares are cached for a day by the provider; the page itself can refresh hourly.
 export const revalidate = 3600;
-export const dynamicParams = false;
+// Routes published in Sanity after a build are rendered on first request.
+export const dynamicParams = true;
 
-export function generateStaticParams() {
-  return FLIGHT_ROUTES.map((route) => ({ slug: route.slug }));
+export async function generateStaticParams() {
+  return (await getFlightRoutes()).map((route) => ({ slug: route.slug }));
 }
 
 function titleFor(route: FlightRoute) {
@@ -24,11 +24,11 @@ function titleFor(route: FlightRoute) {
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
-  const route = getFlightRoute(slug);
+  const route = await getFlightRoute(slug);
   if (!route) return {};
   const title = `${titleFor(route)}: Fares, Halal Meals${route.umrah ? " & Ihram Guide" : " & Prayer Rooms"}`;
   const description = `${route.flightTime.split(";")[0]}. Cheapest months to fly ${route.origin.city} to ${route.destination.city}, ${
-    route.umrah ? "when to enter ihram on the plane, " : ""
+    route.umrah ? "ihram and miqat guidance, " : ""
   }halal meals on board and prayer rooms at both airports.`;
   const url = `${SITE_URL}/flights/${route.slug}`;
   return {
@@ -94,20 +94,19 @@ function FareTable({ data, route }: { data: RouteFares; route: FlightRoute }) {
 
 export default async function FlightRoutePage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const route = getFlightRoute(slug);
+  const route = await getFlightRoute(slug);
   if (!route) notFound();
 
   const pageUrl = `${SITE_URL}/flights/${route.slug}`;
   const title = titleFor(route);
-  const [fares, posts] = await Promise.all([
+  const [fares, allRoutes] = await Promise.all([
     getRouteFares(route.origin.iata, route.destination.iata),
-    getAllBlogPosts().catch(() => []),
+    getFlightRoutes(),
   ]);
-  const relatedPosts = route.relatedPosts
-    .map((s) => posts.find((p) => p.slug?.current === s))
-    .filter((p): p is NonNullable<typeof p> => Boolean(p));
+  // Umrah pilgrims landing in Jeddah stay in Makkah, so point hotel links and the city guide there
+  const stayCity = route.umrah && route.destination.iata === "JED" ? "Makkah" : route.destination.city;
   const cheapest = fares ? Math.min(...fares.fares.map((f) => f.price)) : null;
-  const otherRoutes = FLIGHT_ROUTES.filter((r) => r.slug !== route.slug);
+  const otherRoutes = allRoutes.filter((r) => r.slug !== route.slug);
 
   return (
     <>
@@ -235,7 +234,7 @@ export default async function FlightRoutePage({ params }: { params: Promise<{ sl
           )}
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             <BookingCtaCard type="flights" destinationName={route.destination.city} destinationIATA={route.destination.iata} />
-            <BookingCtaCard type="hotels" destinationName={route.umrah ? "Makkah" : route.destination.city} />
+            <BookingCtaCard type="hotels" destinationName={stayCity} />
             <BookingCtaCard type="insurance" />
           </div>
         </div>
@@ -255,13 +254,13 @@ export default async function FlightRoutePage({ params }: { params: Promise<{ sl
             {route.destination.destinationSlug && (
               <Link href={`/destinations/${route.destination.destinationSlug}`} className="rounded-xl border border-gray-200 p-5 transition-shadow hover:shadow-md">
                 <p className="font-semibold text-gray-900">
-                  {route.umrah ? "Makkah" : route.destination.city} city guide
+                  {stayCity} city guide
                 </p>
                 <p className="mt-1 text-sm text-gray-600">Halal food, prayer times and getting around.</p>
               </Link>
             )}
-            {relatedPosts.map((post) => (
-              <Link key={post._id} href={`/blog/${post.slug.current}`} className="rounded-xl border border-gray-200 p-5 transition-shadow hover:shadow-md">
+            {route.relatedPosts.map((post) => (
+              <Link key={post._id} href={`/blog/${post.slug}`} className="rounded-xl border border-gray-200 p-5 transition-shadow hover:shadow-md">
                 <p className="font-semibold text-gray-900">{post.title}</p>
                 {post.shortDescription && <p className="mt-1 line-clamp-2 text-sm text-gray-600">{post.shortDescription}</p>}
               </Link>

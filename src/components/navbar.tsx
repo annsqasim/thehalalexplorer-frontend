@@ -14,6 +14,7 @@ const pages = [
   { name: "Destinations", path: "/destinations" },
   { name: "Blog", path: "/blog" },
   { name: "Umrah Guide", path: "/umrah" },
+  { name: "Flights", path: "/flights" },
   { name: "Travel Tips", path: "/travel-tips" },
   { name: "About", path: "/about" },
   { name: "Contact", path: "/contact" },

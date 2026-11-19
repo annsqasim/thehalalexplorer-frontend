@@ -2,7 +2,7 @@ import { Metadata } from "next";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { JsonLd } from "@/components/JsonLd";
-import { FLIGHT_ROUTES } from "@/data/flight-routes";
+import { getFlightRoutes } from "@/lib/flight-routes";
 import { SITE_URL } from "@/lib/constants/site";
 
 const PAGE_URL = `${SITE_URL}/flights`;
@@ -17,7 +17,10 @@ export const metadata: Metadata = {
   openGraph: { title: TITLE, description: DESCRIPTION, url: PAGE_URL, type: "website", siteName: "The Halal Explorer" },
 };
 
-export default function FlightsIndexPage() {
+export const revalidate = 3600;
+
+export default async function FlightsIndexPage() {
+  const routes = await getFlightRoutes();
   return (
     <>
       <JsonLd
@@ -42,7 +45,7 @@ export default function FlightsIndexPage() {
       </section>
       <section className="bg-white py-14">
         <div className="mx-auto grid max-w-7xl gap-4 px-4 sm:grid-cols-2 sm:px-6 lg:grid-cols-3 lg:px-8">
-          {FLIGHT_ROUTES.map((route) => (
+          {routes.map((route) => (
             <Link
               key={route.slug}
               href={`/flights/${route.slug}`}
