@@ -3,6 +3,7 @@
 import { PortableText, PortableTextComponents } from "@portabletext/react";
 import type { PortableTextBlock } from "@portabletext/types";
 import { PLACEHOLDER_IMAGE } from "@/lib/constants";
+import { ContentLink } from "@/components/ContentLink";
 
 const components: PortableTextComponents = {
   types: {
@@ -23,11 +24,7 @@ const components: PortableTextComponents = {
     ),
   },
   marks: {
-    link: ({ children, value }) => (
-      <a href={value?.href} className="underline hover:no-underline" target="_blank" rel="noopener noreferrer nofollow sponsored">
-        {children}
-      </a>
-    ),
+    link: ({ children, value }) => <ContentLink href={value?.href}>{children}</ContentLink>,
     strong: ({ children }) => <strong className="font-semibold">{children}</strong>,
     em: ({ children }) => <em className="italic">{children}</em>,
     code: ({ children }) => (

@@ -23,12 +23,10 @@ import {
   ArrowRight,
   Compass,
 } from "lucide-react";
-import {
-  getIATA,
-} from "@/lib/travelpayouts";
-import { TpCtaCard } from "@/components/travelpayouts/TpCtaCard";
-import { FlightSearchWidget } from "@/components/travelpayouts/FlightSearchWidget";
-import { HotelSearchWidget } from "@/components/travelpayouts/HotelSearchWidget";
+import { getIATA } from "@/lib/travel-data";
+import { BookingCtaCard } from "@/components/booking/BookingCtaCard";
+import { FlightSearchWidget } from "@/components/booking/FlightSearchWidget";
+import { ProviderWidget } from "@/components/booking/ProviderWidget";
 import { getDestinationBySlug, getAllDestinationSlugs, getRelatedDestinations } from "@/lib/destinations";
 import { getRelatedBlogPosts } from "@/lib/related-content";
 import {
@@ -412,10 +410,10 @@ export default async function DestinationDetailPage({
 
               {/* 2x2 grid of CTA cards on desktop, stacked on mobile */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <TpCtaCard type="flights" destinationName={destination.name} destinationIATA={iata} />
-                <TpCtaCard type="hotels"  destinationName={destination.name} />
-                <TpCtaCard type="tours"   destinationName={destination.name} />
-                <TpCtaCard type="insurance" />
+                <BookingCtaCard type="flights" destinationName={destination.name} destinationIATA={iata} />
+                <BookingCtaCard type="hotels"  destinationName={destination.name} />
+                <BookingCtaCard type="tours"   destinationName={destination.name} />
+                <BookingCtaCard type="insurance" />
               </div>
             </section>
 
@@ -474,7 +472,7 @@ export default async function DestinationDetailPage({
             />
 
             {/* HOTEL SEARCH WIDGET */}
-            <HotelSearchWidget destinationName={destination.name} />
+            <ProviderWidget kind="hotels" destinationName={destination.name} />
 
             <BookingComCard
               destinationName={destination.name}

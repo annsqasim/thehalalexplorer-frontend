@@ -24,8 +24,8 @@ import { getDestinationExcerpt } from "@/lib/destination-content";
 import type { Blog, AffiliateProductField, NearbyDestinationRef } from "@/types";
 import { PLACEHOLDER_IMAGE } from "@/lib/constants";
 import { AffiliateProductCard } from "@/components/affiliate";
-import { getIATA } from "@/lib/travelpayouts";
-import { TpCtaCard } from "@/components/travelpayouts/TpCtaCard";
+import { getIATA } from "@/lib/travel-data";
+import { BookingCtaCard } from "@/components/booking/BookingCtaCard";
 import type { PortableTextBlock } from "@portabletext/types";
 import _get from "lodash/get";
 import { JsonLd } from "@/components/JsonLd";
@@ -286,16 +286,16 @@ export default async function BlogPostPage({
                   Compare flights, hotels, and activities with our trusted partners.
                 </p>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                  <TpCtaCard
+                  <BookingCtaCard
                     type="flights"
                     destinationName={post.relatedDestinations?.[0]?.name}
                     destinationIATA={post.relatedDestinations?.[0] ? getIATA(post.relatedDestinations[0].slug?.current || '', (post.relatedDestinations[0] as unknown as { iataCode?: string }).iataCode) : undefined}
                   />
-                  <TpCtaCard
+                  <BookingCtaCard
                     type="hotels"
                     destinationName={post.relatedDestinations?.[0]?.name}
                   />
-                  <TpCtaCard
+                  <BookingCtaCard
                     type="insurance"
                   />
                 </div>

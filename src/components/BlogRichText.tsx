@@ -3,6 +3,7 @@
 import { PortableText, PortableTextComponents } from "@portabletext/react";
 import type { PortableTextBlock } from "@portabletext/types";
 import { PLACEHOLDER_IMAGE } from "@/lib/constants";
+import { ContentLink } from "@/components/ContentLink";
 import { extractTocFromBlocks } from "@/lib/portable-text-toc";
 
 function buildHeadingIdMap(blocks: PortableTextBlock[]): Map<string, string> {
@@ -59,14 +60,7 @@ export default function BlogRichText({ value }: { value: PortableTextBlock[] }) 
     },
     marks: {
       link: ({ children, value: markValue }) => (
-        <a
-          href={markValue?.href}
-          className="underline hover:no-underline"
-          target="_blank"
-          rel="noopener noreferrer nofollow sponsored"
-        >
-          {children}
-        </a>
+        <ContentLink href={markValue?.href}>{children}</ContentLink>
       ),
       strong: ({ children }) => <strong className="font-semibold">{children}</strong>,
       em: ({ children }) => <em className="italic">{children}</em>,

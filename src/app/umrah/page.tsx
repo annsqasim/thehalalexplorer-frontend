@@ -5,7 +5,7 @@ import { ArrowRight } from "lucide-react";
 import { getAllBlogPosts, isUmrahPost } from "@/lib/blog";
 import { JsonLd } from "@/components/JsonLd";
 import { EmailCaptureCard } from "@/components/affiliate";
-import { TpCtaCard } from "@/components/travelpayouts/TpCtaCard";
+import { BookingCtaCard } from "@/components/booking/BookingCtaCard";
 import { PLACEHOLDER_IMAGE } from "@/lib/constants";
 import { SITE_URL } from "@/lib/constants/site";
 import type { Blog } from "@/types";
@@ -299,10 +299,10 @@ export default async function UmrahHubPage() {
             this guide free.
           </p>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            <TpCtaCard type="flights" destinationName="Jeddah" destinationIATA="JED" />
-            <TpCtaCard type="flights" destinationName="Madinah" destinationIATA="MED" />
-            <TpCtaCard type="hotels" destinationName="Makkah" />
-            <TpCtaCard type="hotels" destinationName="Madinah" />
+            <BookingCtaCard type="flights" destinationName="Jeddah" destinationIATA="JED" />
+            <BookingCtaCard type="flights" destinationName="Madinah" destinationIATA="MED" />
+            <BookingCtaCard type="hotels" destinationName="Makkah" />
+            <BookingCtaCard type="hotels" destinationName="Madinah" />
           </div>
           <p className="mt-6 text-sm text-gray-600">
             City guides:{" "}
