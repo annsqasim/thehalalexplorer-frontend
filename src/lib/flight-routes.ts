@@ -1,7 +1,8 @@
 /**
  * Flight route pages (/flights/[slug]) and the /api/flight-routes endpoints.
  *
- * Routes are `flightRoute` documents in Sanity. Pages and the API both call
+ * Routes are `flightRoute` documents in Sanity. The schema lives in the
+ * thehalalexplorer-cms repo (schemaTypes/flightRoute.js). Pages and the API both call
  * these functions, so they always agree. Only published documents are read.
  */
 
