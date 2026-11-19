@@ -259,7 +259,7 @@ export default async function FlightRoutePage({ params }: { params: Promise<{ sl
                 <p className="mt-1 text-sm text-gray-600">Halal food, prayer times and getting around.</p>
               </Link>
             )}
-            {route.relatedPosts.map((post) => (
+            {route.relatedPosts.filter(Boolean).map((post) => (
               <Link key={post._id} href={`/blog/${post.slug}`} className="rounded-xl border border-gray-200 p-5 transition-shadow hover:shadow-md">
                 <p className="font-semibold text-gray-900">{post.title}</p>
                 {post.shortDescription && <p className="mt-1 line-clamp-2 text-sm text-gray-600">{post.shortDescription}</p>}
