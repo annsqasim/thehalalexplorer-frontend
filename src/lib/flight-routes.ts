@@ -85,7 +85,8 @@ const fullFields = `
   nonStop,
   "sections": coalesce(sections[]{heading, "paragraphs": coalesce(paragraphs, []), links[]{label, href}}, []),
   "faqs": coalesce(faqs[]{question, answer}, []),
-  "relatedPosts": coalesce(relatedPosts[]->{_id, title, "slug": slug.current, shortDescription}[defined(slug)], []),
+  // Filter before dereferencing: a filter after the projection nulls items instead of dropping them
+  "relatedPosts": coalesce(relatedPosts[defined(@->slug.current)]->{_id, title, "slug": slug.current, shortDescription}, []),
   lastChecked
 `;
 
