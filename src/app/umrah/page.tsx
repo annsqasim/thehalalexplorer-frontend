@@ -8,6 +8,7 @@ import { EmailCaptureCard } from "@/components/affiliate";
 import { BookingCtaCard } from "@/components/booking/BookingCtaCard";
 import { PLACEHOLDER_IMAGE } from "@/lib/constants";
 import { SITE_URL } from "@/lib/constants/site";
+import { FLIGHT_ROUTES } from "@/data/flight-routes";
 import type { Blog } from "@/types";
 
 export const revalidate = 300;
@@ -18,6 +19,7 @@ const DESCRIPTION =
   "A practical Umrah guide for first-timers: what it costs, visa and Nusuk rules, hotels near the Haram, and how to perform the rites step by step.";
 // Update this date whenever the rules below are re-checked against the official sources.
 const LAST_CHECKED = "November 2026";
+const umrahRoutes = FLIGHT_ROUTES.filter((r) => r.umrah);
 
 export const metadata: Metadata = {
   title: `${TITLE} | The Halal Explorer`,
@@ -315,6 +317,19 @@ export default async function UmrahHubPage() {
             </Link>
             , with food, prayer times and getting around.
           </p>
+          {umrahRoutes.length > 0 && (
+            <p className="mt-2 text-sm text-gray-600">
+              Flight guides with ihram timing and halal meals:{" "}
+              {umrahRoutes.map((r, i) => (
+                <span key={r.slug}>
+                  {i > 0 && " · "}
+                  <Link href={`/flights/${r.slug}`} className="font-semibold text-[#1D6A5B] hover:underline">
+                    {r.origin.city} to {r.destination.city}
+                  </Link>
+                </span>
+              ))}
+            </p>
+          )}
         </div>
       </section>
 

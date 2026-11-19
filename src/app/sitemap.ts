@@ -1,6 +1,7 @@
 import type { MetadataRoute } from 'next';
 import { SITE_URL } from '@/lib/constants/site';
 import { client } from '@/lib/sanity';
+import { FLIGHT_ROUTES } from '@/data/flight-routes';
 
 export const revalidate = 3600;
 
@@ -10,6 +11,7 @@ const STATIC_PAGES: { path: string; priority: number; weekly?: boolean }[] = [
   { path: '/destinations', priority: 0.9 },
   { path: '/blog', priority: 0.9, weekly: true },
   { path: '/umrah', priority: 0.9, weekly: true },
+  { path: '/flights', priority: 0.7 },
   { path: '/explore', priority: 0.7 },
   { path: '/travel-tips', priority: 0.7 },
   { path: '/about', priority: 0.5 },
@@ -61,6 +63,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       url: `${SITE_URL}/blog/${b.slug}`,
       lastModified: b.lastModified || now,
       changeFrequency: 'monthly' as const,
+      priority: 0.8,
+    })),
+    ...FLIGHT_ROUTES.map((r) => ({
+      url: `${SITE_URL}/flights/${r.slug}`,
+      lastModified: now,
+      changeFrequency: 'weekly' as const,
       priority: 0.8,
     })),
   ];
