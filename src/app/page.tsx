@@ -111,10 +111,8 @@ export default async function HomePage() {
       {/* The search used to sit in a tall section with a negative margin that
           covered the stats bar labels. It now leads the destinations section. */}
       <Section className="bg-white dark:bg-slate-900 py-12 md:py-16 lg:py-20">
-        <div className="max-w-2xl mx-auto mb-10 md:mb-12">
-          <div className="bg-white rounded-2xl shadow-md p-3 sm:p-4 border border-slate-200 dark:border-slate-800">
-            <DestinationAutocomplete destinations={allDestinations} />
-          </div>
+        <div className="max-w-2xl mx-auto mb-10 md:mb-14">
+          <DestinationAutocomplete destinations={allDestinations} />
         </div>
 
         <SectionHeader
