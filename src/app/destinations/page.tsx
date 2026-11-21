@@ -6,7 +6,7 @@ import { destinationsPageContent } from "@/data/destinations";
 import { DestinationsGrid } from "@/components/DestinationsGrid";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
-import { SITE_URL } from "@/lib/constants/site";
+import { SITE_URL , DEFAULT_OG_IMAGE } from "@/lib/constants/site";
 
 export const metadata: Metadata = {
   title: "Muslim-Friendly Destinations | The Halal Explorer - 50+ Halal Travel Guides",
@@ -23,6 +23,7 @@ export const metadata: Metadata = {
   ],
   alternates: { canonical: `${SITE_URL}/destinations` },
   openGraph: {
+    images: [DEFAULT_OG_IMAGE],
     title: "Muslim-Friendly Destinations | The Halal Explorer",
     description: "Explore our curated list of Muslim-friendly travel destinations",
     url: `${SITE_URL}/destinations`,

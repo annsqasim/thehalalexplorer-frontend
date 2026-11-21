@@ -76,7 +76,8 @@ const nextConfig: NextConfig = {
       { source: '/destinations/osaka', destination: '/destinations/tokyo', permanent: true },
       { source: '/destinations/penang', destination: '/destinations/kuala-lumpur', permanent: true },
       { source: '/destinations/seoul', destination: '/destinations', permanent: true },
-      { source: '/destinations/tashkent', destination: '/destinations/samarkand', permanent: true },
+      // /explore was a mock-data page with dead links; it was removed
+      { source: '/explore/:path*', destination: '/destinations', permanent: true },
       { source: '/destinations/tunis', destination: '/destinations', permanent: true }
     ];
   },

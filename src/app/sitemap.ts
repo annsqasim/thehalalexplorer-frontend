@@ -12,7 +12,6 @@ const STATIC_PAGES: { path: string; priority: number; weekly?: boolean }[] = [
   { path: '/blog', priority: 0.9, weekly: true },
   { path: '/umrah', priority: 0.9, weekly: true },
   { path: '/flights', priority: 0.7 },
-  { path: '/explore', priority: 0.7 },
   { path: '/travel-tips', priority: 0.7 },
   { path: '/about', priority: 0.5 },
   { path: '/contact', priority: 0.5 },
@@ -46,11 +45,22 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     .sort()
     .at(-1);
   const now = new Date().toISOString();
+  const newest = (dates: (string | undefined)[]) => dates.filter(Boolean).sort().at(-1);
+  // Listing pages change when their content does. Other static pages get no
+  // lastmod: stamping them with the request time on every fetch teaches
+  // Google to ignore our lastmod values.
+  const LISTING_LASTMOD: Record<string, string | undefined> = {
+    '': newestBlog,
+    '/blog': newestBlog,
+    '/umrah': newestBlog,
+    '/destinations': newest(destinations.map((d) => d.lastModified)),
+    '/flights': newest(flightRoutes.map((r) => r.updatedAt)),
+  };
 
   return [
     ...STATIC_PAGES.map(({ path, priority, weekly }) => ({
       url: `${SITE_URL}${path}`,
-      lastModified: path === '/blog' || path === '/umrah' || path === '' ? newestBlog || now : now,
+      ...(LISTING_LASTMOD[path] ? { lastModified: LISTING_LASTMOD[path] } : {}),
       changeFrequency: weekly ? ('weekly' as const) : ('monthly' as const),
       priority,
     })),

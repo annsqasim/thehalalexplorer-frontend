@@ -1,4 +1,5 @@
 import type React from "react"
+import { DEFAULT_OG_IMAGE } from "@/lib/constants/site";
 import type { Metadata } from "next"
 import { Plus_Jakarta_Sans, Playfair_Display } from "next/font/google"
 import "./globals.css"
@@ -47,22 +48,21 @@ export const metadata: Metadata = {
   publisher: "The Halal Explorer",
   metadataBase: new URL("https://www.thehalalexplorer.com"),
   openGraph: {
+    images: [DEFAULT_OG_IMAGE],
     title: "The Halal Explorer — Halal Travel Guides for Muslim Travellers",
     description:
       "Honest halal travel guides for Muslim travellers. Halal food, mosque locations, prayer facilities and destination ratings for 53+ cities worldwide. Start exploring.",
     url: "https://www.thehalalexplorer.com",
     siteName: "The Halal Explorer",
-    images: ['https://thehalalexplorer.com/og-image.jpg'],
     locale: "en_US",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
+    images: [DEFAULT_OG_IMAGE],
     title: "The Halal Explorer — Halal Travel Guides for Muslim Travellers",
     description:
       "Honest halal travel guides for Muslim travellers. Halal food, mosque locations, prayer facilities and destination ratings for 53+ cities worldwide. Start exploring.",
-    images: ['https://thehalalexplorer.com/twitter-image.jpg'],
-    creator: "@yourtwitterhandle",
   },
   icons: {
     icon: [
