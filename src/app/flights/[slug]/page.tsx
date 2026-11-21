@@ -6,7 +6,7 @@ import { JsonLd } from "@/components/JsonLd";
 import { BookingCtaCard } from "@/components/booking/BookingCtaCard";
 import { FlightSearchWidget } from "@/components/booking/FlightSearchWidget";
 import { getFlightRoute, getFlightRoutes, type FlightRoute } from "@/lib/flight-routes";
-import { SITE_URL } from "@/lib/constants/site";
+import { SITE_URL , DEFAULT_OG_IMAGE } from "@/lib/constants/site";
 import { getRouteFares, travelProvider, type RouteFares } from "@/lib/travel-data";
 
 // Fares are cached for a day by the provider; the page itself can refresh hourly.
@@ -35,7 +35,8 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     title: `${title} | The Halal Explorer`,
     description,
     alternates: { canonical: url },
-    openGraph: { title, description, url, type: "website", siteName: "The Halal Explorer" },
+    openGraph: {
+    images: [DEFAULT_OG_IMAGE], title, description, url, type: "website", siteName: "The Halal Explorer" },
   };
 }
 

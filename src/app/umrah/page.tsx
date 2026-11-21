@@ -7,7 +7,7 @@ import { JsonLd } from "@/components/JsonLd";
 import { EmailCaptureCard } from "@/components/affiliate";
 import { BookingCtaCard } from "@/components/booking/BookingCtaCard";
 import { PLACEHOLDER_IMAGE } from "@/lib/constants";
-import { SITE_URL } from "@/lib/constants/site";
+import { SITE_URL , DEFAULT_OG_IMAGE } from "@/lib/constants/site";
 import { getFlightRoutes } from "@/lib/flight-routes";
 import type { Blog } from "@/types";
 
@@ -25,6 +25,7 @@ export const metadata: Metadata = {
   description: DESCRIPTION,
   alternates: { canonical: PAGE_URL },
   openGraph: {
+    images: [DEFAULT_OG_IMAGE],
     title: TITLE,
     description: DESCRIPTION,
     url: PAGE_URL,

@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { SITE_URL } from "@/lib/constants/site";
+import { SITE_URL, DEFAULT_OG_IMAGE } from "@/lib/constants/site";
 
 export const metadata: Metadata = {
   title: "About Us | The Halal Explorer - Empowering Muslim Travelers",
@@ -9,6 +9,7 @@ export const metadata: Metadata = {
   keywords: ["about", "The Halal Explorer", "Muslim travel", "halal travel", "mission", "team"],
   alternates: { canonical: `${SITE_URL}/about` },
   openGraph: {
+    images: [DEFAULT_OG_IMAGE],
     title: "About Us | The Halal Explorer",
     description: "Our mission to empower every Muslim traveler with trusted halal travel information.",
     url: `${SITE_URL}/about`,

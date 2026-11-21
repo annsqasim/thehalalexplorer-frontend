@@ -1,4 +1,4 @@
-import { SITE_URL } from '@/lib/constants/site';
+import { SITE_URL, DEFAULT_OG_IMAGE } from '@/lib/constants/site';
 import { urlFor } from '@/lib/imageBuilder';
 import type { Metadata } from 'next';
 
@@ -62,13 +62,13 @@ export function buildPageMetadata({
       type,
       images: ogImageUrl
         ? [{ url: ogImageUrl, width: 1200, height: 630, alt: title }]
-        : [],
+        : [{ url: DEFAULT_OG_IMAGE, width: 1200, height: 630, alt: title }],
     },
     twitter: {
       card: 'summary_large_image',
       title,
       description,
-      images: ogImageUrl ? [ogImageUrl] : [],
+      images: [ogImageUrl ?? DEFAULT_OG_IMAGE],
     },
   };
 }

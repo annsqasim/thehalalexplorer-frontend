@@ -5,7 +5,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { SITE_URL } from "@/lib/constants/site";
+import { SITE_URL , DEFAULT_OG_IMAGE } from "@/lib/constants/site";
 
 export const metadata: Metadata = {
   title: "FAQ - Frequently Asked Questions | The Halal Explorer",
@@ -13,6 +13,7 @@ export const metadata: Metadata = {
   keywords: ["FAQ", "halal travel", "Muslim travel", "prayer rooms", "halal food", "travel tips"],
   alternates: { canonical: `${SITE_URL}/faq` },
   openGraph: {
+    images: [DEFAULT_OG_IMAGE],
     title: "FAQ | The Halal Explorer",
     description: "Frequently asked questions about Muslim-friendly travel and our guides.",
     url: `${SITE_URL}/faq`,

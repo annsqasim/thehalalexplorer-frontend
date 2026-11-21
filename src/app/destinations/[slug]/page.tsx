@@ -207,6 +207,16 @@ export default async function DestinationDetailPage({
 
   return (
     <>
+      <JsonLd
+        data={{
+          '@type': 'BreadcrumbList',
+          itemListElement: [
+            { '@type': 'ListItem', position: 1, name: 'Home', item: SITE_URL },
+            { '@type': 'ListItem', position: 2, name: 'Destinations', item: `${SITE_URL}/destinations` },
+            { '@type': 'ListItem', position: 3, name: destination.name, item: `${SITE_URL}/destinations/${destination.slug.current}` },
+          ],
+        }}
+      />
       {/* TouristDestination JSON-LD structured data */}
       <JsonLd
         data={{

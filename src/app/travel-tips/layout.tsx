@@ -1,5 +1,5 @@
 import { Metadata } from "next";
-import { SITE_URL } from "@/lib/constants/site";
+import { SITE_URL , DEFAULT_OG_IMAGE } from "@/lib/constants/site";
 
 export const metadata: Metadata = {
   title: "Travel Tips for Muslim Travelers | The Halal Explorer",
@@ -14,6 +14,7 @@ export const metadata: Metadata = {
   ],
   alternates: { canonical: `${SITE_URL}/travel-tips` },
   openGraph: {
+    images: [DEFAULT_OG_IMAGE],
     title: "Travel Tips for Muslim Travelers | The Halal Explorer",
     description:
       "Essential travel tips for Muslim travelers. Advice on finding halal food, prayer rooms, and navigating new destinations.",

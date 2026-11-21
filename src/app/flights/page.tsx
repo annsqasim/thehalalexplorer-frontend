@@ -3,7 +3,7 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { JsonLd } from "@/components/JsonLd";
 import { getFlightRoutes } from "@/lib/flight-routes";
-import { SITE_URL } from "@/lib/constants/site";
+import { SITE_URL , DEFAULT_OG_IMAGE } from "@/lib/constants/site";
 
 const PAGE_URL = `${SITE_URL}/flights`;
 const TITLE = "Flight Guides for Muslim Travellers";
@@ -14,7 +14,8 @@ export const metadata: Metadata = {
   title: `${TITLE} | The Halal Explorer`,
   description: DESCRIPTION,
   alternates: { canonical: PAGE_URL },
-  openGraph: { title: TITLE, description: DESCRIPTION, url: PAGE_URL, type: "website", siteName: "The Halal Explorer" },
+  openGraph: {
+    images: [DEFAULT_OG_IMAGE], title: TITLE, description: DESCRIPTION, url: PAGE_URL, type: "website", siteName: "The Halal Explorer" },
 };
 
 export const revalidate = 3600;
