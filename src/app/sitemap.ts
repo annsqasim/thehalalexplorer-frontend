@@ -2,6 +2,7 @@ import type { MetadataRoute } from 'next';
 import { SITE_URL } from '@/lib/constants/site';
 import { client } from '@/lib/sanity';
 import { getFlightRoutes } from '@/lib/flight-routes';
+import { getPackageSitemapEntries } from '@/lib/umrah-packages';
 
 export const revalidate = 3600;
 
@@ -12,6 +13,7 @@ const STATIC_PAGES: { path: string; priority: number; weekly?: boolean }[] = [
   { path: '/blog', priority: 0.9, weekly: true },
   { path: '/umrah', priority: 0.9, weekly: true },
   { path: '/flights', priority: 0.7 },
+  { path: '/umrah/packages', priority: 0.8 },
   { path: '/travel-tips', priority: 0.7 },
   { path: '/about', priority: 0.5 },
   { path: '/contact', priority: 0.5 },
@@ -29,7 +31,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Same filters as the listing pages, so every published page is included.
   // lastModified uses the real edit time; publishedAt alone went stale and
   // was missing on some posts, which made them report "modified just now".
-  const [destinations, blogs, flightRoutes] = await Promise.all([
+  const [destinations, blogs, flightRoutes, packageEntries] = await Promise.all([
     client.fetch<SitemapDoc[]>(
       `*[_type == "destination" && defined(slug.current) && !(_id in path("drafts.**"))]{ "slug": slug.current, "lastModified": _updatedAt }`
     ),
@@ -37,6 +39,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       `*[_type == "blog" && defined(slug.current) && !(_id in path("drafts.**"))]{ "slug": slug.current, "lastModified": coalesce(_updatedAt, publishedAt) }`
     ),
     getFlightRoutes(),
+    getPackageSitemapEntries(),
   ]);
 
   const newestBlog = blogs
@@ -55,6 +58,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     '/umrah': newestBlog,
     '/destinations': newest(destinations.map((d) => d.lastModified)),
     '/flights': newest(flightRoutes.map((r) => r.updatedAt)),
+    '/umrah/packages': newest(packageEntries.packages.map((p) => p.updatedAt)),
   };
 
   return [
@@ -81,6 +85,18 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       lastModified: r.updatedAt || now,
       changeFrequency: 'weekly' as const,
       priority: 0.8,
+    })),
+    ...packageEntries.packages.map((p) => ({
+      url: `${SITE_URL}/umrah/packages/${p.slug}`,
+      lastModified: p.updatedAt,
+      changeFrequency: 'weekly' as const,
+      priority: 0.7,
+    })),
+    ...packageEntries.agencies.map((a) => ({
+      url: `${SITE_URL}/umrah/agencies/${a.slug}`,
+      lastModified: a.updatedAt,
+      changeFrequency: 'monthly' as const,
+      priority: 0.6,
     })),
   ];
 }
