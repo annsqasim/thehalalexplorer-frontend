@@ -42,6 +42,9 @@ export default function Footer() {
                 <Link href="/flights" className="hover:text-primary transition-colors">Flight Guides</Link>
               </li>
               <li>
+                <Link href="/umrah/packages" className="hover:text-primary transition-colors">Umrah Packages</Link>
+              </li>
+              <li>
                 <Link href="/search" className="hover:text-primary transition-colors">Search</Link>
               </li>
             </ul>

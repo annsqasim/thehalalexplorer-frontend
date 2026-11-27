@@ -9,6 +9,8 @@ import { BookingCtaCard } from "@/components/booking/BookingCtaCard";
 import { PLACEHOLDER_IMAGE } from "@/lib/constants";
 import { SITE_URL , DEFAULT_OG_IMAGE } from "@/lib/constants/site";
 import { getFlightRoutes } from "@/lib/flight-routes";
+import { getPackages } from "@/lib/umrah-packages";
+import { PackageCard } from "@/components/umrah-packages/PackageCard";
 import type { Blog } from "@/types";
 
 export const revalidate = 300;
@@ -160,6 +162,7 @@ function PostCard({ post }: { post: Blog }) {
 export default async function UmrahHubPage() {
   const posts = (await getAllBlogPosts()).filter((p) => p.slug?.current && isUmrahPost(p));
   const umrahRoutes = (await getFlightRoutes()).filter((r) => r.umrah);
+  const packages = (await getPackages()).slice(0, 3);
   const grouped = new Map<GroupId, Blog[]>();
   for (const post of posts) {
     const id = groupFor(post);
@@ -291,6 +294,35 @@ export default async function UmrahHubPage() {
           </div>
         </section>
       )}
+
+      {/* Packages from verified agencies */}
+      <section className="bg-[#F9FAFB] py-14">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+            <div>
+              <p className="mb-2 text-xs font-semibold uppercase tracking-widest text-[#1D6A5B]">Prefer a package?</p>
+              <h2 className="mb-2 text-2xl font-bold text-gray-900">Umrah packages from verified agencies</h2>
+              <p className="max-w-2xl text-sm text-gray-600">
+                Compare hotels, distance to the Haram, nights and prices from agencies we have checked, then ask them
+                directly.
+              </p>
+            </div>
+            <Link
+              href="/umrah/packages"
+              className="inline-flex shrink-0 items-center gap-1 rounded-lg bg-[#1D6A5B] px-4 py-2.5 text-sm font-semibold text-white hover:bg-[#16574A]"
+            >
+              Compare packages <ArrowRight className="h-4 w-4" />
+            </Link>
+          </div>
+          {packages.length > 0 && (
+            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              {packages.map((pkg) => (
+                <PackageCard key={pkg._id} pkg={pkg} />
+              ))}
+            </div>
+          )}
+        </div>
+      </section>
 
       {/* Booking */}
       <section className="bg-white py-14">

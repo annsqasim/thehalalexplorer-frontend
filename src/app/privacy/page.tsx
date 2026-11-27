@@ -55,6 +55,9 @@ export default function PrivacyPage() {
           <p className="text-slate-600 dark:text-slate-400 leading-relaxed">
             We do not sell your personal information. We may share data with service providers who assist in operating the site, or when required by law.
           </p>
+          <p className="text-slate-600 dark:text-slate-400 leading-relaxed mt-4">
+            When you send an inquiry about an Umrah package, we share the details you enter (your name, phone number, email if given, number of travellers, preferred month and message) with the agency that listed that package, so they can contact you. We keep a copy of each inquiry to track how many inquiries each agency receives. Packages are sold by the agency, not by The Halal Explorer.
+          </p>
         </section>
 
         <section>
